@@ -8,6 +8,8 @@
   ==============================================================================
 */
 
+#include <yaml-cpp/yaml.h>
+
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 

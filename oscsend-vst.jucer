@@ -5,10 +5,13 @@
               pluginManufacturer="dr.light">
   <MAINGROUP id="d0anJy" name="oscsend-vst">
     <GROUP id="{C999FE65-569A-9B5F-CCD1-8F36F8E11923}" name="Resources">
-      <FILE id="BDCzIC" name="drlight-eyesclosed.png" compile="0" resource="1"
-            file="../footage/images/drlight-eyesclosed.png"/>
-      <FILE id="hzPorZ" name="drlight-shout.png" compile="0" resource="1"
-            file="../footage/images/drlight-shout.png"/>
+      <FILE id="gEy28T" name="drlight-eyesclosed.png" compile="0" resource="1"
+            file="Resources/drlight-eyesclosed.png"/>
+      <FILE id="xt763r" name="drlight-shout.png" compile="0" resource="1"
+            file="Resources/drlight-shout.png"/>
+      <FILE id="V3qRpF" name="list-icon.png" compile="0" resource="1" file="Resources/list-icon.png"/>
+      <FILE id="Dml0Im" name="preset-folder-icon.png" compile="0" resource="1"
+            file="Resources/preset-folder-icon.png"/>
     </GROUP>
     <GROUP id="{4FA477F1-3527-10C5-E7C6-083C0695095A}" name="Source">
       <FILE id="kXLk31" name="OSCControlElement.cpp" compile="1" resource="0"
@@ -25,10 +28,12 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017">
+    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="yaml-cpp.lib">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug"/>
-        <CONFIGURATION isDebug="0" name="Release"/>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="%YAML_CPP_ROOT%/include"
+                       libraryPath="%YAML_CPP_ROOT%/lib"/>
+        <CONFIGURATION isDebug="0" name="Release" headerPath="%YAML_CPP_ROOT%/include"
+                       libraryPath="%YAML_CPP_ROOT%/lib"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../tools/JUCE/modules"/>
