@@ -34,13 +34,18 @@ public:
 	void buttonClicked(Button *) override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    OscsendvstAudioProcessor& processor;
+	void connectOsc();
+	void choosePresetFolder();
+	String showPresetList();
+	
+	OscsendvstAudioProcessor& processor;
+
+	File dirPresets;
 
 	const int heightRow;
 
-	Image imageOff, imageOn;
+	ImageButton buttonPreset;
+	ImageButton buttonPresetFolder;
 	ImageButton buttonSend;
 
 	TextEditor textAddress;
