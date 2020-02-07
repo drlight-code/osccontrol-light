@@ -132,8 +132,8 @@ void OscsendvstAudioProcessorEditor::buttonClicked(Button * button) {
 		choosePresetFolder();
 	}
 	else if (button == &buttonPreset) {
-		auto dir = showPresetList();
-		DBG(dir);
+		auto preset = pickPresetFile();
+		DBG(preset.getFullPathName());
 	}
 }
 
@@ -166,11 +166,18 @@ void OscsendvstAudioProcessorEditor::connectOsc() {
 	}
 }
 
-String OscsendvstAudioProcessorEditor::showPresetList() {
+File OscsendvstAudioProcessorEditor::pickPresetFile() {
 	PopupMenu popup;
 
-	popup.addItem(1, "flerp");
-	popup.show();
+	auto files = dirPresets.findChildFiles(File::findFiles, true, "*.yml");
+	
+	int id = 1;
+	for (auto & file : files) {
+		auto name = file.getRelativePathFrom(dirPresets).dropLastCharacters(4);
+		name = name.replaceCharacter('\\', '/');
+		popup.addItem(id, name);
+	}
+	int index = popup.show();
 
-	return "schmubeldu";
+	return files[index-1];
 }

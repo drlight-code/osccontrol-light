@@ -36,7 +36,7 @@ public:
 private:
 	void connectOsc();
 	void choosePresetFolder();
-	String showPresetList();
+	File pickPresetFile();
 	
 	OscsendvstAudioProcessor& processor;
 
