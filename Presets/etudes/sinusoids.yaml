@@ -1,0 +1,15 @@
+host: 127.0.0.1
+port: 8888
+
+controls:
+  - name: frequency
+    message: /sinusoids/sinusoids/freq
+    range: [0, 10]
+    default: 0.1
+    type: knob
+
+  - name: lambda
+    message: /sinusoids/sinusoids/lambda
+    range: [0, 10]
+    default: 0.1
+    type: knob

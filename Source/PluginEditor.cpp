@@ -208,6 +208,8 @@ OscsendvstAudioProcessorEditor::
 loadPreset
 (File preset)
 {
+    listControlElements.clear();
+
     auto filename = preset.getFullPathName().toStdString();
     YAML::Node config;
 
@@ -236,9 +238,11 @@ loadPreset
 
     resized();
 
+    buttonSend.setToggleState(false, NotificationType::sendNotification);
     auto autoconnect = config["autoconnect"];
-    if(autoconnect.IsScalar() && autoconnect.as<bool>())
-        buttonSend.triggerClick();
+    if(autoconnect.IsScalar() && autoconnect.as<bool>()) {
+        buttonSend.setToggleState(true, NotificationType::sendNotification);
+    }
 }
 
 void
