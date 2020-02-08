@@ -39,6 +39,7 @@ OscsendvstAudioProcessorEditor
         imagePreset, 1.0, Colour(),
         Image(), 1.0, colourOverlay,
         Image(), 1.0, Colour());
+    buttonPreset.setTriggeredOnMouseDown(true);
     buttonPreset.addListener(this);
     addAndMakeVisible(buttonPreset);
 
@@ -46,6 +47,7 @@ OscsendvstAudioProcessorEditor
         imagePresetFolder, 1.0, Colour(),
         Image(), 1.0, colourOverlay,
         Image(), 1.0, Colour());
+    buttonPresetFolder.setTriggeredOnMouseDown(true);
     buttonPresetFolder.addListener(this);
     addAndMakeVisible(buttonPresetFolder);
 
@@ -62,6 +64,7 @@ OscsendvstAudioProcessorEditor
          Image(), 1.f, Colour(),
          imageSendOn, 1.f, Colour());
     buttonSend.setClickingTogglesState(true);
+    buttonSend.setTriggeredOnMouseDown(true);
     buttonSend.addListener(this);
     addAndMakeVisible(&buttonSend);
 
@@ -142,12 +145,15 @@ void OscsendvstAudioProcessorEditor::buttonClicked(Button * button) {
         choosePresetFolder();
     }
     else if (button == &buttonPreset) {
-        if(!dirPresets.exists())
+        if(!dirPresets.exists()) {
             choosePresetFolder();
-
-        auto preset = pickPresetFile();
-        if(preset.exists())
-            loadPreset(preset);
+        }
+        else {
+            auto preset = pickPresetFile();
+            if(preset.exists()) {
+                loadPreset(preset);
+            }
+        }
     }
 }
 
