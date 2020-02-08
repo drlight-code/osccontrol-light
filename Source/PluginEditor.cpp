@@ -145,7 +145,7 @@ buttonClicked
             connectOsc();
         }
         else {
-            oscSender.disconnect();
+            disconnectOsc();
         }
     }
     else if (button == &buttonPresetFolder) {
@@ -232,6 +232,7 @@ loadPreset
     YAML::Node controls = config["controls"];
     for(auto control : controls) {
         auto element = factory.createControlElement(control);
+        element->setEnabled(false);
         addAndMakeVisible(element.get());
         listControlElements.push_back(std::move(element));
     }
@@ -258,6 +259,17 @@ connectOsc()
     oscSender.connect(hostname, port);
 
     for (auto & control : listControlElements) {
+        control->setEnabled(true);
         control->send();
     }
+}
+
+void
+OscsendvstAudioProcessorEditor::
+disconnectOsc()
+{
+    for (auto & control : listControlElements) {
+        control->setEnabled(false);
+    }
+    oscSender.disconnect();
 }

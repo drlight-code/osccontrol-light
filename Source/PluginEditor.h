@@ -37,6 +37,8 @@ public:
 
 private:
     void connectOsc();
+    void disconnectOsc();
+
     void choosePresetFolder();
     File pickPresetFile();
     void loadPreset(File preset);
