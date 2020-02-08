@@ -15,15 +15,17 @@
 
 #include "BinaryData.h"
 
-#include "OSCControlElement.h"
+#include "LayoutHints.h"
+
+#include "ControlElementFactory.h"
+#include "ControlElement.h"
 
 //==============================================================================
 OscsendvstAudioProcessorEditor::
 OscsendvstAudioProcessorEditor
 (OscsendvstAudioProcessor& p) :
     AudioProcessorEditor (&p),
-    processor (p),
-    heightRow(32)
+    processor (p)
 {
     dirPresets =
         File(SystemStats::getEnvironmentVariable("OSCSEND_PRESET_PATH", ""));
@@ -71,68 +73,69 @@ OscsendvstAudioProcessorEditor
     addAndMakeVisible(&textAddress);
     addAndMakeVisible(&textPort);
 
-    //auto names = {"/track/N/azimuth", "/track/N/vbap", "/track/N/stereo", "/track/N/mono" };
-    //for (auto name : names) {
-    //  auto element = std::make_unique<OSCControlElement>();
-    //  element->setOSCSender(&oscSender);
-    //
-    //  auto editor = dynamic_cast<TextEditor*>(element->getChildComponent(1));
-    //  editor->setText(name);
-    //
-    //  addAndMakeVisible(element.get());
-    //  listControlElements.push_back(std::move(element));
-    //}
-
     setResizable(true, true);
-    setResizeLimits(100, 2 * heightRow, 1920, 1080);
-    setSize(400, 300);
+    setResizeLimits(100, 2 * LayoutHints::heightRow, 1920, 1080);
+    setSize(300, 300);
 }
 
-OscsendvstAudioProcessorEditor::~OscsendvstAudioProcessorEditor()
+OscsendvstAudioProcessorEditor::
+~OscsendvstAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void OscsendvstAudioProcessorEditor::paint (Graphics& g)
+void
+OscsendvstAudioProcessorEditor::
+paint
+(Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    g.fillAll(getLookAndFeel().findColour
+        (ResizableWindow::backgroundColourId));
 
-    g.setColour (Colours::white);
-    g.setFont (15.0f);
-
-    //g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
+    g.setColour(Colours::white);
+    g.setFont(15.0f);
 }
 
-void OscsendvstAudioProcessorEditor::resized()
+void
+OscsendvstAudioProcessorEditor::
+resized()
 {
-    auto rect = getLocalBounds();
-    auto rectHeader = Rectangle<int>(0, 0, rect.getWidth(), heightRow);
+    auto heightRow = LayoutHints::heightRow;
+    auto area = getLocalBounds();
+    auto areaHeader = Rectangle<int>
+        (0, 0, area.getWidth(), heightRow);
 
-    buttonPreset.setBounds(rectHeader.removeFromLeft(heightRow));
-    buttonPresetFolder.setBounds(rectHeader.removeFromLeft(heightRow));
+    buttonPreset.setBounds(areaHeader.removeFromLeft(heightRow));
+    buttonPresetFolder.setBounds(areaHeader.removeFromLeft(heightRow));
 
-    buttonSend.setBounds(rectHeader.removeFromRight(heightRow));
+    buttonSend.setBounds(areaHeader.removeFromRight(heightRow));
 
-    int heightTextFields = 24;
-    int insetText = (heightRow - heightTextFields) / 2;
+    auto insetText = LayoutHints::getTextBoxInset();
+    auto gap = LayoutHints::gapSize;
 
-    rectHeader.removeFromTop(insetText);
-    rectHeader.removeFromBottom(insetText);
+    areaHeader.removeFromTop(insetText);
+    areaHeader.removeFromBottom(insetText);
 
-    rectHeader.removeFromRight(4);
-    textPort.setBounds(rectHeader.removeFromRight(48));
-    rectHeader.removeFromRight(4);
-    rectHeader.removeFromLeft(4);
-    textAddress.setBounds(rectHeader);
+    areaHeader.removeFromRight(gap);
+    textPort.setBounds
+        (areaHeader.removeFromRight(LayoutHints::widthTextPort));
+    areaHeader.removeFromRight(gap);
+    areaHeader.removeFromLeft(gap);
+    textAddress.setBounds(areaHeader);
 
-    /*rect.removeFromTop(heightRow);
-    for (auto & controlElement : listControlElements) {
-        controlElement->setBounds(rect.removeFromTop(heightRow));
-    }*/
+    area.removeFromTop(heightRow);
+    for (auto & element : listControlElements) {
+        element->setBounds
+            (area.removeFromTop(heightRow) *
+                element->getNumberOfRows());
+    }
 }
 
-void OscsendvstAudioProcessorEditor::buttonClicked(Button * button) {
+void
+OscsendvstAudioProcessorEditor::
+buttonClicked
+(Button * button)
+{
     if (button == &buttonSend) {
         if (button->getToggleState()) {
             connectOsc();
@@ -157,12 +160,18 @@ void OscsendvstAudioProcessorEditor::buttonClicked(Button * button) {
     }
 }
 
-void OscsendvstAudioProcessorEditor::choosePresetFolder() {
+void
+OscsendvstAudioProcessorEditor::
+choosePresetFolder()
+{
     FileBrowserComponent browser(
-        FileBrowserComponent::openMode | FileBrowserComponent::canSelectDirectories,
+        FileBrowserComponent::openMode |
+        FileBrowserComponent::canSelectDirectories,
         dirPresets, nullptr, nullptr);
 
-    auto colourBg = LookAndFeel::getDefaultLookAndFeel().findColour(ResizableWindow::backgroundColourId);
+    auto colourBg =
+        LookAndFeel::getDefaultLookAndFeel()
+        .findColour(ResizableWindow::backgroundColourId);
     FileChooserDialogBox dialogBox("Preset directory",
         "Select the directory containing OSC preset definitions.",
         browser, false, colourBg);
@@ -173,11 +182,13 @@ void OscsendvstAudioProcessorEditor::choosePresetFolder() {
     }
 }
 
-File OscsendvstAudioProcessorEditor::pickPresetFile() {
-    PopupMenu popup;
-
+File
+OscsendvstAudioProcessorEditor::
+pickPresetFile()
+{
     auto files = dirPresets.findChildFiles(File::findFiles, true, "*.yaml");
 
+    PopupMenu popup;
     int id = 1;
     for (auto & file : files) {
         auto name = file.getRelativePathFrom(dirPresets).dropLastCharacters(5);
@@ -189,34 +200,49 @@ File OscsendvstAudioProcessorEditor::pickPresetFile() {
     return files[index-1];
 }
 
-void OscsendvstAudioProcessorEditor::loadPreset(File preset) {
+void
+OscsendvstAudioProcessorEditor::
+loadPreset
+(File preset)
+{
     auto filename = preset.getFullPathName().toStdString();
-    YAML::Node root;
+    YAML::Node config;
 
     try {
-        root = YAML::LoadFile(filename);
+        config = YAML::LoadFile(filename);
     }
     catch (YAML::BadFile &e) {
         std::string message = "Unable to load config: " + filename;
         throw std::runtime_error(message);
     }
 
-    if (root.IsNull()) {
+    if (config.IsNull()) {
         return;
     }
-    
-    using map = std::map<std::string, YAML::Node>;
-    for (auto & pair : root.as<map>()) {
-        auto name = pair.first;
-        DBG(name);
+
+    textAddress.setText(config["host"].as<std::string>());
+    textPort.setText(config["port"].as<std::string>());
+
+    ControlElementFactory factory(oscSender);
+    YAML::Node controls = config["controls"];
+    for(auto control : controls) {
+        auto element = factory.createControlElement(control);
+        addAndMakeVisible(element.get());
+        listControlElements.push_back(std::move(element));
     }
+
+    resized();
 }
 
-void OscsendvstAudioProcessorEditor::connectOsc() {
+void
+OscsendvstAudioProcessorEditor::
+connectOsc()
+{
     auto hostname = textAddress.getText();
     auto port = textPort.getText().getIntValue();
 
-    auto message = String("connecting to ") + hostname + String(":") + String(port);
+    auto message = String("connecting to ")
+        + hostname + String(":") + String(port);
     DBG(message);
     oscSender.connect(hostname, port);
 

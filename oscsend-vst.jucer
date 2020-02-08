@@ -15,10 +15,22 @@
             file="Resources/preset-folder-icon.png"/>
     </GROUP>
     <GROUP id="{4FA477F1-3527-10C5-E7C6-083C0695095A}" name="Source">
-      <FILE id="kXLk31" name="OSCControlElement.cpp" compile="1" resource="0"
-            file="Source/OSCControlElement.cpp"/>
-      <FILE id="imgJ19" name="OSCControlElement.h" compile="0" resource="0"
-            file="Source/OSCControlElement.h"/>
+      <FILE id="cQcBzq" name="LayoutHints.cpp" compile="1" resource="0" file="Source/LayoutHints.cpp"/>
+      <FILE id="p92oCJ" name="LayoutHints.h" compile="0" resource="0" file="Source/LayoutHints.h"/>
+      <GROUP id="{44A1E280-81AB-B8A5-7B39-9504ADC86A4B}" name="Elements">
+        <FILE id="NhdgQQ" name="ControlElement.cpp" compile="1" resource="0"
+              file="Source/ControlElement.cpp"/>
+        <FILE id="AwdwRD" name="ControlElement.h" compile="0" resource="0"
+              file="Source/ControlElement.h"/>
+        <FILE id="JZQqM3" name="ControlElementKnob.cpp" compile="1" resource="0"
+              file="Source/ControlElementKnob.cpp"/>
+        <FILE id="q6YU4s" name="ControlElementKnob.h" compile="0" resource="0"
+              file="Source/ControlElementKnob.h"/>
+      </GROUP>
+      <FILE id="bWXkc5" name="ControlElementFactory.cpp" compile="1" resource="0"
+            file="Source/ControlElementFactory.cpp"/>
+      <FILE id="aEV6s1" name="ControlElementFactory.h" compile="0" resource="0"
+            file="Source/ControlElementFactory.h"/>
       <FILE id="rMZKEw" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="Rge57S" name="PluginProcessor.h" compile="0" resource="0"

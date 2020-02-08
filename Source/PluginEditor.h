@@ -1,9 +1,9 @@
 /*
   ==============================================================================
 
-    This file was auto-generated!
+  This file was auto-generated!
 
-    It contains the basic framework code for a JUCE plugin editor.
+  It contains the basic framework code for a JUCE plugin editor.
 
   ==============================================================================
 */
@@ -15,15 +15,15 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
-class OSCControlElement;
-using OSCControlElementUniq = std::unique_ptr<OSCControlElement>;
+class ControlElement;
+using ControlElementUniq = std::unique_ptr<ControlElement>;
 
 //==============================================================================
 /**
-*/
+ */
 class OscsendvstAudioProcessorEditor
-  : public AudioProcessorEditor,
-    public Button::Listener
+    : public AudioProcessorEditor,
+      public Button::Listener
 {
 public:
     OscsendvstAudioProcessorEditor (OscsendvstAudioProcessor&);
@@ -41,11 +41,9 @@ private:
     File pickPresetFile();
     void loadPreset(File preset);
 
-  OscsendvstAudioProcessor& processor;
+    OscsendvstAudioProcessor& processor;
 
     File dirPresets;
-
-    const int heightRow;
 
     ImageButton buttonPreset;
     ImageButton buttonPresetFolder;
@@ -53,7 +51,7 @@ private:
 
     TextEditor textAddress;
     TextEditor textPort;
-    std::list<OSCControlElementUniq> listControlElements;
+    std::list<ControlElementUniq> listControlElements;
 
     OSCSender oscSender;
 
