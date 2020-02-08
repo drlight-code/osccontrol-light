@@ -30,13 +30,14 @@ createControlElement
 
     std::unique_ptr<ControlElement> product;
     if(type == "knob") {
-        ControlElementKnob::CreateInfo info;
+        ControlElement::CreateInfo info;
 
         auto range = config["range"];
         info.range = std::make_pair(range[0].as<float>(),
                                     range[1].as<float>());
         info.value = config["default"].as<float>();
 
+        info.name = config["name"].as<std::string>();
         info.message = config["message"].as<std::string>();
         auto messageMute = config["message-mute"];
         if(messageMute.IsScalar())

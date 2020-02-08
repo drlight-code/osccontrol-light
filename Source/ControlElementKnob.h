@@ -20,14 +20,6 @@ class ControlElementKnob :
     public Slider::Listener
 {
 public:
-    struct CreateInfo {
-        std::pair<float, float> range;
-        float value;
-
-        std::string message;
-        std::string messageMute;
-    };
-
     ControlElementKnob (const CreateInfo & info,
                         OSCSender & oscSender);
 
@@ -39,6 +31,7 @@ public:
 
 private:
     std::string message;
+
     std::unique_ptr<Slider> knob;
     std::unique_ptr<TextEditor> textEditor;
 };

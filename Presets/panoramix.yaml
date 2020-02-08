@@ -3,6 +3,9 @@ network:
   port: 6789
   auto-connect: true
 
+interface:
+  show-names: true
+
 controls:
   - name: azimuth
     message: /track/1/azim

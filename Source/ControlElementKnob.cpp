@@ -34,11 +34,18 @@ ControlElementKnob
     textEditor.reset (new TextEditor ("textEditor"));
     textEditor->setMultiLine (false);
     textEditor->setReturnKeyStartsNewLine (false);
-    textEditor->setReadOnly (false);
     textEditor->setScrollbarsShown (false);
     textEditor->setCaretVisible (true);
     textEditor->setPopupMenuEnabled (false);
-    textEditor->setText (info.message);
+
+    if(info.showNames) {
+        textEditor->setReadOnly (true);
+        textEditor->setText (info.name);
+    }
+    else {
+        textEditor->setReadOnly (false);
+        textEditor->setText (info.message);
+    }
     addAndMakeVisible (textEditor.get());
 }
 
@@ -64,9 +71,7 @@ send()
 {
     if (!buttonMute->getToggleState()) {
         auto value = knob->getValue();
-        auto message = textEditor->getText();
-
-        auto oscMessage = OSCMessage(message, float(value));
+        auto oscMessage = OSCMessage(String(message), float(value));
         oscSender.send(oscMessage);
     }
 }

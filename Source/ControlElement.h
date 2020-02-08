@@ -19,6 +19,17 @@ class ControlElement :
     public Button::Listener
 {
 public:
+    struct CreateInfo {
+        std::pair<float, float> range;
+        float value;
+
+        std::string name;
+        std::string message;
+        std::string messageMute;
+
+        bool showNames;
+    };
+
     ControlElement
     (OSCSender & oscSender);
 
