@@ -134,6 +134,7 @@ void OscsendvstAudioProcessorEditor::buttonClicked(Button * button) {
 	else if (button == &buttonPreset) {
 		auto preset = pickPresetFile();
 		DBG(preset.getFullPathName());
+		loadPreset(preset);
 	}
 }
 
@@ -153,6 +154,45 @@ void OscsendvstAudioProcessorEditor::choosePresetFolder() {
 	}
 }
 
+File OscsendvstAudioProcessorEditor::pickPresetFile() {
+	PopupMenu popup;
+
+	auto files = dirPresets.findChildFiles(File::findFiles, true, "*.yaml");
+	
+	int id = 1;
+	for (auto & file : files) {
+		auto name = file.getRelativePathFrom(dirPresets).dropLastCharacters(5);
+		name = name.replaceCharacter('\\', '/');
+		popup.addItem(id++, name);
+	}
+	int index = popup.show();
+
+	return files[index-1];
+}
+
+void OscsendvstAudioProcessorEditor::loadPreset(File preset) {
+	auto filename = preset.getFullPathName().toStdString();
+	YAML::Node root;
+
+	try {
+		root = YAML::LoadFile(filename);
+	}
+	catch (YAML::BadFile &e) {
+		std::string message = "Unable to load config: " + filename;
+		throw std::runtime_error(message);
+	}
+
+	if (root.IsNull()) {
+		return;
+	}
+	
+	using map = std::map<std::string, YAML::Node>;
+	for (auto & pair : root.as<map>()) {
+		auto name = pair.first;
+		DBG(name);
+	}
+}
+
 void OscsendvstAudioProcessorEditor::connectOsc() {
 	auto hostname = textAddress.getText();
 	auto port = textPort.getText().getIntValue();
@@ -164,20 +204,4 @@ void OscsendvstAudioProcessorEditor::connectOsc() {
 	for (auto & control : listControlElements) {
 		control->send();
 	}
-}
-
-File OscsendvstAudioProcessorEditor::pickPresetFile() {
-	PopupMenu popup;
-
-	auto files = dirPresets.findChildFiles(File::findFiles, true, "*.yml");
-	
-	int id = 1;
-	for (auto & file : files) {
-		auto name = file.getRelativePathFrom(dirPresets).dropLastCharacters(4);
-		name = name.replaceCharacter('\\', '/');
-		popup.addItem(id, name);
-	}
-	int index = popup.show();
-
-	return files[index-1];
 }

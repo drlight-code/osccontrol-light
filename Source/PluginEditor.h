@@ -37,6 +37,7 @@ private:
 	void connectOsc();
 	void choosePresetFolder();
 	File pickPresetFile();
+	void loadPreset(File preset);
 	
 	OscsendvstAudioProcessor& processor;
 
