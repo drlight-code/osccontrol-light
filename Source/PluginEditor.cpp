@@ -225,8 +225,10 @@ loadPreset
         return;
     }
 
-    textAddress.setText(config["host"].as<std::string>());
-    textPort.setText(config["port"].as<std::string>());
+    auto configNetwork = config["network"];
+
+    textAddress.setText(configNetwork["host"].as<std::string>());
+    textPort.setText(configNetwork["port"].as<std::string>());
 
     ControlElementFactory factory(oscSender);
     YAML::Node controls = config["controls"];
@@ -240,8 +242,8 @@ loadPreset
     resized();
 
     buttonSend.setToggleState(false, NotificationType::sendNotification);
-    auto autoconnect = config["autoconnect"];
-    if(autoconnect.IsScalar() && autoconnect.as<bool>()) {
+    auto autoConnect = configNetwork["auto-connect"];
+    if(autoConnect.IsScalar() && autoConnect.as<bool>()) {
         buttonSend.setToggleState(true, NotificationType::sendNotification);
     }
 }

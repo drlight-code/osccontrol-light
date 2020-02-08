@@ -1,6 +1,7 @@
-host: 127.0.0.1
-port: 6789
-autoconnect: true
+network:
+  host: 127.0.0.1
+  port: 6789
+  auto-connect: true
 
 controls:
   - name: azimuth
