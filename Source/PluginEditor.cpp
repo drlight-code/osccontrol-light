@@ -236,7 +236,8 @@ loadPreset
 
     resized();
 
-    if(config["autoconnect"].as<bool>())
+    auto autoconnect = config["autoconnect"];
+    if(autoconnect.IsScalar() && autoconnect.as<bool>())
         buttonSend.triggerClick();
 }
 
