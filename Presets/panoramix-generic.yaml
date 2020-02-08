@@ -1,0 +1,38 @@
+host: 127.0.0.1
+port: 6789
+
+prototypes:
+  - class: gain
+    name: gain-$(bus)
+    message: /track/1/bus/$(bus)/gain
+    range: -24, 6
+    type: knob
+    
+controls:
+  - name: azimuth
+    message: /track/1/azim
+    range: -180, 180
+    type: knob
+
+  - name: distance
+    message: /track/1/dist
+    range: 1, 100
+    type: knob
+
+  - instance: gain
+    bus: A
+    
+  - instance: gain
+    bus: B
+    
+  - instance: gain
+    bus: C
+  
+  - instance: gain
+    bus: D
+  
+  - instance: gain
+    bus: E
+  
+  - instance: gain
+    bus: F

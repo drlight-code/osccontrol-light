@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <list>
+
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
@@ -19,9 +21,9 @@ using OSCControlElementUniq = std::unique_ptr<OSCControlElement>;
 //==============================================================================
 /**
 */
-class OscsendvstAudioProcessorEditor  : 
-	public AudioProcessorEditor,
-	public Button::Listener
+class OscsendvstAudioProcessorEditor
+  : public AudioProcessorEditor,
+    public Button::Listener
 {
 public:
     OscsendvstAudioProcessorEditor (OscsendvstAudioProcessor&);
@@ -31,29 +33,30 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-	void buttonClicked(Button *) override;
+    void buttonClicked(Button *) override;
 
 private:
-	void connectOsc();
-	void choosePresetFolder();
-	File pickPresetFile();
-	void loadPreset(File preset);
-	
-	OscsendvstAudioProcessor& processor;
+    void connectOsc();
+    void choosePresetFolder();
+    File pickPresetFile();
+    void loadPreset(File preset);
 
-	File dirPresets;
+  OscsendvstAudioProcessor& processor;
 
-	const int heightRow;
+    File dirPresets;
 
-	ImageButton buttonPreset;
-	ImageButton buttonPresetFolder;
-	ImageButton buttonSend;
+    const int heightRow;
 
-	TextEditor textAddress;
-	TextEditor textPort;
-	std::list<OSCControlElementUniq> listControlElements;
+    ImageButton buttonPreset;
+    ImageButton buttonPresetFolder;
+    ImageButton buttonSend;
 
-	OSCSender oscSender;
-	
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscsendvstAudioProcessorEditor)
+    TextEditor textAddress;
+    TextEditor textPort;
+    std::list<OSCControlElementUniq> listControlElements;
+
+    OSCSender oscSender;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR
+    (OscsendvstAudioProcessorEditor)
 };
