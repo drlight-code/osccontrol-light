@@ -14,8 +14,8 @@
 
 ControlElement::
 ControlElement
-(OSCSender & sender) :
-    sender(sender)
+(OSCSender & oscSender) :
+    oscSender(oscSender)
 {
     // create mute button
     buttonMute.reset (new TextButton ("buttonMute"));
@@ -33,7 +33,7 @@ resized()
 {
     auto area = getLocalBounds();
 
-    auto gap = LayoutHints::gapSize;
+    auto gap = LayoutHints::sizeGap;
     auto buttonSize = LayoutHints::heightRow - 2*gap;
 
     area.removeFromRight(gap);

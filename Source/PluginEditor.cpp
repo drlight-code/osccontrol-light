@@ -30,6 +30,9 @@ OscsendvstAudioProcessorEditor
     dirPresets =
         File(SystemStats::getEnvironmentVariable("OSCSEND_PRESET_PATH", ""));
 
+    LookAndFeel::getDefaultLookAndFeel()
+        .setDefaultSansSerifTypefaceName ("Liberation Mono");
+
     auto imagePreset = ImageCache::getFromMemory
         (BinaryData::listicon_png, BinaryData::listicon_pngSize);
     auto imagePresetFolder = ImageCache::getFromMemory
@@ -111,7 +114,7 @@ resized()
     buttonSend.setBounds(areaHeader.removeFromRight(heightRow));
 
     auto insetText = LayoutHints::getTextBoxInset();
-    auto gap = LayoutHints::gapSize;
+    auto gap = LayoutHints::sizeGap;
 
     areaHeader.removeFromTop(insetText);
     areaHeader.removeFromBottom(insetText);
@@ -176,8 +179,7 @@ choosePresetFolder()
         "Select the directory containing OSC preset definitions.",
         browser, false, colourBg);
 
-    if (dialogBox.show())
-    {
+    if (dialogBox.show()) {
         dirPresets = browser.getSelectedFile(0);
     }
 }
@@ -232,6 +234,9 @@ loadPreset
     }
 
     resized();
+
+    if(config["autoconnect"].as<bool>())
+        buttonSend.triggerClick();
 }
 
 void

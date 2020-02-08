@@ -20,7 +20,7 @@ class ControlElement :
 {
 public:
     ControlElement
-    (OSCSender & sender);
+    (OSCSender & oscSender);
 
     void resized() override;
     void buttonClicked(Button* button) override;
@@ -29,7 +29,6 @@ public:
     virtual void send() = 0;
 
 protected:
-    OSCSender & sender;
-
+    OSCSender & oscSender;
     std::unique_ptr<TextButton> buttonMute;
 };

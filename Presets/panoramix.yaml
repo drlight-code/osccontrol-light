@@ -1,43 +1,52 @@
 host: 127.0.0.1
 port: 6789
+autoconnect: false
 
 controls:
   - name: azimuth
     message: /track/1/azim
-    range: -180, 180
+    range: [-180, 180]
+    default: 0
     type: knob
 
   - name: distance
     message: /track/1/dist
-    range: 1, 100
+    range: [1, 100]
+    default: 1
     type: knob
 
   - name: gain-A
     message: /track/1/bus/A/gain
-    range: -24, 6
+    range: [-24, 6]
+    default: -6
     type: knob
 
   - name: gain-B
     message: /track/1/bus/B/gain
-    range: -24, 6
+    range: [-24, 6]
+    default: -6
     type: knob
 
   - name: gain-C
     message: /track/1/bus/C/gain
-    range: -24, 6
+    range: [-24, 6]
+    default: -6
     type: knob
 
   - name: gain-D
     message: /track/1/bus/D/gain
-    range: -24, 6
+    range: [-24, 6]
+    default: -6
     type: knob
 
   - name: gain-E
     message: /track/1/bus/E/gain
-    range: -24, 6
+    range: [-24, 6]
+    default: -6
     type: knob
 
   - name: gain-F
     message: /track/1/bus/F/gain
-    range: -24, 6
+    range: [-24, 6]
+    default: -6
     type: knob

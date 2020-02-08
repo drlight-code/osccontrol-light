@@ -16,7 +16,8 @@ public:
     static const int heightRow = 32;
     static const int heightTextBox = 24;
     static const int widthTextPort = 48;
-    static const int gapSize = 4;
+    static const int sizeKnob = 42;
+    static const int sizeGap = 4;
 
     static int getTextBoxInset();
 };

@@ -10,15 +10,34 @@
 
 #pragma once
 
+#include <utility>
+
 #include "ControlElement.h"
 #include "ControlElementKnob.h"
 
 class ControlElementKnob :
-    public ControlElement
+    public ControlElement,
+    public Slider::Listener
 {
 public:
-    ControlElementKnob(OSCSender & sender);
+    struct CreateInfo {
+        std::pair<float, float> range;
+        float value;
+
+        std::string message;
+    };
+
+    ControlElementKnob (const CreateInfo & info,
+                        OSCSender & oscSender);
 
     int getNumberOfRows() const override;
+    void sliderValueChanged (Slider* slider) override;
     void send() override;
+
+    void resized() override;
+
+private:
+    std::string message;
+    std::unique_ptr<Slider> knob;
+    std::unique_ptr<TextEditor> textEditor;
 };

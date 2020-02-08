@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="qcsgO2" name="oscsend-vst" projectType="audioplug" jucerVersion="5.4.6"
-              cppLanguageStandard="14" pluginCharacteristicsValue="pluginIsSynth,pluginRTASDisableBypass,pluginWantsMidiIn"
+              cppLanguageStandard="14" pluginCharacteristicsValue="pluginRTASDisableBypass,pluginWantsMidiIn"
               pluginManufacturer="dr.light" version="0.0.0" companyName="Saunaklub Hawaii"
               companyCopyright="Copyright 2020 Patric Schmitz" pluginFormats="buildStandalone,buildVST3">
   <MAINGROUP id="d0anJy" name="oscsend-vst">

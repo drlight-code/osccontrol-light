@@ -15,8 +15,8 @@
 
 ControlElementFactory::
 ControlElementFactory
-(OSCSender & sender) :
-    sender(sender)
+(OSCSender & oscSender) :
+    oscSender(oscSender)
 {
 }
 
@@ -28,11 +28,18 @@ createControlElement
     auto name = config["name"].as<std::string>();
     auto type = config["type"].as<std::string>();
 
-    DBG("creating control " + name + " of type " + type);
-
     std::unique_ptr<ControlElement> product;
     if(type == "knob") {
-        product = std::make_unique<ControlElementKnob>(sender);
+        ControlElementKnob::CreateInfo info;
+
+        auto range = config["range"];
+        info.range = std::make_pair(range[0].as<float>(),
+                                    range[1].as<float>());
+        info.value = config["default"].as<float>();
+
+        info.message = config["message"].as<std::string>();
+
+        product = std::make_unique<ControlElementKnob>(info, oscSender);
     }
 
     return product;
