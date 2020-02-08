@@ -23,27 +23,34 @@ ControlElementFactory
 std::unique_ptr<ControlElement>
 ControlElementFactory::
 createControlElement
-(YAML::Node config)
+(YAML::Node configElement, YAML::Node configInterface)
 {
-    auto name = config["name"].as<std::string>();
-    auto type = config["type"].as<std::string>();
+    ControlElement::CreateInfo info;
+
+    auto name = configElement["name"].as<std::string>();
+    auto type = configElement["type"].as<std::string>();
+
+    if(!configInterface.IsNull()) {
+        auto showNames = configInterface["show-names"];
+
+        info.showNames =
+            showNames.IsScalar() ? showNames.as<bool>() : false;
+    }
 
     std::unique_ptr<ControlElement> product;
     if(type == "knob") {
-        ControlElement::CreateInfo info;
 
-        auto range = config["range"];
+        auto range = configElement["range"];
         info.range = std::make_pair(range[0].as<float>(),
                                     range[1].as<float>());
-        info.value = config["default"].as<float>();
+        info.value = configElement["default"].as<float>();
 
-        info.name = config["name"].as<std::string>();
-        info.message = config["message"].as<std::string>();
-        auto messageMute = config["message-mute"];
-        if(messageMute.IsScalar())
-            info.messageMute = messageMute.as<std::string>();
-        else
-            info.messageMute = "";
+        info.name = configElement["name"].as<std::string>();
+        info.message = configElement["message"].as<std::string>();
+        auto messageMute = configElement["message-mute"];
+
+        info.messageMute =
+            messageMute.IsScalar() ? messageMute.as<std::string>() : "";
 
         product = std::make_unique<ControlElementKnob>(info, oscSender);
     }

@@ -21,7 +21,10 @@ class ControlElementFactory  {
 public:
     ControlElementFactory(OSCSender & oscSender);
 
-    std::unique_ptr<ControlElement> createControlElement(YAML::Node config);
+    std::unique_ptr<ControlElement>
+    createControlElement
+    (YAML::Node configElement,
+     YAML::Node configInterface);
 
 private:
     OSCSender & oscSender;

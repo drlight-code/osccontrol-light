@@ -232,8 +232,9 @@ loadPreset
 
     ControlElementFactory factory(oscSender);
     YAML::Node controls = config["controls"];
+    YAML::Node interface = config["interface"];
     for(auto control : controls) {
-        auto element = factory.createControlElement(control);
+        auto element = factory.createControlElement(control, interface);
         element->setEnabled(false);
         addAndMakeVisible(element.get());
         listControlElements.push_back(std::move(element));

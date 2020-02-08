@@ -18,8 +18,8 @@ controls:
     default: 0.1
     type: knob
 
-  # - name: stroke width
-  #   message: /sinusoids/sinusoids/stroke-width
-  #   range: [0, 1]
-  #   default: 0.5
-  #   type: knob
+  - name: stroke width
+    message: /sinusoids/sinusoids/stroke-width
+    range: [0, 1]
+    default: 0.5
+    type: knob
