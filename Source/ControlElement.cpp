@@ -17,7 +17,6 @@ ControlElement
 (OSCSender & oscSender) :
     oscSender(oscSender)
 {
-    // create mute button
     buttonMute.reset (new TextButton ("buttonMute"));
     buttonMute->setButtonText("m");
     buttonMute->setColour(TextButton::buttonOnColourId,
@@ -48,4 +47,9 @@ ControlElement::
 buttonClicked
 (Button* button)
 {
+    if(messageMute != "") {
+        auto state = buttonMute->getToggleState();
+        auto oscMessage = OSCMessage(String(messageMute), int(state));
+        oscSender.send(oscMessage);
+    }
 }

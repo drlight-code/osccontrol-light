@@ -38,6 +38,11 @@ createControlElement
         info.value = config["default"].as<float>();
 
         info.message = config["message"].as<std::string>();
+        auto messageMute = config["message-mute"];
+        if(messageMute.IsScalar())
+            info.messageMute = messageMute.as<std::string>();
+        else
+            info.messageMute = "";
 
         product = std::make_unique<ControlElementKnob>(info, oscSender);
     }

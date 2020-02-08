@@ -30,5 +30,7 @@ public:
 
 protected:
     OSCSender & oscSender;
+
     std::unique_ptr<TextButton> buttonMute;
+    std::string messageMute;
 };

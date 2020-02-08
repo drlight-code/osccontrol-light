@@ -21,6 +21,8 @@ ControlElementKnob
     ControlElement(oscSender),
     message(info.message)
 {
+    messageMute = info.messageMute;
+
     knob.reset (new Slider("knob"));
     knob->setSliderStyle (Slider::RotaryVerticalDrag);
     knob->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);

@@ -17,36 +17,42 @@ controls:
 
   - name: gain-A
     message: /track/1/bus/A/gain
+    message-mute: /track/1/bus/A/mute
     range: [-24, 6]
     default: -6
     type: knob
 
   - name: gain-B
     message: /track/1/bus/B/gain
+    message-mute: /track/1/bus/B/mute
     range: [-24, 6]
     default: -6
     type: knob
 
   - name: gain-C
     message: /track/1/bus/C/gain
+    message-mute: /track/1/bus/C/mute
     range: [-24, 6]
     default: -6
     type: knob
 
   - name: gain-D
     message: /track/1/bus/D/gain
+    message-mute: /track/1/bus/D/mute
     range: [-24, 6]
     default: -6
     type: knob
 
   - name: gain-E
     message: /track/1/bus/E/gain
+    message-mute: /track/1/bus/E/mute
     range: [-24, 6]
     default: -6
     type: knob
 
   - name: gain-F
     message: /track/1/bus/F/gain
+    message-mute: /track/1/bus/F/mute
     range: [-24, 6]
     default: -6
     type: knob

@@ -25,6 +25,7 @@ public:
         float value;
 
         std::string message;
+        std::string messageMute;
     };
 
     ControlElementKnob (const CreateInfo & info,
