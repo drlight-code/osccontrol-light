@@ -28,7 +28,7 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="yaml-cpp.lib">
+    <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="yaml-cppd.lib">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" headerPath="%YAML_CPP_ROOT%/include"
                        libraryPath="%YAML_CPP_ROOT%/lib"/>
