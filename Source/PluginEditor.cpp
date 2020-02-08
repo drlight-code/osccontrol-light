@@ -77,7 +77,7 @@ OscsendvstAudioProcessorEditor
     addAndMakeVisible(&textPort);
 
     setResizable(true, true);
-    setResizeLimits(100, 2 * LayoutHints::heightRow, 1920, 1080);
+    setResizeLimits(200, 2 * LayoutHints::heightRow, 1920, 1080);
     setSize(300, 300);
 }
 
