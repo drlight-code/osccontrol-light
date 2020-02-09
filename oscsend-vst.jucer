@@ -13,6 +13,7 @@
       <FILE id="V3qRpF" name="list-icon.png" compile="0" resource="1" file="Resources/list-icon.png"/>
       <FILE id="Dml0Im" name="preset-folder-icon.png" compile="0" resource="1"
             file="Resources/preset-folder-icon.png"/>
+      <FILE id="uIGffv" name="reset-icon.png" compile="0" resource="1" file="Resources/reset-icon.png"/>
     </GROUP>
     <GROUP id="{4FA477F1-3527-10C5-E7C6-083C0695095A}" name="Source">
       <FILE id="cQcBzq" name="LayoutHints.cpp" compile="1" resource="0" file="Source/LayoutHints.cpp"/>

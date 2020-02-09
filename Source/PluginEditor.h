@@ -34,12 +34,18 @@ public:
     void buttonClicked (Button *) override;
 
 private:
-    void connectOsc();
+    void handlePresetButton();
+    void updateActivePageInfo();
+
+    ControlContainer * getActiveControlContainer();
+
+    void connectOsc(String host, int port);
     void disconnectOsc();
 
     void choosePresetFolder();
     File pickPresetFile();
     void loadPreset(File preset);
+    void switchToPage(String pathName);
 
     OscsendvstAudioProcessor& processor;
 
@@ -47,13 +53,27 @@ private:
 
     ImageButton buttonPreset;
     ImageButton buttonPresetFolder;
-    ImageButton buttonSend;
+    ImageButton buttonReset;
+    ImageButton buttonConnect;
 
-    TextEditor textAddress;
+    TextEditor textHost;
     TextEditor textPort;
 
     Viewport viewport;
-    ControlContainer controlContainer;
+
+    struct PageInfo {
+        String host;
+        String port;
+        bool connected;
+
+        std::unique_ptr<ControlContainer>
+        container;
+    };
+
+    using PageMap = std::map<String, std::unique_ptr<PageInfo>>;
+
+    PageMap pageMap;
+    String activePage = "";
 
     OSCSender oscSender;
 

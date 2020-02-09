@@ -1,7 +1,7 @@
 network:
   host: 127.0.0.1
   port: 6789
-  auto-connect: true
+  auto-connect: false
 
 interface:
   show-names: true

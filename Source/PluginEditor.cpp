@@ -20,6 +20,7 @@
 #include "ControlElementFactory.h"
 #include "ControlElement.h"
 
+
 //==============================================================================
 OscsendvstAudioProcessorEditor::
 OscsendvstAudioProcessorEditor
@@ -38,23 +39,34 @@ OscsendvstAudioProcessorEditor
     auto imagePresetFolder = ImageCache::getFromMemory
         (BinaryData::presetfoldericon_png,
          BinaryData::presetfoldericon_pngSize);
+    auto imageReset = ImageCache::getFromMemory
+        (BinaryData::reseticon_png, BinaryData::reseticon_pngSize);
 
-    auto colourOverlay = Colour(uint8(66), uint8(162), uint8(200), 0.5f);
+    auto opacityNormal = 0.7f;
+    auto opacityOver = 1.0f;
     buttonPreset.setImages(true, false, true,
-        imagePreset, 1.0, Colour(),
-        Image(), 1.0, colourOverlay,
+        imagePreset, opacityNormal, Colour(),
+        Image(), opacityOver, Colour(),
         Image(), 1.0, Colour());
     buttonPreset.setTriggeredOnMouseDown(true);
     buttonPreset.addListener(this);
     addAndMakeVisible(buttonPreset);
 
     buttonPresetFolder.setImages(true, false, true,
-        imagePresetFolder, 1.0, Colour(),
-        Image(), 1.0, colourOverlay,
+        imagePresetFolder, opacityNormal, Colour(),
+        Image(), opacityOver, Colour(),
         Image(), 1.0, Colour());
     buttonPresetFolder.setTriggeredOnMouseDown(true);
     buttonPresetFolder.addListener(this);
     addAndMakeVisible(buttonPresetFolder);
+
+    buttonReset.setImages(true, false, true,
+        imageReset, opacityNormal, Colour(),
+        Image(), opacityOver, Colour(),
+        Image(), 1.0, Colour());
+    buttonReset.setTriggeredOnMouseDown(true);
+    buttonReset.addListener(this);
+    addAndMakeVisible(buttonReset);
 
     auto imageSendOff = ImageCache::getFromMemory
         (BinaryData::drlighteyesclosed_png,
@@ -63,28 +75,26 @@ OscsendvstAudioProcessorEditor
         (BinaryData::drlightshout_png,
          BinaryData::drlightshout_pngSize);
 
-    buttonSend.setImages
+    auto opacityOff = 0.9f;
+    buttonConnect.setImages
         (true, false, true,
-         imageSendOff, 1.f, Colour(),
-         Image(), 1.f, Colour(),
-         imageSendOn, 1.f, Colour());
-    buttonSend.setClickingTogglesState(true);
-    buttonSend.setTriggeredOnMouseDown(true);
-    buttonSend.addListener(this);
-    addAndMakeVisible(&buttonSend);
+         imageSendOff, opacityOff, Colour(),
+         Image(), opacityOver, Colour(),
+         imageSendOn, opacityOver, Colour());
+    buttonConnect.setClickingTogglesState(true);
+    buttonConnect.setTriggeredOnMouseDown(true);
+    buttonConnect.addListener(this);
+    addAndMakeVisible(&buttonConnect);
 
-    addAndMakeVisible(&textAddress);
+    addAndMakeVisible(&textHost);
     addAndMakeVisible(&textPort);
 
     setPaintingIsUnclipped(true);
     viewport.setPaintingIsUnclipped(true);
-    controlContainer.setPaintingIsUnclipped(true);
-
-    viewport.setViewedComponent(&controlContainer);
     addAndMakeVisible(viewport);
 
     setResizable(true, true);
-    setResizeLimits(200, 2 * LayoutHints::heightRow, 1920, 1080);
+    setResizeLimits(245, 2 * LayoutHints::heightRow, 1920, 1080);
     setSize(300, 300);
 }
 
@@ -118,8 +128,12 @@ resized()
 
     buttonPreset.setBounds(areaHeader.removeFromLeft(sizeIcons));
     buttonPresetFolder.setBounds(areaHeader.removeFromLeft(sizeIcons));
+    buttonReset.setBounds(areaHeader.removeFromLeft(sizeIcons));
 
-    buttonSend.setBounds(areaHeader.removeFromRight(heightRow));
+    // correct for off-center reset button
+    areaHeader.removeFromLeft(-6);
+
+    buttonConnect.setBounds(areaHeader.removeFromRight(heightRow));
 
     auto insetText = LayoutHints::getTextBoxInset();
     auto gap = LayoutHints::sizeGap;
@@ -127,21 +141,23 @@ resized()
     areaHeader.removeFromTop(insetText);
     areaHeader.removeFromBottom(insetText);
 
-    areaHeader.removeFromRight(gap);
     textPort.setBounds
         (areaHeader.removeFromRight(LayoutHints::widthTextPort));
     areaHeader.removeFromRight(gap);
     areaHeader.removeFromLeft(gap);
-    textAddress.setBounds(areaHeader);
+    textHost.setBounds(areaHeader);
 
     area.removeFromTop(heightRow);
 
     viewport.setBounds(area);
 
-    auto controlArea = controlContainer.getBounds();
-    controlArea.setWidth
-        (viewport.getMaximumVisibleWidth());
-    controlContainer.setBounds(controlArea);
+    auto container = getActiveControlContainer();
+    if(container) {
+        auto controlArea = container->getBounds();
+        controlArea.setWidth
+            (viewport.getMaximumVisibleWidth());
+        container->setBounds(controlArea);
+    }
 }
 
 void
@@ -149,9 +165,10 @@ OscsendvstAudioProcessorEditor::
 buttonClicked
 (Button * button)
 {
-    if (button == &buttonSend) {
+    if (button == &buttonConnect) {
         if (button->getToggleState()) {
-            connectOsc();
+            connectOsc(pageMap[activePage]->host,
+                       pageMap[activePage]->port.getIntValue());
         }
         else {
             disconnectOsc();
@@ -161,16 +178,69 @@ buttonClicked
         choosePresetFolder();
     }
     else if (button == &buttonPreset) {
-        if(!dirPresets.exists()) {
-            choosePresetFolder();
-        }
-        else {
-            auto preset = pickPresetFile();
-            if(preset.exists()) {
-                loadPreset(preset);
+        handlePresetButton();
+    }
+    else if (button == &buttonReset) {
+        updateActivePageInfo();
+        loadPreset(activePage);
+        switchToPage(activePage);
+    }
+}
+
+ControlContainer *
+OscsendvstAudioProcessorEditor::
+getActiveControlContainer()
+{
+    return activePage != "" ?
+        pageMap[activePage]->container.get() :
+        nullptr;
+}
+
+void
+OscsendvstAudioProcessorEditor::
+handlePresetButton()
+{
+    if(!dirPresets.exists()) {
+        choosePresetFolder();
+    }
+    else {
+        auto preset = pickPresetFile();
+        auto presetPath = preset.getFullPathName();
+
+        if(preset.exists()) {
+
+            if(activePage != "")
+                updateActivePageInfo();
+
+            if(presetPath != activePage) {
+                auto pageIter = pageMap.find(presetPath);
+                auto pageExists = pageIter != pageMap.end();
+
+                if(!pageExists) {
+                    auto pageInfo = std::make_unique<PageInfo>();
+
+                    pageInfo->container = std::make_unique<ControlContainer>();
+                    pageInfo->container->setPaintingIsUnclipped(true);
+                    pageMap[presetPath] = std::move(pageInfo);
+
+                    loadPreset(preset);
+                }
+
+                switchToPage(presetPath);
             }
         }
     }
+}
+
+void
+OscsendvstAudioProcessorEditor::
+updateActivePageInfo()
+{
+    auto & pageInfo = pageMap[activePage];
+
+    pageInfo->host = textHost.getText();
+    pageInfo->port = textPort.getText();
+    pageInfo->connected = buttonConnect.getToggleState();
 }
 
 void
@@ -217,16 +287,19 @@ OscsendvstAudioProcessorEditor::
 loadPreset
 (File preset)
 {
-    controlContainer.getElementList().clear();
+    auto presetPath = preset.getFullPathName();
+    auto container = pageMap[presetPath]->container.get();
 
-    auto filename = preset.getFullPathName().toStdString();
+    container->getElementList().clear();
+
     YAML::Node config;
 
     try {
-        config = YAML::LoadFile(filename);
+        config = YAML::LoadFile(presetPath.toStdString());
     }
     catch (YAML::BadFile &e) {
-        std::string message = "Unable to load config: " + filename;
+        std::string message =
+            "Unable to load config: " + presetPath.toStdString();
         throw std::runtime_error(message);
     }
 
@@ -236,8 +309,12 @@ loadPreset
 
     auto configNetwork = config["network"];
 
-    textAddress.setText(configNetwork["host"].as<std::string>());
-    textPort.setText(configNetwork["port"].as<std::string>());
+    pageMap[presetPath]->host = configNetwork["host"].as<std::string>();
+    pageMap[presetPath]->port = configNetwork["port"].as<std::string>();
+
+    auto autoConnect = configNetwork["auto-connect"];
+    pageMap[presetPath]->connected =
+        autoConnect.IsScalar() ? autoConnect.as<bool>() : true;
 
     ControlElementFactory factory(oscSender);
     YAML::Node controls = config["controls"];
@@ -249,33 +326,48 @@ loadPreset
         accumulatedHeight +=
             element->getNumberOfRows() * LayoutHints::heightRow;
 
-        element->setEnabled(false);
+        element->setEnabled(pageMap[presetPath]->connected);
 
-        controlContainer.addAndMakeVisible(element.get());
-        controlContainer.getElementList().push_back(std::move(element));
+        container->addAndMakeVisible(element.get());
+        container->getElementList().push_back(std::move(element));
     }
-    controlContainer.setBounds(0, 0, getWidth(), accumulatedHeight);
-
-    buttonSend.setToggleState(false, NotificationType::sendNotification);
-    auto autoConnect = configNetwork["auto-connect"];
-    if(autoConnect.IsScalar() && autoConnect.as<bool>()) {
-        buttonSend.setToggleState(true, NotificationType::sendNotification);
-    }
+    container->setBounds(0, 0, getWidth(), accumulatedHeight);
 }
 
 void
 OscsendvstAudioProcessorEditor::
-connectOsc()
+switchToPage
+(String presetPath)
 {
-    auto hostname = textAddress.getText();
-    auto port = textPort.getText().getIntValue();
+    activePage = presetPath;
 
+    textHost.setText(pageMap[activePage]->host);
+    textPort.setText(pageMap[activePage]->port);
+
+    buttonConnect.setToggleState
+        (false, NotificationType::sendNotification);
+    buttonConnect.setToggleState
+        (pageMap[activePage]->connected,
+            NotificationType::sendNotification);
+
+    viewport.setViewedComponent
+        (getActiveControlContainer(), false);
+    getActiveControlContainer()->resized();
+
+    resized();
+}
+
+void
+OscsendvstAudioProcessorEditor::
+connectOsc(String host, int port)
+{
     auto message = String("connecting to ")
-        + hostname + String(":") + String(port);
+        + host + String(":") + String(port);
     DBG(message);
-    oscSender.connect(hostname, port);
+    oscSender.connect(host, port);
 
-    for (auto & control : controlContainer.getElementList()) {
+    for (auto & control :
+             getActiveControlContainer()->getElementList()) {
         control->setEnabled(true);
         control->send();
     }
@@ -285,7 +377,8 @@ void
 OscsendvstAudioProcessorEditor::
 disconnectOsc()
 {
-    for (auto & control : controlContainer.getElementList()) {
+    for (auto & control :
+             getActiveControlContainer()->getElementList()) {
         control->setEnabled(false);
     }
     oscSender.disconnect();
