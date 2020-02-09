@@ -37,7 +37,6 @@ ControlElementKnob
     textEditor->setScrollbarsShown (false);
     textEditor->setCaretVisible (true);
     textEditor->setPopupMenuEnabled (false);
-
     if(info.showNames) {
         textEditor->setReadOnly (true);
         textEditor->setText (info.name);

@@ -39,6 +39,10 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="bDhQ71" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
+    <FILE id="uewbfh" name="ControlContainer.cpp" compile="1" resource="0"
+          file="Source/ControlContainer.cpp"/>
+    <FILE id="i12E9F" name="ControlContainer.h" compile="0" resource="0"
+          file="Source/ControlContainer.h"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="yaml-cppd.lib"

@@ -10,13 +10,11 @@
 
 #pragma once
 
-#include <list>
-
 #include <JuceHeader.h>
-#include "PluginProcessor.h"
 
-class ControlElement;
-using ControlElementUniq = std::unique_ptr<ControlElement>;
+#include "ControlContainer.h"
+
+#include "PluginProcessor.h"
 
 //==============================================================================
 /**
@@ -27,13 +25,13 @@ class OscsendvstAudioProcessorEditor
 {
 public:
     OscsendvstAudioProcessorEditor (OscsendvstAudioProcessor&);
-    ~OscsendvstAudioProcessorEditor();
+    ~OscsendvstAudioProcessorEditor ();
 
     //==============================================================================
     void paint (Graphics&) override;
-    void resized() override;
+    void resized () override;
 
-    void buttonClicked(Button *) override;
+    void buttonClicked (Button *) override;
 
 private:
     void connectOsc();
@@ -53,7 +51,9 @@ private:
 
     TextEditor textAddress;
     TextEditor textPort;
-    std::list<ControlElementUniq> listControlElements;
+
+    Viewport viewport;
+    ControlContainer controlContainer;
 
     OSCSender oscSender;
 

@@ -32,7 +32,6 @@ createControlElement
 
     if(!configInterface.IsNull()) {
         auto showNames = configInterface["show-names"];
-
         info.showNames =
             showNames.IsScalar() ? showNames.as<bool>() : false;
     }
@@ -47,8 +46,8 @@ createControlElement
 
         info.name = configElement["name"].as<std::string>();
         info.message = configElement["message"].as<std::string>();
-        auto messageMute = configElement["message-mute"];
 
+        auto messageMute = configElement["message-mute"];
         info.messageMute =
             messageMute.IsScalar() ? messageMute.as<std::string>() : "";
 

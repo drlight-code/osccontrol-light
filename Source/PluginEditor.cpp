@@ -76,6 +76,9 @@ OscsendvstAudioProcessorEditor
     addAndMakeVisible(&textAddress);
     addAndMakeVisible(&textPort);
 
+    viewport.setViewedComponent(&controlContainer);
+    addAndMakeVisible(viewport);
+
     setResizable(true, true);
     setResizeLimits(200, 2 * LayoutHints::heightRow, 1920, 1080);
     setSize(300, 300);
@@ -128,11 +131,13 @@ resized()
     textAddress.setBounds(areaHeader);
 
     area.removeFromTop(heightRow);
-    for (auto & element : listControlElements) {
-        element->setBounds
-            (area.removeFromTop(heightRow) *
-                element->getNumberOfRows());
-    }
+
+    viewport.setBounds(area);
+
+    auto controlArea = controlContainer.getBounds();
+    controlArea.setWidth
+        (viewport.getMaximumVisibleWidth());
+    controlContainer.setBounds(controlArea);
 }
 
 void
@@ -208,7 +213,7 @@ OscsendvstAudioProcessorEditor::
 loadPreset
 (File preset)
 {
-    listControlElements.clear();
+    controlContainer.getElementList().clear();
 
     auto filename = preset.getFullPathName().toStdString();
     YAML::Node config;
@@ -233,14 +238,19 @@ loadPreset
     ControlElementFactory factory(oscSender);
     YAML::Node controls = config["controls"];
     YAML::Node interface = config["interface"];
+    int accumulatedHeight = 0;
     for(auto control : controls) {
         auto element = factory.createControlElement(control, interface);
-        element->setEnabled(false);
-        addAndMakeVisible(element.get());
-        listControlElements.push_back(std::move(element));
-    }
 
-    resized();
+        accumulatedHeight +=
+            element->getNumberOfRows() * LayoutHints::heightRow;
+
+        element->setEnabled(false);
+
+        controlContainer.addAndMakeVisible(element.get());
+        controlContainer.getElementList().push_back(std::move(element));
+    }
+    controlContainer.setBounds(0, 0, getWidth(), accumulatedHeight);
 
     buttonSend.setToggleState(false, NotificationType::sendNotification);
     auto autoConnect = configNetwork["auto-connect"];
@@ -261,7 +271,7 @@ connectOsc()
     DBG(message);
     oscSender.connect(hostname, port);
 
-    for (auto & control : listControlElements) {
+    for (auto & control : controlContainer.getElementList()) {
         control->setEnabled(true);
         control->send();
     }
@@ -271,7 +281,7 @@ void
 OscsendvstAudioProcessorEditor::
 disconnectOsc()
 {
-    for (auto & control : listControlElements) {
+    for (auto & control : controlContainer.getElementList()) {
         control->setEnabled(false);
     }
     oscSender.disconnect();
