@@ -23,6 +23,7 @@ ControlElement
                           Colours::crimson);
     buttonMute->setClickingTogglesState(true);
     buttonMute->addListener(this);
+    buttonMute->setPaintingIsUnclipped(true);
     addAndMakeVisible(buttonMute.get());
 }
 

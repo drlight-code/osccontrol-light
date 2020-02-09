@@ -29,6 +29,7 @@ ControlElementKnob
     knob->setRange (info.range.first, info.range.second, 0);
     knob->setValue(info.value, NotificationType::dontSendNotification);
     knob->addListener (this);
+    knob->setPaintingIsUnclipped(true);
     addAndMakeVisible(knob.get());
 
     textEditor.reset (new TextEditor ("textEditor"));

@@ -76,6 +76,10 @@ OscsendvstAudioProcessorEditor
     addAndMakeVisible(&textAddress);
     addAndMakeVisible(&textPort);
 
+    setPaintingIsUnclipped(true);
+    viewport.setPaintingIsUnclipped(true);
+    controlContainer.setPaintingIsUnclipped(true);
+
     viewport.setViewedComponent(&controlContainer);
     addAndMakeVisible(viewport);
 
