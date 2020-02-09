@@ -34,6 +34,8 @@ public:
     void buttonClicked (Button *) override;
 
 private:
+    void initializeMainUIComponents();
+
     void handlePresetButton();
     void updateActivePageInfo();
 

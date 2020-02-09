@@ -34,6 +34,23 @@ OscsendvstAudioProcessorEditor
     LookAndFeel::getDefaultLookAndFeel()
         .setDefaultSansSerifTypefaceName ("Liberation Mono");
 
+    initializeMainUIComponents();
+
+    setPaintingIsUnclipped(true);
+    setResizable(true, true);
+    setResizeLimits(245, 2 * LayoutHints::heightRow, 1920, 1080);
+    setSize(300, 300);
+}
+
+OscsendvstAudioProcessorEditor::
+~OscsendvstAudioProcessorEditor()
+{
+}
+
+void
+OscsendvstAudioProcessorEditor::
+initializeMainUIComponents()
+{
     auto imagePreset = ImageCache::getFromMemory
         (BinaryData::listicon_png, BinaryData::listicon_pngSize);
     auto imagePresetFolder = ImageCache::getFromMemory
@@ -44,26 +61,29 @@ OscsendvstAudioProcessorEditor
 
     auto opacityNormal = 0.7f;
     auto opacityOver = 1.0f;
-    buttonPreset.setImages(true, false, true,
-        imagePreset, opacityNormal, Colour(),
-        Image(), opacityOver, Colour(),
-        Image(), 1.0, Colour());
+    buttonPreset.setImages
+        (true, false, true,
+         imagePreset, opacityNormal, Colour(),
+         Image(), opacityOver, Colour(),
+         Image(), 1.0, Colour());
     buttonPreset.setTriggeredOnMouseDown(true);
     buttonPreset.addListener(this);
     addAndMakeVisible(buttonPreset);
 
-    buttonPresetFolder.setImages(true, false, true,
-        imagePresetFolder, opacityNormal, Colour(),
-        Image(), opacityOver, Colour(),
-        Image(), 1.0, Colour());
+    buttonPresetFolder.setImages
+        (true, false, true,
+         imagePresetFolder, opacityNormal, Colour(),
+         Image(), opacityOver, Colour(),
+         Image(), 1.0, Colour());
     buttonPresetFolder.setTriggeredOnMouseDown(true);
     buttonPresetFolder.addListener(this);
     addAndMakeVisible(buttonPresetFolder);
 
-    buttonReset.setImages(true, false, true,
-        imageReset, opacityNormal, Colour(),
-        Image(), opacityOver, Colour(),
-        Image(), 1.0, Colour());
+    buttonReset.setImages
+        (true, false, true,
+         imageReset, opacityNormal, Colour(),
+         Image(), opacityOver, Colour(),
+         Image(), 1.0, Colour());
     buttonReset.setTriggeredOnMouseDown(true);
     buttonReset.addListener(this);
     addAndMakeVisible(buttonReset);
@@ -89,21 +109,10 @@ OscsendvstAudioProcessorEditor
     addAndMakeVisible(&textHost);
     addAndMakeVisible(&textPort);
 
-    setPaintingIsUnclipped(true);
     viewport.setPaintingIsUnclipped(true);
     addAndMakeVisible(viewport);
-
-    setResizable(true, true);
-    setResizeLimits(245, 2 * LayoutHints::heightRow, 1920, 1080);
-    setSize(300, 300);
 }
 
-OscsendvstAudioProcessorEditor::
-~OscsendvstAudioProcessorEditor()
-{
-}
-
-//==============================================================================
 void
 OscsendvstAudioProcessorEditor::
 paint
