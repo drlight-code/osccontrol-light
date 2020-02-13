@@ -48,9 +48,14 @@ ControlElement::
 buttonClicked
 (Button* button)
 {
+    auto toggleState = buttonMute->getToggleState();
     if(messageMute != "") {
-        auto state = buttonMute->getToggleState();
-        auto oscMessage = OSCMessage(String(messageMute), int(state));
+        auto oscMessage = OSCMessage(String(messageMute),
+                                     int(toggleState));
         oscSender.send(oscMessage);
+    }
+
+    if(!toggleState) {
+        send();
     }
 }
