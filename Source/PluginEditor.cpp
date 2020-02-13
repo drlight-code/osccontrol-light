@@ -132,17 +132,14 @@ OscsendvstAudioProcessorEditor::
 resized()
 {
     auto heightRow = LayoutHints::heightRow;
-    auto sizeIcons = LayoutHints::sizeIcons;
     auto area = getLocalBounds();
     auto areaHeader = Rectangle<int>
         (0, 0, area.getWidth(), heightRow);
 
-    buttonPreset.setBounds(areaHeader.removeFromLeft(sizeIcons));
-    buttonPresetFolder.setBounds(areaHeader.removeFromLeft(sizeIcons));
-    buttonReset.setBounds(areaHeader.removeFromLeft(sizeIcons));
-
-    // correct for off-center reset button
-    areaHeader.removeFromLeft(-6);
+    Rectangle<int> areaButton;
+    buttonPreset.setBounds(areaHeader.removeFromLeft(heightRow));
+    buttonPresetFolder.setBounds(areaHeader.removeFromLeft(heightRow));
+    buttonReset.setBounds(areaHeader.removeFromLeft(heightRow));
 
     buttonConnect.setBounds(areaHeader.removeFromRight(heightRow));
 
