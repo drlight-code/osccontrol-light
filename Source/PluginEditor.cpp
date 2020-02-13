@@ -86,6 +86,7 @@ initializeMainUIComponents()
          Image(), 1.0, Colour());
     buttonReset.setTriggeredOnMouseDown(true);
     buttonReset.addListener(this);
+    buttonReset.setEnabled(false);
     addAndMakeVisible(buttonReset);
 
     auto imageSendOff = ImageCache::getFromMemory
@@ -103,6 +104,7 @@ initializeMainUIComponents()
          imageSendOn, opacityOver, Colour());
     buttonConnect.setClickingTogglesState(true);
     buttonConnect.setTriggeredOnMouseDown(true);
+    buttonConnect.setEnabled(false);
     buttonConnect.addListener(this);
     addAndMakeVisible(&buttonConnect);
 
@@ -235,6 +237,8 @@ handlePresetButton()
                     loadPreset(preset);
                 }
 
+                buttonConnect.setEnabled(true);
+                buttonReset.setEnabled(true);
                 switchToPage(presetPath);
             }
         }
