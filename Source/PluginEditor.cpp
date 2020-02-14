@@ -31,6 +31,10 @@ OscsendvstAudioProcessorEditor
     dirPresets =
         File(SystemStats::getEnvironmentVariable("OSCSEND_PRESET_PATH", ""));
 
+    auto scaleFactor = SystemStats::getEnvironmentVariable
+        ("OSCSEND_SCALE_FACTOR", "1").getFloatValue();
+    Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
+
     LookAndFeel::getDefaultLookAndFeel()
         .setDefaultSansSerifTypefaceName ("Liberation Mono");
 
