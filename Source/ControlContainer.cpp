@@ -26,20 +26,16 @@ resized()
     }
 }
 
-// void
-// ControlContainer::
-// paint
-// (Graphics &g)
-// {
-//     auto area = getLocalBounds();
-//     g.setColour(Colours::aquamarine);
-//     g.fillRect(area);
-// }
-
-
 std::list<ControlElementUniq> &
 ControlContainer::
 getElementList()
 {
     return listControlElements;
+}
+
+OSCSender &
+ControlContainer::
+getOSCSender()
+{
+    return oscSender;
 }

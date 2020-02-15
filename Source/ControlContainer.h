@@ -22,10 +22,14 @@ class ControlContainer :
 {
 public:
     void resized() override;
-    // void paint(Graphics &g) override;
 
     std::list<ControlElementUniq> & getElementList();
 
+    OSCSender & getOSCSender();
+
 private:
     std::list<ControlElementUniq> listControlElements;
+    OSCSender oscSender;
 };
+
+using ControlContainerUniq = std::unique_ptr<ControlContainer>;

@@ -109,7 +109,7 @@ initializeMainUIComponents()
     buttonConnect.setClickingTogglesState(true);
     buttonConnect.setTriggeredOnMouseDown(true);
     buttonConnect.setEnabled(false);
-    buttonConnect.addListener(this);
+    buttonConnect.getToggleStateValue().addListener(this);
     addAndMakeVisible(&buttonConnect);
 
     addAndMakeVisible(&textHost);
@@ -140,7 +140,6 @@ resized()
     auto areaHeader = Rectangle<int>
         (0, 0, area.getWidth(), heightRow);
 
-    Rectangle<int> areaButton;
     buttonPreset.setBounds(areaHeader.removeFromLeft(heightRow));
     buttonPresetFolder.setBounds(areaHeader.removeFromLeft(heightRow));
     buttonReset.setBounds(areaHeader.removeFromLeft(heightRow));
@@ -177,27 +176,32 @@ OscsendvstAudioProcessorEditor::
 buttonClicked
 (Button * button)
 {
-    if (button == &buttonConnect) {
-        if (button->getToggleState()) {
-            connectOsc(pageMap[activePage]->host,
-                       pageMap[activePage]->port.getIntValue());
-        }
-        else {
-            disconnectOsc();
-        }
-    }
-    else if (button == &buttonPresetFolder) {
+    if (button == &buttonPresetFolder) {
         choosePresetFolder();
     }
     else if (button == &buttonPreset) {
         handlePresetButton();
     }
     else if (button == &buttonReset) {
-        updateActivePageInfo();
         loadPreset(activePage);
         switchToPage(activePage);
     }
 }
+
+void
+OscsendvstAudioProcessorEditor::
+valueChanged (Value & value)
+{
+    DBG("valueChanged");
+    if(value.getValue()) {
+        connectOsc(pageMap[activePage]->host.getValue(),
+                   pageMap[activePage]->port.getValue());
+    }
+    else {
+        disconnectOsc();
+    }
+}
+
 
 ControlContainer *
 OscsendvstAudioProcessorEditor::
@@ -221,25 +225,18 @@ handlePresetButton()
 
         if(preset.exists()) {
 
-            if(activePage != "")
-                updateActivePageInfo();
+            buttonConnect.setEnabled(true);
+            buttonReset.setEnabled(true);
 
             if(presetPath != activePage) {
                 auto pageIter = pageMap.find(presetPath);
                 auto pageExists = pageIter != pageMap.end();
 
                 if(!pageExists) {
-                    auto pageInfo = std::make_unique<PageInfo>();
-
-                    pageInfo->container = std::make_unique<ControlContainer>();
-                    pageInfo->container->setPaintingIsUnclipped(true);
-                    pageMap[presetPath] = std::move(pageInfo);
-
+                    createPage(presetPath);
                     loadPreset(preset);
                 }
 
-                buttonConnect.setEnabled(true);
-                buttonReset.setEnabled(true);
                 switchToPage(presetPath);
             }
         }
@@ -248,13 +245,24 @@ handlePresetButton()
 
 void
 OscsendvstAudioProcessorEditor::
-updateActivePageInfo()
+createPage(String presetPath)
 {
-    auto & pageInfo = pageMap[activePage];
+    auto pageInfo = std::make_unique<PageInfo>();
 
-    pageInfo->host = textHost.getText();
-    pageInfo->port = textPort.getText();
-    pageInfo->connected = buttonConnect.getToggleState();
+    pageInfo->container = std::make_unique<ControlContainer>();
+    pageInfo->container->setPaintingIsUnclipped(true);
+    pageMap[presetPath] = std::move(pageInfo);
+}
+
+void
+OscsendvstAudioProcessorEditor::
+connectActivePageValues()
+{
+    textHost.getTextValue().referTo(pageMap[activePage]->host);
+    textPort.getTextValue().referTo(pageMap[activePage]->port);
+
+    buttonConnect.getToggleStateValue()
+        .referTo(pageMap[activePage]->connected);
 }
 
 void
@@ -307,7 +315,6 @@ loadPreset
     container->getElementList().clear();
 
     YAML::Node config;
-
     try {
         config = YAML::LoadFile(presetPath.toStdString());
     }
@@ -323,14 +330,14 @@ loadPreset
 
     auto configNetwork = config["network"];
 
-    pageMap[presetPath]->host = configNetwork["host"].as<std::string>();
-    pageMap[presetPath]->port = configNetwork["port"].as<std::string>();
+    pageMap[presetPath]->host = String(configNetwork["host"].as<std::string>());
+    pageMap[presetPath]->port = String(configNetwork["port"].as<std::string>());
 
     auto autoConnect = configNetwork["auto-connect"];
     pageMap[presetPath]->connected =
         autoConnect.IsScalar() ? autoConnect.as<bool>() : true;
 
-    ControlElementFactory factory(oscSender);
+    ControlElementFactory factory(container->getOSCSender());
     YAML::Node controls = config["controls"];
     YAML::Node interface = config["interface"];
     int accumulatedHeight = 0;
@@ -340,7 +347,7 @@ loadPreset
         accumulatedHeight +=
             element->getNumberOfRows() * LayoutHints::heightRow;
 
-        element->setEnabled(pageMap[presetPath]->connected);
+        element->setEnabled(pageMap[presetPath]->connected.getValue());
 
         container->addAndMakeVisible(element.get());
         container->getElementList().push_back(std::move(element));
@@ -355,14 +362,7 @@ switchToPage
 {
     activePage = presetPath;
 
-    textHost.setText(pageMap[activePage]->host);
-    textPort.setText(pageMap[activePage]->port);
-
-    buttonConnect.setToggleState
-        (false, NotificationType::sendNotification);
-    buttonConnect.setToggleState
-        (pageMap[activePage]->connected,
-            NotificationType::sendNotification);
+    connectActivePageValues();
 
     viewport.setViewedComponent
         (getActiveControlContainer(), false);
@@ -375,13 +375,15 @@ void
 OscsendvstAudioProcessorEditor::
 connectOsc(String host, int port)
 {
+    auto container = getActiveControlContainer();
     auto message = String("connecting to ")
         + host + String(":") + String(port);
     DBG(message);
-    oscSender.connect(host, port);
+
+    container->getOSCSender().connect(host, port);
 
     for (auto & control :
-             getActiveControlContainer()->getElementList()) {
+             container->getElementList()) {
         control->setEnabled(true);
         control->send();
     }
@@ -391,9 +393,9 @@ void
 OscsendvstAudioProcessorEditor::
 disconnectOsc()
 {
-    for (auto & control :
-             getActiveControlContainer()->getElementList()) {
+    auto container = getActiveControlContainer();
+    for (auto & control : container->getElementList()) {
         control->setEnabled(false);
     }
-    oscSender.disconnect();
+    container->getOSCSender().disconnect();
 }

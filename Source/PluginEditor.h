@@ -21,7 +21,8 @@
  */
 class OscsendvstAudioProcessorEditor
     : public AudioProcessorEditor,
-      public Button::Listener
+      public Button::Listener,
+      public Value::Listener
 {
 public:
     OscsendvstAudioProcessorEditor (OscsendvstAudioProcessor&);
@@ -32,22 +33,24 @@ public:
     void resized () override;
 
     void buttonClicked (Button *) override;
+    void valueChanged (Value & value) override;
 
 private:
-    void initializeMainUIComponents();
+    void initializeMainUIComponents ();
 
-    void handlePresetButton();
-    void updateActivePageInfo();
+    void handlePresetButton ();
+    void createPage (String presetPath);
+    void connectActivePageValues ();
 
-    ControlContainer * getActiveControlContainer();
+    ControlContainer * getActiveControlContainer ();
 
-    void connectOsc(String host, int port);
-    void disconnectOsc();
+    void connectOsc (String host, int port);
+    void disconnectOsc ();
 
-    void choosePresetFolder();
-    File pickPresetFile();
-    void loadPreset(File preset);
-    void switchToPage(String pathName);
+    void choosePresetFolder ();
+    File pickPresetFile ();
+    void loadPreset (File preset);
+    void switchToPage (String pathName);
 
     OscsendvstAudioProcessor& processor;
 
@@ -64,20 +67,17 @@ private:
     Viewport viewport;
 
     struct PageInfo {
-        String host;
-        String port;
-        bool connected;
+        Value host;
+        Value port;
+        Value connected;
 
-        std::unique_ptr<ControlContainer>
-        container;
+        ControlContainerUniq container;
     };
 
     using PageMap = std::map<String, std::unique_ptr<PageInfo>>;
 
     PageMap pageMap;
     String activePage = "";
-
-    OSCSender oscSender;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR
     (OscsendvstAudioProcessorEditor)
