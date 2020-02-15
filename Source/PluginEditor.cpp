@@ -112,7 +112,10 @@ initializeMainUIComponents()
     buttonConnect.getToggleStateValue().addListener(this);
     addAndMakeVisible(&buttonConnect);
 
+    textHost.setEnabled(false);
     addAndMakeVisible(&textHost);
+
+    textPort.setEnabled(false);
     addAndMakeVisible(&textPort);
 
     viewport.setPaintingIsUnclipped(true);
@@ -226,6 +229,8 @@ handlePresetButton()
 
             buttonConnect.setEnabled(true);
             buttonReset.setEnabled(true);
+            textHost.setEnabled(true);
+            textPort.setEnabled(true);
 
             if(presetPath != activePage) {
                 auto pageIter = pageMap.find(presetPath);
