@@ -1,42 +1,56 @@
 /*
-  ==============================================================================
 
-    This file was auto-generated!
+  oscsend-vst - An audio plugin that speaks OSC.
+  Copyright (C) 2020 Patric Schmitz
 
-    It contains the basic framework code for a JUCE plugin processor.
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-  ==============================================================================
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-//==============================================================================
-OscsendvstAudioProcessor::OscsendvstAudioProcessor()
+OscsendvstAudioProcessor::
+OscsendvstAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+       .withInput  ("Input",  AudioChannelSet::stereo(), true)
+#endif
+       .withOutput ("Output", AudioChannelSet::stereo(), true)
+#endif
+       )
 #endif
 {
 }
 
-OscsendvstAudioProcessor::~OscsendvstAudioProcessor()
+OscsendvstAudioProcessor::
+~OscsendvstAudioProcessor()
 {
 }
 
-//==============================================================================
-const String OscsendvstAudioProcessor::getName() const
+const String
+OscsendvstAudioProcessor::
+getName() const
 {
     return JucePlugin_Name;
 }
 
-bool OscsendvstAudioProcessor::acceptsMidi() const
+bool
+OscsendvstAudioProcessor::
+acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -45,7 +59,9 @@ bool OscsendvstAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool OscsendvstAudioProcessor::producesMidi() const
+bool
+OscsendvstAudioProcessor::
+producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -54,7 +70,9 @@ bool OscsendvstAudioProcessor::producesMidi() const
    #endif
 }
 
-bool OscsendvstAudioProcessor::isMidiEffect() const
+bool
+OscsendvstAudioProcessor::
+isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -63,50 +81,74 @@ bool OscsendvstAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double OscsendvstAudioProcessor::getTailLengthSeconds() const
+double
+OscsendvstAudioProcessor::
+getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int OscsendvstAudioProcessor::getNumPrograms()
+int
+OscsendvstAudioProcessor::
+getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-                // so this should be at least 1, even if you're not really implementing programs.
+    return 1;   // NB: some hosts don't cope very well if you tell
+                // them there are 0 programs, so this should be at
+                // least 1, even if you're not really implementing
+                // programs.
 }
 
-int OscsendvstAudioProcessor::getCurrentProgram()
+int
+OscsendvstAudioProcessor::
+getCurrentProgram()
 {
     return 0;
 }
 
-void OscsendvstAudioProcessor::setCurrentProgram (int index)
+void
+OscsendvstAudioProcessor::
+setCurrentProgram
+(int index)
 {
 }
 
-const String OscsendvstAudioProcessor::getProgramName (int index)
+const String
+OscsendvstAudioProcessor::
+getProgramName
+(int index)
 {
     return {};
 }
 
-void OscsendvstAudioProcessor::changeProgramName (int index, const String& newName)
+void
+OscsendvstAudioProcessor::
+changeProgramName
+(int index, const String& newName)
 {
 }
 
-//==============================================================================
-void OscsendvstAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void
+OscsendvstAudioProcessor::
+prepareToPlay
+(double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
 
-void OscsendvstAudioProcessor::releaseResources()
+void
+OscsendvstAudioProcessor::
+releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool OscsendvstAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool
+OscsendvstAudioProcessor::
+isBusesLayoutSupported
+(const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     ignoreUnused (layouts);
@@ -129,7 +171,11 @@ bool OscsendvstAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 }
 #endif
 
-void OscsendvstAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void
+OscsendvstAudioProcessor::
+processBlock
+(AudioBuffer<float>& buffer,
+  MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -158,34 +204,45 @@ void OscsendvstAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     }
 }
 
-//==============================================================================
-bool OscsendvstAudioProcessor::hasEditor() const
+bool
+OscsendvstAudioProcessor::
+hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true; // (change this to false if you choose to not supply
+                 // an editor)
 }
 
-AudioProcessorEditor* OscsendvstAudioProcessor::createEditor()
+AudioProcessorEditor*
+OscsendvstAudioProcessor::
+createEditor()
 {
     return new OscsendvstAudioProcessorEditor (*this);
 }
 
-//==============================================================================
-void OscsendvstAudioProcessor::getStateInformation (MemoryBlock& destData)
+void
+OscsendvstAudioProcessor::
+getStateInformation
+(MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    // You should use this method to store your parameters in the
+    // memory block.  You could do that either as raw data, or use the
+    // XML or ValueTree classes as intermediaries to make it easy to
+    // save and load complex data.
 }
 
-void OscsendvstAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void
+OscsendvstAudioProcessor::
+setStateInformation
+(const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    // You should use this method to restore your parameters from this
+    // memory block, whose contents will have been created by the
+    // getStateInformation() call.
 }
 
-//==============================================================================
 // This creates new instances of the plugin..
-AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+AudioProcessor* JUCE_CALLTYPE
+createPluginFilter()
 {
     return new OscsendvstAudioProcessor();
 }
