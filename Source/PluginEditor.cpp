@@ -183,6 +183,7 @@ buttonClicked
         handlePresetButton();
     }
     else if (button == &buttonReset) {
+        pageMap[activePage]->connected = false;
         loadPreset(activePage);
         switchToPage(activePage);
     }
@@ -192,7 +193,6 @@ void
 OscsendvstAudioProcessorEditor::
 valueChanged (Value & value)
 {
-    DBG("valueChanged");
     if(value.getValue()) {
         connectOsc(pageMap[activePage]->host.getValue(),
                    pageMap[activePage]->port.getValue());
@@ -201,7 +201,6 @@ valueChanged (Value & value)
         disconnectOsc();
     }
 }
-
 
 ControlContainer *
 OscsendvstAudioProcessorEditor::

@@ -27,10 +27,10 @@ ControlElementKnob
     knob->setSliderStyle (Slider::RotaryVerticalDrag);
     knob->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     knob->setRange (info.range.first, info.range.second, 0);
-    knob->setValue(info.value, NotificationType::dontSendNotification);
+    knob->setValue (info.value, NotificationType::dontSendNotification);
+    knob->setPaintingIsUnclipped (true);
     knob->addListener (this);
-    knob->setPaintingIsUnclipped(true);
-    addAndMakeVisible(knob.get());
+    addAndMakeVisible (knob.get());
 
     textEditor.reset (new TextEditor ("textEditor"));
     textEditor->setMultiLine (false);
@@ -59,11 +59,10 @@ getNumberOfRows() const
 void
 ControlElementKnob::
 sliderValueChanged
-(Slider* slider)
+(Slider * slider)
 {
     send();
 }
-
 
 void
 ControlElementKnob::

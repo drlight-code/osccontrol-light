@@ -24,10 +24,12 @@ public:
                         OSCSender & oscSender);
 
     int getNumberOfRows() const override;
-    void sliderValueChanged (Slider* slider) override;
-    void send() override;
+
+    void sliderValueChanged (Slider * slider) override;
 
     void resized() override;
+
+    void send() override;
 
 private:
     std::string message;
