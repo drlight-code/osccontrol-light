@@ -40,6 +40,11 @@ ControlElementKnob
     textEditor->setPopupMenuEnabled (false);
     if(info.showNames) {
         textEditor->setReadOnly (true);
+        auto backgroundColour =
+            textEditor->findColour(TextEditor::backgroundColourId);
+        textEditor->setColour
+            (TextEditor::outlineColourId,
+            backgroundColour);
         textEditor->setText (info.name);
     }
     else {
