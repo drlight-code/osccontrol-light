@@ -34,6 +34,9 @@ OscsendvstAudioProcessor()
        )
 #endif
 {
+    // parameter = std::make_unique<AudioParameterFloat>
+    //     ("speed", "Amphetamine", 0.0, 1.0, 0.5);
+    // addParameter(parameter.get());
 }
 
 OscsendvstAudioProcessor::
@@ -117,7 +120,7 @@ OscsendvstAudioProcessor::
 getProgramName
 (int index)
 {
-    return {};
+    return {"test"};
 }
 
 void
