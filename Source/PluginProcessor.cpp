@@ -23,20 +23,11 @@
 
 OscsendvstAudioProcessor::
 OscsendvstAudioProcessor()
-#ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-#if ! JucePlugin_IsMidiEffect
-#if ! JucePlugin_IsSynth
-       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-#endif
-       .withOutput ("Output", AudioChannelSet::stereo(), true)
-#endif
-       )
-#endif
+    : AudioProcessor (BusesProperties())
 {
-    // parameter = std::make_unique<AudioParameterFloat>
-    //     ("speed", "Amphetamine", 0.0, 1.0, 0.5);
-    // addParameter(parameter.get());
+    // parameter = new AudioParameterFloat
+    //     ("speed", "Speed", 0.0f, 1.0f, 0.5f);
+    // addParameter (parameter);
 }
 
 OscsendvstAudioProcessor::
@@ -48,40 +39,21 @@ const String
 OscsendvstAudioProcessor::
 getName() const
 {
-    return JucePlugin_Name;
+    return "oscsend";
 }
 
 bool
 OscsendvstAudioProcessor::
 acceptsMidi() const
 {
-   #if JucePlugin_WantsMidiInput
-    return true;
-   #else
-    return false;
-   #endif
+  return false;
 }
 
 bool
 OscsendvstAudioProcessor::
 producesMidi() const
 {
-   #if JucePlugin_ProducesMidiOutput
-    return true;
-   #else
-    return false;
-   #endif
-}
-
-bool
-OscsendvstAudioProcessor::
-isMidiEffect() const
-{
-   #if JucePlugin_IsMidiEffect
-    return true;
-   #else
-    return false;
-   #endif
+  return false;
 }
 
 double
@@ -120,7 +92,7 @@ OscsendvstAudioProcessor::
 getProgramName
 (int index)
 {
-    return {"test"};
+    return {};
 }
 
 void
@@ -135,44 +107,21 @@ OscsendvstAudioProcessor::
 prepareToPlay
 (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
 }
 
 void
 OscsendvstAudioProcessor::
 releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
 }
 
-#ifndef JucePlugin_PreferredChannelConfigurations
 bool
 OscsendvstAudioProcessor::
 isBusesLayoutSupported
 (const BusesLayout& layouts) const
 {
-  #if JucePlugin_IsMidiEffect
-    ignoreUnused (layouts);
     return true;
-  #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
-        return false;
-
-    // This checks if the input layout matches the output layout
-   #if ! JucePlugin_IsSynth
-    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-        return false;
-   #endif
-
-    return true;
-  #endif
 }
-#endif
 
 void
 OscsendvstAudioProcessor::
@@ -180,39 +129,13 @@ processBlock
 (AudioBuffer<float>& buffer,
   MidiBuffer& midiMessages)
 {
-    ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
-
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
-
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }
 }
 
 bool
 OscsendvstAudioProcessor::
 hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply
-                 // an editor)
+    return true;
 }
 
 AudioProcessorEditor*
@@ -231,6 +154,7 @@ getStateInformation
     // memory block.  You could do that either as raw data, or use the
     // XML or ValueTree classes as intermediaries to make it easy to
     // save and load complex data.
+//    MemoryOutputStream (destData, true).writeFloat (*parameter);
 }
 
 void
@@ -238,9 +162,9 @@ OscsendvstAudioProcessor::
 setStateInformation
 (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this
-    // memory block, whose contents will have been created by the
-    // getStateInformation() call.
+    // parameter->setValueNotifyingHost
+    //     (MemoryInputStream
+    //         (data, static_cast<size_t> (sizeInBytes), false).readFloat());
 }
 
 // This creates new instances of the plugin..

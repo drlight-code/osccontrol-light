@@ -32,9 +32,7 @@ public:
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
-   #ifndef JucePlugin_PreferredChannelConfigurations
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-   #endif
 
     void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
 
@@ -45,7 +43,6 @@ public:
 
     bool acceptsMidi() const override;
     bool producesMidi() const override;
-    bool isMidiEffect() const override;
     double getTailLengthSeconds() const override;
 
     int getNumPrograms() override;
@@ -58,7 +55,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    std::unique_ptr<AudioParameterFloat> parameter;
+//    AudioParameterFloat * parameter;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscsendvstAudioProcessor)
 };
