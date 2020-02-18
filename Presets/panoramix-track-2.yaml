@@ -1,0 +1,62 @@
+network:
+  host: 127.0.0.1
+  port: 6789
+  auto-connect: false
+
+interface:
+  show-names: true
+
+controls:
+  - name: azimuth
+    message: /track/2/azim
+    range: [-180, 180]
+    default: 0
+    type: knob
+
+  - name: distance
+    message: /track/2/dist
+    range: [1, 100]
+    default: 1
+    type: knob
+
+  - name: gain-A
+    message: /track/2/bus/A/gain
+    message-mute: /track/2/bus/A/mute
+    range: [-24, 6]
+    default: -6
+    type: knob
+
+  - name: gain-B
+    message: /track/2/bus/B/gain
+    message-mute: /track/2/bus/B/mute
+    range: [-24, 6]
+    default: -6
+    type: knob
+
+  - name: gain-C
+    message: /track/2/bus/C/gain
+    message-mute: /track/2/bus/C/mute
+    range: [-24, 6]
+    default: -6
+    type: knob
+
+  - name: gain-D
+    message: /track/2/bus/D/gain
+    message-mute: /track/2/bus/D/mute
+    range: [-24, 6]
+    default: -6
+    type: knob
+
+  - name: gain-E
+    message: /track/2/bus/E/gain
+    message-mute: /track/2/bus/E/mute
+    range: [-24, 6]
+    default: -6
+    type: knob
+
+  - name: gain-F
+    message: /track/2/bus/F/gain
+    message-mute: /track/2/bus/F/mute
+    range: [-24, 6]
+    default: -6
+    type: knob
