@@ -24,17 +24,23 @@
 
 ControlElement::
 ControlElement
-(OSCSender & oscSender) :
+(const CreateInfo & info,
+    OSCSender & oscSender) :
     oscSender(oscSender)
 {
+    message = info.message;
+    messageMute = info.messageMute;
+
     buttonMute.reset (new TextButton ("buttonMute"));
     buttonMute->setButtonText("m");
     buttonMute->setColour(TextButton::buttonOnColourId,
                           Colours::crimson);
     buttonMute->setClickingTogglesState(true);
-    buttonMute->addListener(this);
     buttonMute->setPaintingIsUnclipped(true);
+    buttonMute->getToggleStateValue().addListener(this);
     addAndMakeVisible(buttonMute.get());
+
+    sendValue.addListener(this);
 }
 
 void
@@ -55,17 +61,43 @@ resized()
 
 void
 ControlElement::
-buttonClicked
-(Button* button)
+registerSendValue()
 {
-    auto toggleState = buttonMute->getToggleState();
-    if(messageMute != "") {
-        auto oscMessage = OSCMessage(String(messageMute),
-                                     int(toggleState));
-        oscSender.send(oscMessage);
-    }
+    sendValue.removeListener(this);
+    sendValue.referTo
+        (getSpecificSendValue());
+    sendValue.addListener(this);
+}
 
-    if(!toggleState) {
+void
+ControlElement::
+valueChanged
+(Value & value)
+{
+    if(value == buttonMute->getToggleStateValue()) {
+        auto toggleState = buttonMute->getToggleState();
+        if(messageMute != "") {
+            auto oscMessage = OSCMessage(String(messageMute),
+                int(toggleState));
+            oscSender.send(oscMessage);
+        }
+
+        if(!toggleState) {
+            send();
+        }
+    }
+    else if(value.refersToSameSourceAs(sendValue)) {
         send();
+    }
+}
+
+void
+ControlElement::
+send()
+{
+    if (!buttonMute->getToggleState()) {
+        auto value = sendValue.getValue();
+        auto oscMessage = OSCMessage(String(message), float(value));
+        oscSender.send(oscMessage);
     }
 }

@@ -26,7 +26,7 @@
 
 class ControlElement :
     public Component,
-    public Button::Listener
+    public Value::Listener
 {
 public:
     struct CreateInfo {
@@ -38,20 +38,30 @@ public:
         std::string messageMute;
 
         bool showNames;
+
     };
 
     ControlElement
-    (OSCSender & oscSender);
-
-    void resized() override;
-    void buttonClicked(Button* button) override;
+    (const CreateInfo & info,
+     OSCSender & oscSender);
 
     virtual int getNumberOfRows() const = 0;
-    virtual void send() = 0;
+    void resized() override;
+
+    void registerSendValue();
+    void valueChanged(Value & value) override;
+
+    void send();
 
 protected:
+    virtual Value & getSpecificSendValue() = 0;
     OSCSender & oscSender;
 
+private:
     std::unique_ptr<TextButton> buttonMute;
-    std::string messageMute;
+
+    String message;
+    String messageMute;
+
+    Value sendValue;
 };

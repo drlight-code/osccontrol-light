@@ -28,18 +28,14 @@ ControlElementKnob::
 ControlElementKnob
 (const CreateInfo & info,
  OSCSender & oscSender) :
-    ControlElement(oscSender),
-    message(info.message)
+    ControlElement(info, oscSender)
 {
-    messageMute = info.messageMute;
-
     knob.reset (new Slider("knob"));
     knob->setSliderStyle (Slider::RotaryVerticalDrag);
     knob->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     knob->setRange (info.range.first, info.range.second, 0);
     knob->setValue (info.value, NotificationType::dontSendNotification);
     knob->setPaintingIsUnclipped (true);
-    knob->addListener (this);
     addAndMakeVisible (knob.get());
 
     textEditor.reset (new TextEditor ("textEditor"));
@@ -73,25 +69,6 @@ getNumberOfRows() const
 
 void
 ControlElementKnob::
-sliderValueChanged
-(Slider * slider)
-{
-    send();
-}
-
-void
-ControlElementKnob::
-send()
-{
-    if (!buttonMute->getToggleState()) {
-        auto value = knob->getValue();
-        auto oscMessage = OSCMessage(String(message), float(value));
-        oscSender.send(oscMessage);
-    }
-}
-
-void
-ControlElementKnob::
 resized()
 {
     ControlElement::resized();
@@ -106,4 +83,11 @@ resized()
     area.removeFromTop(LayoutHints::getTextBoxInset());
     area.removeFromBottom(LayoutHints::getTextBoxInset());
     textEditor->setBounds(area);
+}
+
+Value &
+ControlElementKnob::
+getSpecificSendValue()
+{
+    return knob->getValueObject();
 }

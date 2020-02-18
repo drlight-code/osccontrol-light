@@ -352,7 +352,8 @@ loadPreset
     pageMap[presetPath]->connected =
         autoConnect.IsScalar() ? autoConnect.as<bool>() : true;
 
-    ControlElementFactory factory(container->getOSCSender());
+    ControlElementFactory factory
+        (container->getOSCSender(), processor);
     YAML::Node controls = config["controls"];
     YAML::Node interface = config["interface"];
     int accumulatedHeight = 0;

@@ -20,13 +20,17 @@
 
 #include <JuceHeader.h>
 
-#include "ControlElementFactory.h"
+#include "PluginProcessor.h"
+
 #include "ControlElementKnob.h"
+#include "ControlElementFactory.h"
 
 ControlElementFactory::
 ControlElementFactory
-(OSCSender & oscSender) :
-    oscSender(oscSender)
+(OSCSender & oscSender,
+ OscsendvstAudioProcessor & processor) :
+    oscSender(oscSender),
+    processor(processor)
 {
 }
 
@@ -62,6 +66,7 @@ createControlElement
             messageMute.IsScalar() ? messageMute.as<std::string>() : "";
 
         product = std::make_unique<ControlElementKnob>(info, oscSender);
+        product->registerSendValue();
     }
 
     return product;
