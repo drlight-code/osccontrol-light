@@ -42,7 +42,7 @@ OscsendvstAudioProcessorEditor
 
     auto scaleFactor = SystemStats::getEnvironmentVariable
         ("OSCSEND_SCALE_FACTOR", "1").getFloatValue();
-    Desktop::getInstance().setGlobalScaleFactor(scaleFactor);
+    setScaleFactor(scaleFactor);
 
     LookAndFeel::getDefaultLookAndFeel()
         .setDefaultSansSerifTypefaceName ("Liberation Mono");
