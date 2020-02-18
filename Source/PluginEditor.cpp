@@ -304,6 +304,7 @@ OscsendvstAudioProcessorEditor::
 pickPresetFile()
 {
     auto files = dirPresets.findChildFiles(File::findFiles, true, "*.yaml");
+    files.sort();
 
     PopupMenu popup;
     int id = 1;
@@ -312,6 +313,7 @@ pickPresetFile()
         name = name.replaceCharacter('\\', '/');
         popup.addItem(id++, name);
     }
+
     int index = popup.show();
 
     return files[index-1];
