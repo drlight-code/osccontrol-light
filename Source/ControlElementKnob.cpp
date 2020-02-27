@@ -26,15 +26,16 @@
 
 ControlElementKnob::
 ControlElementKnob
-(const CreateInfo & info,
+(const CreateInfo & createInfo,
  OSCSender & oscSender) :
-    ControlElement(info, oscSender)
+    ControlElement(createInfo, oscSender)
 {
     knob.reset (new Slider("knob"));
     knob->setSliderStyle (Slider::RotaryVerticalDrag);
     knob->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    knob->setRange (info.range.first, info.range.second, 0);
-    knob->setValue (info.value, NotificationType::dontSendNotification);
+    knob->setRange (createInfo.range.first, createInfo.range.second, 0);
+    knob->setValue (createInfo.defaultValue,
+        NotificationType::dontSendNotification);
     knob->setPaintingIsUnclipped (true);
     addAndMakeVisible (knob.get());
 
@@ -44,18 +45,18 @@ ControlElementKnob
     textEditor->setScrollbarsShown (false);
     textEditor->setCaretVisible (true);
     textEditor->setPopupMenuEnabled (false);
-    if(info.showNames) {
+    if(createInfo.showNames) {
         textEditor->setReadOnly (true);
         auto backgroundColour =
             textEditor->findColour(TextEditor::backgroundColourId);
         textEditor->setColour
             (TextEditor::outlineColourId,
             backgroundColour);
-        textEditor->setText (info.name);
+        textEditor->setText (createInfo.name);
     }
     else {
         textEditor->setReadOnly (false);
-        textEditor->setText (info.message);
+        textEditor->setText (createInfo.message);
     }
     addAndMakeVisible (textEditor.get());
 }

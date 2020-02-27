@@ -56,7 +56,7 @@ createControlElement
         auto range = configElement["range"];
         info.range = std::make_pair(range[0].as<float>(),
                                     range[1].as<float>());
-        info.value = configElement["default"].as<float>();
+        info.defaultValue = configElement["default"].as<float>();
 
         info.name = configElement["name"].as<std::string>();
         info.message = configElement["message"].as<std::string>();

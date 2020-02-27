@@ -29,8 +29,9 @@ class ControlElementKnob :
     public ControlElement
 {
 public:
-    ControlElementKnob (const CreateInfo & info,
-                        OSCSender & oscSender);
+    ControlElementKnob
+    (const CreateInfo & createInfo,
+     OSCSender & oscSender);
 
     int getNumberOfRows() const override;
 

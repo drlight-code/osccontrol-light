@@ -24,12 +24,13 @@
 
 ControlElement::
 ControlElement
-(const CreateInfo & info,
-    OSCSender & oscSender) :
-    oscSender(oscSender)
+(const CreateInfo & createInfo,
+ OSCSender & oscSender) :
+    oscSender(oscSender),
+    createInfo(createInfo)
 {
-    message = info.message;
-    messageMute = info.messageMute;
+    message = createInfo.message;
+    messageMute = createInfo.messageMute;
 
     buttonMute.reset (new TextButton ("buttonMute"));
     buttonMute->setButtonText("m");

@@ -17,6 +17,10 @@
       <FILE id="uIGffv" name="reset-icon.png" compile="0" resource="1" file="Resources/reset-icon.png"/>
     </GROUP>
     <GROUP id="{4FA477F1-3527-10C5-E7C6-083C0695095A}" name="Source">
+      <FILE id="uewbfh" name="ControlContainer.cpp" compile="1" resource="0"
+            file="Source/ControlContainer.cpp"/>
+      <FILE id="i12E9F" name="ControlContainer.h" compile="0" resource="0"
+            file="Source/ControlContainer.h"/>
       <FILE id="cQcBzq" name="LayoutHints.cpp" compile="1" resource="0" file="Source/LayoutHints.cpp"/>
       <FILE id="p92oCJ" name="LayoutHints.h" compile="0" resource="0" file="Source/LayoutHints.h"/>
       <GROUP id="{44A1E280-81AB-B8A5-7B39-9504ADC86A4B}" name="Elements">
@@ -41,10 +45,6 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="bDhQ71" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
-    <FILE id="uewbfh" name="ControlContainer.cpp" compile="1" resource="0"
-          file="Source/ControlContainer.cpp"/>
-    <FILE id="i12E9F" name="ControlContainer.h" compile="0" resource="0"
-          file="Source/ControlContainer.h"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017" externalLibraries="yaml-cppd.lib"
@@ -73,7 +73,7 @@
         <MODULEPATH id="juce_osc" path="../../tools/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" externalLibraries="yaml-cpp"
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" externalLibraries="dl&#10;yaml-cpp"
                 smallIcon="xt763r" bigIcon="xt763r">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" linuxArchitecture="-m64"/>

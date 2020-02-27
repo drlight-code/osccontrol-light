@@ -31,14 +31,13 @@ class ControlElement :
 public:
     struct CreateInfo {
         std::pair<float, float> range;
-        float value;
+        float defaultValue;
 
         std::string name;
         std::string message;
         std::string messageMute;
 
         bool showNames;
-
     };
 
     ControlElement
@@ -49,6 +48,7 @@ public:
     void resized() override;
 
     void registerSendValue();
+
     void valueChanged(Value & value) override;
 
     void send();
@@ -58,6 +58,7 @@ protected:
     OSCSender & oscSender;
 
 private:
+    CreateInfo createInfo;
     std::unique_ptr<TextButton> buttonMute;
 
     String message;

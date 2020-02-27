@@ -21,24 +21,52 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-OscsendvstAudioProcessor::
-OscsendvstAudioProcessor()
-    : AudioProcessor (BusesProperties())
+#include <dlfcn.h>
+
+namespace  {
+File juce_getExecutableFile();
+File juce_getExecutableFile()
 {
-    // parameter = new AudioParameterFloat
-    //     ("speed", "Speed", 0.0f, 1.0f, 0.5f);
-    // addParameter (parameter);
+  struct DLAddrReader
+  {
+    static String getFilename()
+    {
+      Dl_info exeInfo;
+
+      auto localSymbol = (void*) juce_getExecutableFile;
+      dladdr (localSymbol, &exeInfo);
+      return CharPointer_UTF8 (exeInfo.dli_fname);
+    }
+  };
+
+  static String filename = DLAddrReader::getFilename();
+  return File::getCurrentWorkingDirectory().getChildFile (filename);
+}
+}
+
+OscsendvstAudioProcessor::
+OscsendvstAudioProcessor() :
+    AudioProcessor (BusesProperties()),
+    fileLogger(File("~/.oscsend-vst.log"), "oscsend-vst debug log")
+{
+    Logger::setCurrentLogger(&fileLogger);
+    Logger::writeToLog("OscsendvstAudioProcessor");
+
+    auto filename = juce_getExecutableFile();
+    Logger::writeToLog(filename.getFullPathName());
 }
 
 OscsendvstAudioProcessor::
 ~OscsendvstAudioProcessor()
 {
+    Logger::writeToLog("~OscsendvstAudioProcessor");
 }
 
 const String
 OscsendvstAudioProcessor::
 getName() const
 {
+    Logger::writeToLog("getName");
     return "oscsend";
 }
 
@@ -46,20 +74,23 @@ bool
 OscsendvstAudioProcessor::
 acceptsMidi() const
 {
-  return false;
+    Logger::writeToLog("acceptsMidi");
+    return false;
 }
 
 bool
 OscsendvstAudioProcessor::
 producesMidi() const
 {
-  return false;
+    Logger::writeToLog("producesMidi");
+    return false;
 }
 
 double
 OscsendvstAudioProcessor::
 getTailLengthSeconds() const
 {
+    Logger::writeToLog("getTailLengthSeconds");
     return 0.0;
 }
 
@@ -67,6 +98,7 @@ int
 OscsendvstAudioProcessor::
 getNumPrograms()
 {
+    Logger::writeToLog("getNumPrograms");
     return 1;   // NB: some hosts don't cope very well if you tell
                 // them there are 0 programs, so this should be at
                 // least 1, even if you're not really implementing
@@ -77,6 +109,7 @@ int
 OscsendvstAudioProcessor::
 getCurrentProgram()
 {
+    Logger::writeToLog("getCurrentProgram");
     return 0;
 }
 
@@ -85,6 +118,7 @@ OscsendvstAudioProcessor::
 setCurrentProgram
 (int index)
 {
+    Logger::writeToLog("setCurrentProgram");
 }
 
 const String
@@ -92,6 +126,7 @@ OscsendvstAudioProcessor::
 getProgramName
 (int index)
 {
+    Logger::writeToLog("getProgramName");
     return {};
 }
 
@@ -100,6 +135,7 @@ OscsendvstAudioProcessor::
 changeProgramName
 (int index, const String& newName)
 {
+    Logger::writeToLog("changeProgramName");
 }
 
 void
@@ -107,12 +143,14 @@ OscsendvstAudioProcessor::
 prepareToPlay
 (double sampleRate, int samplesPerBlock)
 {
+    Logger::writeToLog("prepareToPlay");
 }
 
 void
 OscsendvstAudioProcessor::
 releaseResources()
 {
+    Logger::writeToLog("releaseResources");
 }
 
 bool
@@ -120,6 +158,7 @@ OscsendvstAudioProcessor::
 isBusesLayoutSupported
 (const BusesLayout& layouts) const
 {
+    Logger::writeToLog("isBusesLayoutSupported");
     return true;
 }
 
@@ -129,12 +168,14 @@ processBlock
 (AudioBuffer<float>& buffer,
   MidiBuffer& midiMessages)
 {
+//    Logger::writeToLog("processBlock");
 }
 
 bool
 OscsendvstAudioProcessor::
 hasEditor() const
 {
+    Logger::writeToLog("hasEditor");
     return true;
 }
 
@@ -142,6 +183,7 @@ AudioProcessorEditor*
 OscsendvstAudioProcessor::
 createEditor()
 {
+    Logger::writeToLog("createEditor");
     return new OscsendvstAudioProcessorEditor (*this);
 }
 
@@ -150,11 +192,13 @@ OscsendvstAudioProcessor::
 getStateInformation
 (MemoryBlock& destData)
 {
+    Logger::writeToLog("getStateInformation");
     // You should use this method to store your parameters in the
     // memory block.  You could do that either as raw data, or use the
     // XML or ValueTree classes as intermediaries to make it easy to
     // save and load complex data.
-//    MemoryOutputStream (destData, true).writeFloat (*parameter);
+
+    // MemoryOutputStream (destData, true).writeString("test");
 }
 
 void
@@ -162,14 +206,13 @@ OscsendvstAudioProcessor::
 setStateInformation
 (const void* data, int sizeInBytes)
 {
-    // parameter->setValueNotifyingHost
-    //     (MemoryInputStream
-    //         (data, static_cast<size_t> (sizeInBytes), false).readFloat());
+    Logger::writeToLog("setStateInformation");
 }
 
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE
 createPluginFilter()
 {
+    Logger::writeToLog("createPluginFilter");
     return new OscsendvstAudioProcessor();
 }
