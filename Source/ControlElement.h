@@ -24,9 +24,7 @@
 
 #include <JuceHeader.h>
 
-class ControlElement :
-    public Component,
-    public Value::Listener
+class ControlElement
 {
 public:
     struct CreateInfo {
@@ -44,25 +42,9 @@ public:
     (const CreateInfo & info,
      OSCSender & oscSender);
 
-    virtual int getNumberOfRows() const = 0;
-    void resized() override;
-
-    void registerSendValue();
-
-    void valueChanged(Value & value) override;
-
-    void send();
+    virtual void send() = 0;
 
 protected:
-    virtual Value & getSpecificSendValue() = 0;
     OSCSender & oscSender;
-
-private:
     CreateInfo createInfo;
-    std::unique_ptr<TextButton> buttonMute;
-
-    String message;
-    String messageMute;
-
-    Value sendValue;
 };

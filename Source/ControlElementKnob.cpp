@@ -28,7 +28,7 @@ ControlElementKnob::
 ControlElementKnob
 (const CreateInfo & createInfo,
  OSCSender & oscSender) :
-    ControlElement(createInfo, oscSender)
+    ControlElementUI(createInfo, oscSender)
 {
     knob.reset (new Slider("knob"));
     knob->setSliderStyle (Slider::RotaryVerticalDrag);
@@ -72,7 +72,7 @@ void
 ControlElementKnob::
 resized()
 {
-    ControlElement::resized();
+    ControlElementUI::resized();
 
     auto area = getLocalBounds();
     auto areaKnob = area.removeFromLeft(LayoutHints::heightRow);

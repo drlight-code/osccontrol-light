@@ -1,6 +1,6 @@
 /*
 
-t  oscsend-vst - An audio plugin that speaks OSC.
+  oscsend-vst - An audio plugin that speaks OSC.
   Copyright (C) 2020 Patric Schmitz
 
   This program is free software: you can redistribute it and/or modify
@@ -27,19 +27,17 @@ t  oscsend-vst - An audio plugin that speaks OSC.
 
 #include "LayoutHints.h"
 
+#include "ControlElementUI.h"
 #include "ControlElementFactory.h"
-#include "ControlElement.h"
 
 
 OscsendvstAudioProcessorEditor::
 OscsendvstAudioProcessorEditor
-(OscsendvstAudioProcessor& p) :
+(OscsendvstAudioProcessor& p, File pathPreset) :
     AudioProcessorEditor (&p),
-    processor (p)
+    processor (p),
+    pathPreset(pathPreset)
 {
-    dirPresets =
-        File(SystemStats::getEnvironmentVariable("OSCSEND_PRESET_PATH", ""));
-
     auto scaleFactor = SystemStats::getEnvironmentVariable
         ("OSCSEND_SCALE_FACTOR", "1").getFloatValue();
     setScaleFactor(scaleFactor);
@@ -227,7 +225,7 @@ void
 OscsendvstAudioProcessorEditor::
 handlePresetButton()
 {
-    if(!dirPresets.exists()) {
+    if(!pathPreset.exists()) {
         choosePresetFolder();
     }
     else {
@@ -285,7 +283,7 @@ choosePresetFolder()
     FileBrowserComponent browser(
         FileBrowserComponent::openMode |
         FileBrowserComponent::canSelectDirectories,
-        dirPresets, nullptr, nullptr);
+        pathPreset, nullptr, nullptr);
 
     auto colourBg =
         LookAndFeel::getDefaultLookAndFeel()
@@ -295,7 +293,7 @@ choosePresetFolder()
         browser, false, colourBg);
 
     if (dialogBox.show()) {
-        dirPresets = browser.getSelectedFile(0);
+        pathPreset = browser.getSelectedFile(0);
     }
 }
 
@@ -303,13 +301,13 @@ File
 OscsendvstAudioProcessorEditor::
 pickPresetFile()
 {
-    auto files = dirPresets.findChildFiles(File::findFiles, true, "*.yaml");
+    auto files = pathPreset.findChildFiles(File::findFiles, true, "*.yaml");
     files.sort();
 
     PopupMenu popup;
     int id = 1;
     for (auto & file : files) {
-        auto name = file.getRelativePathFrom(dirPresets).dropLastCharacters(5);
+        auto name = file.getRelativePathFrom(pathPreset).dropLastCharacters(5);
         name = name.replaceCharacter('\\', '/');
         popup.addItem(id++, name);
     }
@@ -358,7 +356,7 @@ loadPreset
     YAML::Node interface = config["interface"];
     int accumulatedHeight = 0;
     for(auto control : controls) {
-        auto element = factory.createControlElement(control, interface);
+        auto element = factory.createControlElementUI(control, interface);
 
         accumulatedHeight +=
             element->getNumberOfRows() * LayoutHints::heightRow;

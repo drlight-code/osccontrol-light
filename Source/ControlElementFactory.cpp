@@ -22,6 +22,7 @@
 
 #include "PluginProcessor.h"
 
+#include "ControlElementUI.h"
 #include "ControlElementKnob.h"
 #include "ControlElementFactory.h"
 
@@ -34,9 +35,9 @@ ControlElementFactory
 {
 }
 
-std::unique_ptr<ControlElement>
+std::unique_ptr<ControlElementUI>
 ControlElementFactory::
-createControlElement
+createControlElementUI
 (YAML::Node configElement, YAML::Node configInterface)
 {
     ControlElement::CreateInfo info;
@@ -50,7 +51,7 @@ createControlElement
             showNames.IsScalar() ? showNames.as<bool>() : false;
     }
 
-    std::unique_ptr<ControlElement> product;
+    std::unique_ptr<ControlElementUI> product;
     if(type == "knob") {
 
         auto range = configElement["range"];

@@ -29,6 +29,8 @@ public:
     OscsendvstAudioProcessor();
     ~OscsendvstAudioProcessor();
 
+    void initializeHeadless();
+
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
@@ -57,6 +59,10 @@ public:
 private:
 
     FileLogger fileLogger;
+
+    bool hasUserInterface;
+    std::unique_ptr<OSCSender> oscSender;
+    File pathPreset;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscsendvstAudioProcessor)
 };

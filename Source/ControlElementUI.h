@@ -18,34 +18,36 @@
 
 */
 
-#include "LayoutHints.h"
-#include "ControlElementUI.h"
+#pragma once
 
-#include "ControlContainer.h"
+#include "ControlElement.h"
 
-void
-ControlContainer::
-resized()
+class ControlElementUI :
+    public ControlElement,
+    public Component,
+    public Value::Listener
 {
-    auto area = getLocalBounds();
+public:
+    ControlElementUI
+    (const CreateInfo & info,
+        OSCSender & oscSender);
 
-    for (auto & element : listControlElements) {
-        element->setBounds
-            (area.removeFromTop(LayoutHints::heightRow) *
-                element->getNumberOfRows());
-    }
-}
+    virtual int getNumberOfRows() const = 0;
+    void resized() override;
 
-std::list<ControlElementUIUniq> &
-ControlContainer::
-getElementList()
-{
-    return listControlElements;
-}
+    void registerSendValue();
 
-OSCSender &
-ControlContainer::
-getOSCSender()
-{
-    return oscSender;
-}
+    void valueChanged(Value & value) override;
+
+    void send() override;
+
+protected:
+
+    virtual Value & getSpecificSendValue() = 0;
+
+private:
+
+    std::unique_ptr<TextButton> buttonMute;
+    Value sendValue;
+};
+using ControlElementUIUniq = std::unique_ptr<ControlElementUI>;

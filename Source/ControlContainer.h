@@ -24,8 +24,8 @@
 
 #include <JuceHeader.h>
 
-class ControlElement;
-using ControlElementUniq = std::unique_ptr<ControlElement>;
+class ControlElementUI;
+using ControlElementUIUniq = std::unique_ptr<ControlElementUI>;
 
 class ControlContainer :
     public Component
@@ -33,13 +33,12 @@ class ControlContainer :
 public:
     void resized() override;
 
-    std::list<ControlElementUniq> & getElementList();
+    std::list<ControlElementUIUniq> & getElementList();
 
     OSCSender & getOSCSender();
 
 private:
-    std::list<ControlElementUniq> listControlElements;
+    std::list<ControlElementUIUniq> listControlElements;
     OSCSender oscSender;
 };
-
 using ControlContainerUniq = std::unique_ptr<ControlContainer>;

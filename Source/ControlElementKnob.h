@@ -22,11 +22,11 @@
 
 #include <utility>
 
-#include "ControlElement.h"
+#include "ControlElementUI.h"
 #include "ControlElementKnob.h"
 
 class ControlElementKnob :
-    public ControlElement
+    public ControlElementUI
 {
 public:
     ControlElementKnob

@@ -35,8 +35,8 @@ public:
     (OSCSender & oscSender,
      OscsendvstAudioProcessor & processor);
 
-    std::unique_ptr<ControlElement>
-    createControlElement
+    std::unique_ptr<ControlElementUI>
+    createControlElementUI
     (YAML::Node configElement,
      YAML::Node configInterface);
 

@@ -23,7 +23,7 @@
             file="Source/ControlContainer.h"/>
       <FILE id="cQcBzq" name="LayoutHints.cpp" compile="1" resource="0" file="Source/LayoutHints.cpp"/>
       <FILE id="p92oCJ" name="LayoutHints.h" compile="0" resource="0" file="Source/LayoutHints.h"/>
-      <GROUP id="{44A1E280-81AB-B8A5-7B39-9504ADC86A4B}" name="Elements">
+      <GROUP id="{44A1E280-81AB-B8A5-7B39-9504ADC86A4B}" name="ControlElements">
         <FILE id="NhdgQQ" name="ControlElement.cpp" compile="1" resource="0"
               file="Source/ControlElement.cpp"/>
         <FILE id="AwdwRD" name="ControlElement.h" compile="0" resource="0"
@@ -32,6 +32,10 @@
               file="Source/ControlElementKnob.cpp"/>
         <FILE id="q6YU4s" name="ControlElementKnob.h" compile="0" resource="0"
               file="Source/ControlElementKnob.h"/>
+        <FILE id="IykEUD" name="ControlElementUI.cpp" compile="1" resource="0"
+              file="Source/ControlElementUI.cpp"/>
+        <FILE id="DVapF5" name="ControlElementUI.h" compile="0" resource="0"
+              file="Source/ControlElementUI.h"/>
       </GROUP>
       <FILE id="bWXkc5" name="ControlElementFactory.cpp" compile="1" resource="0"
             file="Source/ControlElementFactory.cpp"/>

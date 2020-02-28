@@ -47,19 +47,51 @@ File juce_getExecutableFile()
 OscsendvstAudioProcessor::
 OscsendvstAudioProcessor() :
     AudioProcessor (BusesProperties()),
-    fileLogger(File("~/.oscsend-vst.log"), "oscsend-vst debug log")
+    fileLogger(File("~/.oscsend-vst.log"), "oscsend-vst debug log"),
+    hasUserInterface(true)
 {
     Logger::setCurrentLogger(&fileLogger);
     Logger::writeToLog("OscsendvstAudioProcessor");
 
     auto filename = juce_getExecutableFile();
     Logger::writeToLog(filename.getFullPathName());
+
+    pathPreset =
+        File(SystemStats::getEnvironmentVariable("OSCSEND_PRESET_PATH", ""));
+
+    auto namePlugin = filename.getFileNameWithoutExtension();
+    if(namePlugin.startsWith("oscsend-vst")) {
+        auto presetToLoad =
+            namePlugin.fromFirstOccurrenceOf
+            ("oscsend-vst", false, false).trimCharactersAtStart("-");
+
+        if(presetToLoad.isNotEmpty()) {
+            Logger::writeToLog("PRESET NAME: " + presetToLoad);
+
+            hasUserInterface = false;
+
+            initializeHeadless();
+        }
+    }
+    else {
+        // TODO freak out!!
+    }
 }
 
 OscsendvstAudioProcessor::
 ~OscsendvstAudioProcessor()
 {
     Logger::writeToLog("~OscsendvstAudioProcessor");
+}
+
+void
+OscsendvstAudioProcessor::
+initializeHeadless()
+{
+    Logger::writeToLog("initializeHeadless");
+    // initialize DAW controls from so-named preset
+
+    // create and connect processor (this) OSC sender
 }
 
 const String
@@ -176,7 +208,7 @@ OscsendvstAudioProcessor::
 hasEditor() const
 {
     Logger::writeToLog("hasEditor");
-    return true;
+    return hasUserInterface;
 }
 
 AudioProcessorEditor*
@@ -184,7 +216,8 @@ OscsendvstAudioProcessor::
 createEditor()
 {
     Logger::writeToLog("createEditor");
-    return new OscsendvstAudioProcessorEditor (*this);
+    return new OscsendvstAudioProcessorEditor
+        (*this, pathPreset);
 }
 
 void

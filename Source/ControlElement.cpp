@@ -18,8 +18,6 @@
 
 */
 
-#include "LayoutHints.h"
-
 #include "ControlElement.h"
 
 ControlElement::
@@ -29,76 +27,4 @@ ControlElement
     oscSender(oscSender),
     createInfo(createInfo)
 {
-    message = createInfo.message;
-    messageMute = createInfo.messageMute;
-
-    buttonMute.reset (new TextButton ("buttonMute"));
-    buttonMute->setButtonText("m");
-    buttonMute->setColour(TextButton::buttonOnColourId,
-                          Colours::crimson);
-    buttonMute->setClickingTogglesState(true);
-    buttonMute->setPaintingIsUnclipped(true);
-    buttonMute->getToggleStateValue().addListener(this);
-    addAndMakeVisible(buttonMute.get());
-
-    sendValue.addListener(this);
-}
-
-void
-ControlElement::
-resized()
-{
-    auto area = getLocalBounds();
-
-    auto gap = LayoutHints::sizeGap;
-    auto buttonSize = LayoutHints::heightRow - 2*gap;
-
-    area.removeFromRight(gap);
-    area.removeFromTop(gap);
-    area.setHeight(buttonSize);
-
-    buttonMute->setBounds(area.removeFromRight(buttonSize));
-}
-
-void
-ControlElement::
-registerSendValue()
-{
-    sendValue.removeListener(this);
-    sendValue.referTo
-        (getSpecificSendValue());
-    sendValue.addListener(this);
-}
-
-void
-ControlElement::
-valueChanged
-(Value & value)
-{
-    if(value == buttonMute->getToggleStateValue()) {
-        auto toggleState = buttonMute->getToggleState();
-        if(messageMute != "") {
-            auto oscMessage = OSCMessage(String(messageMute),
-                int(toggleState));
-            oscSender.send(oscMessage);
-        }
-
-        if(!toggleState) {
-            send();
-        }
-    }
-    else if(value.refersToSameSourceAs(sendValue)) {
-        send();
-    }
-}
-
-void
-ControlElement::
-send()
-{
-    if (!buttonMute->getToggleState()) {
-        auto value = sendValue.getValue();
-        auto oscMessage = OSCMessage(String(message), float(value));
-        oscSender.send(oscMessage);
-    }
 }
