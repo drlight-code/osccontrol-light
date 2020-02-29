@@ -31,14 +31,16 @@ class ControlContainer :
     public Component
 {
 public:
-    void resized() override;
 
-    std::list<ControlElementUIUniq> & getElementList();
+    void resized() override;
 
     OSCSender & getOSCSender();
 
+    std::list<ControlElementUIUniq> & getElementList();
+
 private:
-    std::list<ControlElementUIUniq> listControlElements;
+
     OSCSender oscSender;
+    std::list<ControlElementUIUniq> listControlElements;
 };
 using ControlContainerUniq = std::unique_ptr<ControlContainer>;

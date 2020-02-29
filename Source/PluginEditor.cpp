@@ -18,18 +18,17 @@
 
 */
 
-#include <yaml-cpp/yaml.h>
-
-#include "PluginProcessor.h"
-#include "PluginEditor.h"
-
 #include "BinaryData.h"
 
 #include "LayoutHints.h"
 
+#include "PresetParser.h"
+
 #include "ControlElementUI.h"
 #include "ControlElementFactory.h"
 
+#include "PluginProcessor.h"
+#include "PluginEditor.h"
 
 OscsendvstAudioProcessorEditor::
 OscsendvstAudioProcessorEditor
@@ -136,9 +135,6 @@ paint
 {
     g.fillAll(getLookAndFeel().findColour
         (ResizableWindow::backgroundColourId));
-
-    g.setColour(Colours::white);
-    g.setFont(15.0f);
 }
 
 void
@@ -193,7 +189,6 @@ buttonClicked
         handlePresetButton();
     }
     else if (button == &buttonReset) {
-        pageMap[activePage]->connected = false;
         loadPreset(activePage);
         switchToPage(activePage);
     }
@@ -320,48 +315,28 @@ pickPresetFile()
 void
 OscsendvstAudioProcessorEditor::
 loadPreset
-(File preset)
+(File filePreset)
 {
-    auto presetPath = preset.getFullPathName();
+    PresetParser preset(filePreset);
+    auto presetPath = filePreset.getFullPathName();
+
+    pageMap[presetPath]->host = preset.getHost();
+    pageMap[presetPath]->port = preset.getPort();
+    pageMap[presetPath]->connected = true;
+
     auto container = pageMap[presetPath]->container.get();
-
     container->getElementList().clear();
-
-    YAML::Node config;
-    try {
-        config = YAML::LoadFile(presetPath.toStdString());
-    }
-    catch (YAML::BadFile &e) {
-        std::string message =
-            "Unable to load config: " + presetPath.toStdString();
-        throw std::runtime_error(message);
-    }
-
-    if (config.IsNull()) {
-        return;
-    }
-
-    auto configNetwork = config["network"];
-
-    pageMap[presetPath]->host = String(configNetwork["host"].as<std::string>());
-    pageMap[presetPath]->port = String(configNetwork["port"].as<std::string>());
-
-    auto autoConnect = configNetwork["auto-connect"];
-    pageMap[presetPath]->connected =
-        autoConnect.IsScalar() ? autoConnect.as<bool>() : true;
 
     ControlElementFactory factory
         (container->getOSCSender(), processor);
-    YAML::Node controls = config["controls"];
-    YAML::Node interface = config["interface"];
+
     int accumulatedHeight = 0;
-    for(auto control : controls) {
-        auto element = factory.createControlElementUI(control, interface);
+    for(auto control : preset.getControlElements()) {
+        auto createInfo = preset.getControlElementCreateInfo(control);
+        auto element = factory.createControlElementUI(createInfo);
 
         accumulatedHeight +=
             element->getNumberOfRows() * LayoutHints::heightRow;
-
-        element->setEnabled(pageMap[presetPath]->connected.getValue());
 
         container->addAndMakeVisible(element.get());
         container->getElementList().push_back(std::move(element));
@@ -374,6 +349,8 @@ OscsendvstAudioProcessorEditor::
 switchToPage
 (String presetPath)
 {
+    Logger::writeToLog("switchToPage");
+
     activePage = presetPath;
 
     connectActivePageValues();
@@ -399,7 +376,6 @@ connectOsc(String host, int port)
     for (auto & control :
              container->getElementList()) {
         control->setEnabled(true);
-        control->send();
     }
 }
 

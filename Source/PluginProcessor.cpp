@@ -47,7 +47,7 @@ File juce_getExecutableFile()
 OscsendvstAudioProcessor::
 OscsendvstAudioProcessor() :
     AudioProcessor (BusesProperties()),
-    fileLogger(File("~/.oscsend-vst.log"), "oscsend-vst debug log"),
+    fileLogger(File("~/.oscsend-vst.log"), "oscsend-vst debug log", 0),
     hasUserInterface(true)
 {
     Logger::setCurrentLogger(&fileLogger);
@@ -68,9 +68,10 @@ OscsendvstAudioProcessor() :
         if(presetToLoad.isNotEmpty()) {
             Logger::writeToLog("PRESET NAME: " + presetToLoad);
 
-            hasUserInterface = false;
+            auto presetFile = locatePresetFile(presetToLoad);
 
-            initializeHeadless();
+            hasUserInterface = false;
+            initializeHeadless(presetFile);
         }
     }
     else {
@@ -84,14 +85,33 @@ OscsendvstAudioProcessor::
     Logger::writeToLog("~OscsendvstAudioProcessor");
 }
 
+File
+OscsendvstAudioProcessor::
+locatePresetFile
+(String namePreset)
+{
+    auto filenamePreset = namePreset + ".yaml";
+    auto files = pathPreset.findChildFiles
+        (File::findFiles, true, filenamePreset);
+
+    if(files.isEmpty()) {
+        Logger::writeToLog
+            ("error: could not locate preset file: " + filenamePreset);
+        // TODO freak out!!
+    }
+
+    // TODO resolve possible alternatives
+    return files[0];
+}
+
 void
 OscsendvstAudioProcessor::
-initializeHeadless()
+initializeHeadless
+(File filePreset)
 {
     Logger::writeToLog("initializeHeadless");
-    // initialize DAW controls from so-named preset
 
-    // create and connect processor (this) OSC sender
+    // initialize DAW controls from so-named preset
 }
 
 const String
@@ -130,7 +150,7 @@ int
 OscsendvstAudioProcessor::
 getNumPrograms()
 {
-    Logger::writeToLog("getNumPrograms");
+    // Logger::writeToLog("getNumPrograms");
     return 1;   // NB: some hosts don't cope very well if you tell
                 // them there are 0 programs, so this should be at
                 // least 1, even if you're not really implementing
@@ -141,7 +161,7 @@ int
 OscsendvstAudioProcessor::
 getCurrentProgram()
 {
-    Logger::writeToLog("getCurrentProgram");
+    // Logger::writeToLog("getCurrentProgram");
     return 0;
 }
 

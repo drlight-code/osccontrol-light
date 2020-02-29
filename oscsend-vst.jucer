@@ -28,19 +28,23 @@
               file="Source/ControlElement.cpp"/>
         <FILE id="AwdwRD" name="ControlElement.h" compile="0" resource="0"
               file="Source/ControlElement.h"/>
-        <FILE id="JZQqM3" name="ControlElementKnob.cpp" compile="1" resource="0"
-              file="Source/ControlElementKnob.cpp"/>
-        <FILE id="q6YU4s" name="ControlElementKnob.h" compile="0" resource="0"
-              file="Source/ControlElementKnob.h"/>
+        <FILE id="bWXkc5" name="ControlElementFactory.cpp" compile="1" resource="0"
+              file="Source/ControlElementFactory.cpp"/>
+        <FILE id="aEV6s1" name="ControlElementFactory.h" compile="0" resource="0"
+              file="Source/ControlElementFactory.h"/>
+        <FILE id="NLKGdg" name="ControlElementHost.h" compile="0" resource="0"
+              file="Source/ControlElementHost.h"/>
+        <FILE id="jGlsBU" name="ControlElementHost.cpp" compile="1" resource="0"
+              file="Source/ControlElementHost.cpp"/>
         <FILE id="IykEUD" name="ControlElementUI.cpp" compile="1" resource="0"
               file="Source/ControlElementUI.cpp"/>
         <FILE id="DVapF5" name="ControlElementUI.h" compile="0" resource="0"
               file="Source/ControlElementUI.h"/>
+        <FILE id="JZQqM3" name="ControlElementKnob.cpp" compile="1" resource="0"
+              file="Source/ControlElementKnob.cpp"/>
+        <FILE id="q6YU4s" name="ControlElementKnob.h" compile="0" resource="0"
+              file="Source/ControlElementKnob.h"/>
       </GROUP>
-      <FILE id="bWXkc5" name="ControlElementFactory.cpp" compile="1" resource="0"
-            file="Source/ControlElementFactory.cpp"/>
-      <FILE id="aEV6s1" name="ControlElementFactory.h" compile="0" resource="0"
-            file="Source/ControlElementFactory.h"/>
       <FILE id="rMZKEw" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="Rge57S" name="PluginProcessor.h" compile="0" resource="0"
@@ -48,6 +52,9 @@
       <FILE id="y91UFU" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="bDhQ71" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="u0KFLZ" name="PresetParser.cpp" compile="1" resource="0"
+            file="Source/PresetParser.cpp"/>
+      <FILE id="edLAfG" name="PresetParser.h" compile="0" resource="0" file="Source/PresetParser.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
@@ -77,7 +84,7 @@
         <MODULEPATH id="juce_osc" path="../../tools/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" externalLibraries="dl&#10;yaml-cpp"
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" externalLibraries="yaml-cpp"
                 smallIcon="xt763r" bigIcon="xt763r">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" linuxArchitecture="-m64"/>

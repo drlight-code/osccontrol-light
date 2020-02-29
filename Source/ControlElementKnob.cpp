@@ -34,30 +34,25 @@ ControlElementKnob
     knob->setSliderStyle (Slider::RotaryVerticalDrag);
     knob->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     knob->setRange (createInfo.range.first, createInfo.range.second, 0);
-    knob->setValue (createInfo.defaultValue,
-        NotificationType::dontSendNotification);
+    knob->setValue (createInfo.defaultValue);
     knob->setPaintingIsUnclipped (true);
     addAndMakeVisible (knob.get());
 
     textEditor.reset (new TextEditor ("textEditor"));
+    textEditor->setText (createInfo.name);
     textEditor->setMultiLine (false);
     textEditor->setReturnKeyStartsNewLine (false);
     textEditor->setScrollbarsShown (false);
     textEditor->setCaretVisible (true);
     textEditor->setPopupMenuEnabled (false);
-    if(createInfo.showNames) {
-        textEditor->setReadOnly (true);
-        auto backgroundColour =
-            textEditor->findColour(TextEditor::backgroundColourId);
-        textEditor->setColour
-            (TextEditor::outlineColourId,
+    textEditor->setReadOnly (true);
+
+    auto backgroundColour =
+        textEditor->findColour(TextEditor::backgroundColourId);
+    textEditor->setColour
+        (TextEditor::outlineColourId,
             backgroundColour);
-        textEditor->setText (createInfo.name);
-    }
-    else {
-        textEditor->setReadOnly (false);
-        textEditor->setText (createInfo.message);
-    }
+
     addAndMakeVisible (textEditor.get());
 }
 

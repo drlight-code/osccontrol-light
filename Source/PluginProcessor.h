@@ -29,7 +29,8 @@ public:
     OscsendvstAudioProcessor();
     ~OscsendvstAudioProcessor();
 
-    void initializeHeadless();
+    File locatePresetFile(String namePreset);
+    void initializeHeadless(File filePreset);
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;

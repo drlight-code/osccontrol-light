@@ -2,24 +2,21 @@ network:
   host: 127.0.0.1
   port: 8888
 
-interface:
-  show-names: true
-
 controls:
   - name: frequency
-    message: /sinusoids/sinusoids/freq
+    type: float
     range: [0, 10]
     default: 0.1
-    type: knob
+    message: /sinusoids/sinusoids/freq
 
   - name: lambda
-    message: /sinusoids/sinusoids/lambda
+    type: float
     range: [0, 10]
     default: 0.1
-    type: knob
+    message: /sinusoids/sinusoids/lambda
 
   - name: stroke width
-    message: /sinusoids/sinusoids/stroke-width
+    type: float
     range: [0, 1]
     default: 0.5
-    type: knob
+    message: /sinusoids/sinusoids/stroke-width

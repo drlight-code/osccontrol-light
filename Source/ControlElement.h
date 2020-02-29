@@ -27,15 +27,21 @@
 class ControlElement
 {
 public:
+
+    enum class Type {
+        Float,
+        Bool
+    };
+
     struct CreateInfo {
+        std::string name;
+        Type type;
+
         std::pair<float, float> range;
         float defaultValue;
 
-        std::string name;
         std::string message;
         std::string messageMute;
-
-        bool showNames;
     };
 
     ControlElement

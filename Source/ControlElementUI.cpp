@@ -64,6 +64,11 @@ registerSendValue()
     sendValue.referTo
         (getSpecificSendValue());
     sendValue.addListener(this);
+
+    if (sendValue.getValue().isDouble() &&
+        float(sendValue.getValue()) == 0.f) {
+        send();
+    }
 }
 
 void

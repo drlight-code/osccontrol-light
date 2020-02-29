@@ -20,24 +20,30 @@
 
 #pragma once
 
-#include <memory>
-
 #include <JuceHeader.h>
 
-class OscsendvstAudioProcessor;
-class ControlElement;
+#include <yaml-cpp/yaml.h>
 
-class ControlElementFactory  {
+#include "ControlElement.h"
+
+class PresetParser
+{
 public:
-    ControlElementFactory
-    (OSCSender & oscSender,
-     OscsendvstAudioProcessor & processor);
 
-    std::unique_ptr<ControlElementUI>
-    createControlElementUI
-    (const ControlElement::CreateInfo & createInfo);
+    PresetParser(File filePreset);
+
+    String getHost() const;
+    int getPort() const;
+
+    StringArray getControlElements() const;
+
+    ControlElement::CreateInfo
+    getControlElementCreateInfo
+    (String element) const;
 
 private:
-    OSCSender & oscSender;
-    OscsendvstAudioProcessor & processor;
+
+    static const std::map<String, ControlElement::Type> mapTypeNames;
+
+    YAML::Node config; // TODO pimpl?
 };

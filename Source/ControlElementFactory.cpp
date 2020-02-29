@@ -38,35 +38,11 @@ ControlElementFactory
 std::unique_ptr<ControlElementUI>
 ControlElementFactory::
 createControlElementUI
-(YAML::Node configElement, YAML::Node configInterface)
+(const ControlElement::CreateInfo & createInfo)
 {
-    ControlElement::CreateInfo info;
-
-    auto name = configElement["name"].as<std::string>();
-    auto type = configElement["type"].as<std::string>();
-
-    if(!configInterface.IsNull()) {
-        auto showNames = configInterface["show-names"];
-        info.showNames =
-            showNames.IsScalar() ? showNames.as<bool>() : false;
-    }
-
     std::unique_ptr<ControlElementUI> product;
-    if(type == "knob") {
-
-        auto range = configElement["range"];
-        info.range = std::make_pair(range[0].as<float>(),
-                                    range[1].as<float>());
-        info.defaultValue = configElement["default"].as<float>();
-
-        info.name = configElement["name"].as<std::string>();
-        info.message = configElement["message"].as<std::string>();
-
-        auto messageMute = configElement["message-mute"];
-        info.messageMute =
-            messageMute.IsScalar() ? messageMute.as<std::string>() : "";
-
-        product = std::make_unique<ControlElementKnob>(info, oscSender);
+    if(createInfo.type == ControlElement::Type::Float) {
+        product = std::make_unique<ControlElementKnob>(createInfo, oscSender);
         product->registerSendValue();
     }
 

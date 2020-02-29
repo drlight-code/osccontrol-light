@@ -18,26 +18,13 @@
 
 */
 
-#pragma once
+#include "ControlElementHost.h"
 
-#include <memory>
 
-#include <JuceHeader.h>
-
-class OscsendvstAudioProcessor;
-class ControlElement;
-
-class ControlElementFactory  {
-public:
-    ControlElementFactory
-    (OSCSender & oscSender,
-     OscsendvstAudioProcessor & processor);
-
-    std::unique_ptr<ControlElementUI>
-    createControlElementUI
-    (const ControlElement::CreateInfo & createInfo);
-
-private:
-    OSCSender & oscSender;
-    OscsendvstAudioProcessor & processor;
-};
+ControlElementHost::
+ControlElementHost
+(const CreateInfo & info,
+ OSCSender & oscSender) :
+    ControlElement(info, oscSender)
+{
+}
