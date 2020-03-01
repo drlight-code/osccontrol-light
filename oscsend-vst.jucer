@@ -52,6 +52,8 @@
       <FILE id="y91UFU" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="bDhQ71" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="tgjcg2" name="PresetPage.cpp" compile="1" resource="0" file="Source/PresetPage.cpp"/>
+      <FILE id="c6zr7O" name="PresetPage.h" compile="0" resource="0" file="Source/PresetPage.h"/>
       <FILE id="u0KFLZ" name="PresetParser.cpp" compile="1" resource="0"
             file="Source/PresetParser.cpp"/>
       <FILE id="edLAfG" name="PresetParser.h" compile="0" resource="0" file="Source/PresetParser.h"/>

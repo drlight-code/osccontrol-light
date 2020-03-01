@@ -22,11 +22,6 @@
 
 #include "LayoutHints.h"
 
-#include "PresetParser.h"
-
-#include "ControlElementUI.h"
-#include "ControlElementFactory.h"
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
@@ -35,31 +30,32 @@ OscsendvstAudioProcessorEditor
 (OscsendvstAudioProcessor& p, File pathPreset) :
     AudioProcessorEditor (&p),
     processor (p),
-    pathPreset(pathPreset)
+    pathPreset (pathPreset),
+    activePage(pageMap.end())
 {
     auto scaleFactor = SystemStats::getEnvironmentVariable
         ("OSCSEND_SCALE_FACTOR", "1").getFloatValue();
-    setScaleFactor(scaleFactor);
+    setScaleFactor (scaleFactor);
 
-    LookAndFeel::getDefaultLookAndFeel()
+    LookAndFeel::getDefaultLookAndFeel ()
         .setDefaultSansSerifTypefaceName ("Liberation Mono");
 
-    initializeMainUIComponents();
+    initializeMainUIComponents ();
 
-    setPaintingIsUnclipped(true);
-    setResizable(true, true);
-    setResizeLimits(245, 2 * LayoutHints::heightRow, 1920, 1080);
-    setSize(300, 300);
+    setPaintingIsUnclipped (true);
+    setResizable (true, true);
+    setResizeLimits (245, 2 * LayoutHints::heightRow, 1920, 1080);
+    setSize (300, 300);
 }
 
 OscsendvstAudioProcessorEditor::
-~OscsendvstAudioProcessorEditor()
+~OscsendvstAudioProcessorEditor ()
 {
 }
 
 void
 OscsendvstAudioProcessorEditor::
-initializeMainUIComponents()
+initializeMainUIComponents ()
 {
     auto imagePreset = ImageCache::getFromMemory
         (BinaryData::listicon_png, BinaryData::listicon_pngSize);
@@ -115,7 +111,6 @@ initializeMainUIComponents()
     buttonConnect.setClickingTogglesState(true);
     buttonConnect.setTriggeredOnMouseDown(true);
     buttonConnect.setEnabled(false);
-    buttonConnect.getToggleStateValue().addListener(this);
     addAndMakeVisible(&buttonConnect);
 
     textHost.setEnabled(false);
@@ -133,47 +128,45 @@ OscsendvstAudioProcessorEditor::
 paint
 (Graphics& g)
 {
-    g.fillAll(getLookAndFeel().findColour
+    g.fillAll (getLookAndFeel ().findColour
         (ResizableWindow::backgroundColourId));
 }
 
 void
 OscsendvstAudioProcessorEditor::
-resized()
+resized ()
 {
     auto heightRow = LayoutHints::heightRow;
-    auto area = getLocalBounds();
+    auto area = getLocalBounds ();
     auto areaHeader = Rectangle<int>
         (0, 0, area.getWidth(), heightRow);
 
-    buttonPreset.setBounds(areaHeader.removeFromLeft(heightRow));
-    buttonPresetFolder.setBounds(areaHeader.removeFromLeft(heightRow));
-    buttonReset.setBounds(areaHeader.removeFromLeft(heightRow));
+    buttonPreset.setBounds (areaHeader.removeFromLeft (heightRow));
+    buttonPresetFolder.setBounds (areaHeader.removeFromLeft (heightRow));
+    buttonReset.setBounds (areaHeader.removeFromLeft (heightRow));
 
-    buttonConnect.setBounds(areaHeader.removeFromRight(heightRow));
+    buttonConnect.setBounds (areaHeader.removeFromRight (heightRow));
 
-    auto insetText = LayoutHints::getTextBoxInset();
+    auto insetText = LayoutHints::getTextBoxInset ();
     auto gap = LayoutHints::sizeGap;
 
-    areaHeader.removeFromTop(insetText);
-    areaHeader.removeFromBottom(insetText);
+    areaHeader.removeFromTop (insetText);
+    areaHeader.removeFromBottom (insetText);
 
     textPort.setBounds
-        (areaHeader.removeFromRight(LayoutHints::widthTextPort));
-    areaHeader.removeFromRight(gap);
-    areaHeader.removeFromLeft(gap);
-    textHost.setBounds(areaHeader);
+        (areaHeader.removeFromRight (LayoutHints::widthTextPort));
+    areaHeader.removeFromRight (gap);
+    areaHeader.removeFromLeft (gap);
+    textHost.setBounds (areaHeader);
 
     area.removeFromTop(heightRow);
+    viewport.setBounds (area);
 
-    viewport.setBounds(area);
-
-    auto container = getActiveControlContainer();
-    if(container) {
-        auto controlArea = container->getBounds();
-        controlArea.setWidth
-            (viewport.getMaximumVisibleWidth());
-        container->setBounds(controlArea);
+    if (isPageLoaded ()) {
+        auto container = activePage->second->getContainerComponent ();
+        auto areaControl = container->getBounds ();
+        areaControl.setWidth (viewport.getMaximumVisibleWidth ());
+        container->setBounds (areaControl);
     }
 }
 
@@ -189,86 +182,41 @@ buttonClicked
         handlePresetButton();
     }
     else if (button == &buttonReset) {
-        loadPreset(activePage);
-        switchToPage(activePage);
+        activePage->second->loadFromFile(activePage->first);
+//        switchToPage(activePage->first);
     }
-}
-
-void
-OscsendvstAudioProcessorEditor::
-valueChanged (Value & value)
-{
-    if(value.getValue()) {
-        connectOsc(pageMap[activePage]->host.getValue(),
-                   pageMap[activePage]->port.getValue());
-    }
-    else {
-        disconnectOsc();
-    }
-}
-
-ControlContainer *
-OscsendvstAudioProcessorEditor::
-getActiveControlContainer()
-{
-    return activePage != "" ?
-        pageMap[activePage]->container.get() :
-        nullptr;
 }
 
 void
 OscsendvstAudioProcessorEditor::
 handlePresetButton()
 {
-    if(!pathPreset.exists()) {
-        choosePresetFolder();
+    if (!pathPreset.exists ()) {
+        choosePresetFolder ();
     }
     else {
-        auto preset = pickPresetFile();
-        auto presetPath = preset.getFullPathName();
+        auto filePreset = pickPresetFile ();
+        auto pathPreset = filePreset.getFullPathName ();
 
-        if(preset.exists()) {
+        if (filePreset.exists ()) {
+            buttonConnect.setEnabled (true);
+            buttonReset.setEnabled (true);
+            textHost.setEnabled (true);
+            textPort.setEnabled (true);
 
-            buttonConnect.setEnabled(true);
-            buttonReset.setEnabled(true);
-            textHost.setEnabled(true);
-            textPort.setEnabled(true);
-
-            if(presetPath != activePage) {
-                auto pageIter = pageMap.find(presetPath);
-                auto pageExists = pageIter != pageMap.end();
-
-                if(!pageExists) {
-                    createPage(presetPath);
-                    loadPreset(preset);
-                }
-
-                switchToPage(presetPath);
+            auto pageIter = pageMap.find (pathPreset);
+            auto pageExists = pageIter != pageMap.end ();
+            if (!pageExists) {
+                auto presetPage = std::make_unique<PresetPage> ();
+                presetPage->loadFromFile (filePreset);
+                pageMap[pathPreset] = std::move (presetPage);
+                switchToPage (pathPreset);
+            }
+            else if (pathPreset != activePage->first) {
+                switchToPage (pathPreset);
             }
         }
     }
-}
-
-void
-OscsendvstAudioProcessorEditor::
-createPage(String presetPath)
-{
-    auto pageInfo = std::make_unique<PageInfo>();
-
-    pageInfo->container = std::make_unique<ControlContainer>();
-    pageInfo->container->setPaintingIsUnclipped(true);
-    pageMap[presetPath] = std::move(pageInfo);
-}
-
-void
-OscsendvstAudioProcessorEditor::
-connectActivePageValues()
-{
-    textHost.getTextValue().referTo(pageMap[activePage]->host);
-    textPort.getTextValue().referTo(pageMap[activePage]->port);
-
-    buttonConnect.getToggleStateValue()
-        .referTo(pageMap[activePage]->connected);
 }
 
 void
@@ -314,78 +262,29 @@ pickPresetFile()
 
 void
 OscsendvstAudioProcessorEditor::
-loadPreset
-(File filePreset)
-{
-    PresetParser preset(filePreset);
-    auto presetPath = filePreset.getFullPathName();
-
-    pageMap[presetPath]->host = preset.getHost();
-    pageMap[presetPath]->port = preset.getPort();
-    pageMap[presetPath]->connected = true;
-
-    auto container = pageMap[presetPath]->container.get();
-    container->getElementList().clear();
-
-    ControlElementFactory factory
-        (container->getOSCSender(), processor);
-
-    int accumulatedHeight = 0;
-    for(auto control : preset.getControlElements()) {
-        auto createInfo = preset.getControlElementCreateInfo(control);
-        auto element = factory.createControlElementUI(createInfo);
-
-        accumulatedHeight +=
-            element->getNumberOfRows() * LayoutHints::heightRow;
-
-        container->addAndMakeVisible(element.get());
-        container->getElementList().push_back(std::move(element));
-    }
-    container->setBounds(0, 0, getWidth(), accumulatedHeight);
-}
-
-void
-OscsendvstAudioProcessorEditor::
 switchToPage
 (String presetPath)
 {
     Logger::writeToLog("switchToPage");
 
-    activePage = presetPath;
+    activePage = pageMap.find (presetPath);
 
-    connectActivePageValues();
+    textHost.getTextValue ().referTo (activePage->second->getHostValue ());
+    textPort.getTextValue ().referTo (activePage->second->getPortValue ());
+    buttonConnect.getToggleStateValue ()
+        .referTo (activePage->second->getConnectedValue ());
 
-    viewport.setViewedComponent
-        (getActiveControlContainer(), false);
-    getActiveControlContainer()->resized();
+    auto container = activePage->second->getContainerComponent ();
+    viewport.setViewedComponent(container, false);
 
+    container->resized();
     resized();
 }
 
-void
+bool
 OscsendvstAudioProcessorEditor::
-connectOsc(String host, int port)
+isPageLoaded
+() const
 {
-    auto container = getActiveControlContainer();
-    auto message = String("connecting to ")
-        + host + String(":") + String(port);
-    DBG(message);
-
-    container->getOSCSender().connect(host, port);
-
-    for (auto & control :
-             container->getElementList()) {
-        control->setEnabled(true);
-    }
-}
-
-void
-OscsendvstAudioProcessorEditor::
-disconnectOsc()
-{
-    auto container = getActiveControlContainer();
-    for (auto & control : container->getElementList()) {
-        control->setEnabled(false);
-    }
-    container->getOSCSender().disconnect();
+    return activePage != pageMap.end ();
 }

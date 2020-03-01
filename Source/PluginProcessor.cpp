@@ -82,7 +82,8 @@ OscsendvstAudioProcessor() :
 OscsendvstAudioProcessor::
 ~OscsendvstAudioProcessor()
 {
-    Logger::writeToLog("~OscsendvstAudioProcessor");
+    Logger::writeToLog ("~OscsendvstAudioProcessor");
+    Logger::setCurrentLogger (nullptr);
 }
 
 File

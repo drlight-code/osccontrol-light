@@ -29,9 +29,7 @@ class ControlElement;
 
 class ControlElementFactory  {
 public:
-    ControlElementFactory
-    (OSCSender & oscSender,
-     OscsendvstAudioProcessor & processor);
+    ControlElementFactory(OSCSender & oscSender);
 
     std::unique_ptr<ControlElementUI>
     createControlElementUI
@@ -39,5 +37,4 @@ public:
 
 private:
     OSCSender & oscSender;
-    OscsendvstAudioProcessor & processor;
 };

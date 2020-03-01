@@ -22,14 +22,13 @@
 
 #include <JuceHeader.h>
 
-#include "ControlContainer.h"
+#include "PresetPage.h"
 
 #include "PluginProcessor.h"
 
 class OscsendvstAudioProcessorEditor
     : public AudioProcessorEditor,
-      public Button::Listener,
-      public Value::Listener
+      public Button::Listener
 {
 public:
     OscsendvstAudioProcessorEditor
@@ -40,24 +39,16 @@ public:
     void resized () override;
 
     void buttonClicked (Button *) override;
-    void valueChanged (Value & value) override;
 
 private:
     void initializeMainUIComponents ();
 
     void handlePresetButton ();
-    void createPage (String presetPath);
-    void connectActivePageValues ();
-
-    ControlContainer * getActiveControlContainer ();
-
-    void connectOsc (String host, int port);
-    void disconnectOsc ();
-
     void choosePresetFolder ();
     File pickPresetFile ();
-    void loadPreset (File preset);
+
     void switchToPage (String pathName);
+    bool isPageLoaded() const;
 
     OscsendvstAudioProcessor& processor;
 
@@ -73,18 +64,9 @@ private:
 
     Viewport viewport;
 
-    struct PageInfo {
-        Value host;
-        Value port;
-        Value connected;
-
-        ControlContainerUniq container;
-    };
-
-    using PageMap = std::map<String, std::unique_ptr<PageInfo>>;
-
+    using PageMap = std::map<String, std::unique_ptr<PresetPage>>;
     PageMap pageMap;
-    String activePage = "";
+    PageMap::iterator activePage;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR
     (OscsendvstAudioProcessorEditor)

@@ -20,24 +20,38 @@
 
 #pragma once
 
-#include <list>
-
 #include <JuceHeader.h>
 
-class ControlElementUI;
-using ControlElementUIUnique = std::unique_ptr<ControlElementUI>;
+class ControlContainer;
+using ControlContainerUnique = std::unique_ptr<ControlContainer>;
 
-class ControlContainer :
-    public Component
+class PresetPage :
+    public Value::Listener
 {
 public:
 
-    void resized() override;
+    PresetPage ();
+    ~PresetPage ();
 
-    std::list<ControlElementUIUnique> & getElementList();
+    void loadFromFile (File filePreset);
+
+    Value & getHostValue ();
+    Value & getPortValue ();
+
+    Value & getConnectedValue ();
+    void valueChanged (Value & value) override;
+
+    Component * getContainerComponent();
+
+    void connectOsc ();
+    void disconnectOsc ();
 
 private:
 
-    std::list<ControlElementUIUnique> listControlElements;
+    Value host;
+    Value port;
+    Value connected;
+
+    OSCSender oscSender;
+    ControlContainerUnique container;
 };
-using ControlContainerUnique = std::unique_ptr<ControlContainer>;

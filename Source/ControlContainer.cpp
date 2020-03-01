@@ -42,10 +42,3 @@ getElementList()
 {
     return listControlElements;
 }
-
-OSCSender &
-ControlContainer::
-getOSCSender()
-{
-    return oscSender;
-}

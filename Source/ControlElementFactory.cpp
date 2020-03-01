@@ -24,14 +24,13 @@
 
 #include "ControlElementUI.h"
 #include "ControlElementKnob.h"
+
 #include "ControlElementFactory.h"
 
 ControlElementFactory::
 ControlElementFactory
-(OSCSender & oscSender,
- OscsendvstAudioProcessor & processor) :
-    oscSender(oscSender),
-    processor(processor)
+(OSCSender & oscSender) :
+    oscSender(oscSender)
 {
 }
 
