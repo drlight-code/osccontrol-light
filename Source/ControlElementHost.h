@@ -24,9 +24,6 @@
 
 #include "ControlElement.h"
 
-using AudioProcessorParameterUnique =
-    std::unique_ptr<AudioProcessorParameter>;
-
 class ControlElementHost :
     public ControlElement,
     public AudioProcessorParameter::Listener,
@@ -35,8 +32,9 @@ class ControlElementHost :
 public:
 
     ControlElementHost
-    (const CreateInfo & info,
-     OSCSender & oscSender);
+    (const CreateInfo & createInfo,
+     OSCSender & oscSender,
+     AudioProcessor & processor);
 
     void parameterValueChanged (int index, float value) override;
     void parameterGestureChanged (int index, bool starting) override;
@@ -47,7 +45,9 @@ public:
 
 private:
 
-    AudioProcessorParameterUnique parameter;
+    AudioProcessor & processor;
+    AudioProcessorParameter * parameter;
+
     Value sendValue;
 };
 using ControlElementHostUnique = std::unique_ptr<ControlElementHost>;

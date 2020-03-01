@@ -56,7 +56,8 @@ createControlElementHost
  OscsendvstAudioProcessor & processor)
 {
     std::unique_ptr<ControlElementHost> product;
-    product = std::make_unique<ControlElementHost>(createInfo, oscSender);
+    product = std::make_unique<ControlElementHost>
+        (createInfo, oscSender, processor);
 
     return product;
 }

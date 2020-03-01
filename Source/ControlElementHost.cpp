@@ -23,10 +23,20 @@
 
 ControlElementHost::
 ControlElementHost
-(const CreateInfo & info,
- OSCSender & oscSender) :
-    ControlElement(info, oscSender)
+(const CreateInfo & createInfo,
+ OSCSender & oscSender,
+ AudioProcessor & processor) :
+    ControlElement (createInfo, oscSender),
+    processor (processor)
 {
+    parameter = new AudioParameterFloat
+        (createInfo.name, createInfo.name,
+         createInfo.range.first, createInfo.range.second,
+         createInfo.defaultValue);
+    parameter->addListener (this);
+    processor.addParameter (parameter);
+
+    sendValue.addListener(this);
 }
 
 void
@@ -34,6 +44,7 @@ ControlElementHost::
 parameterValueChanged
 (int index, float value)
 {
+    sendValue.setValue(value);
 }
 
 void
@@ -47,10 +58,15 @@ void
 ControlElementHost::
 valueChanged(Value & value)
 {
+    send();
 }
 
 void
 ControlElementHost::
 send()
 {
+    auto value = sendValue.getValue();
+    auto oscMessage =
+        OSCMessage(String(createInfo.message), float(value));
+    oscSender.send(oscMessage);
 }

@@ -52,6 +52,8 @@ public:
 
     bool acceptsMidi() const override;
     bool producesMidi() const override;
+    bool isMidiEffect() const override;
+
     double getTailLengthSeconds() const override;
 
     int getNumPrograms() override;
@@ -73,6 +75,7 @@ private:
     std::unique_ptr<OSCSender> oscSender;
 
     File dirPreset;
+    String filenamePlugin;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscsendvstAudioProcessor)
 };

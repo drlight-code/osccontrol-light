@@ -56,9 +56,9 @@ OscsendvstAudioProcessor() :
     hasUserInterface(true)
 {
     auto filePlugin = juce_getExecutableFile();
-    auto filenamePlugin = filePlugin.getFileNameWithoutExtension();
+    filenamePlugin = filePlugin.getFileNameWithoutExtension();
     auto filenameLog = filenamePlugin + ".log";
-    std::cout << filenameLog.toStdString() << std::endl;
+
     fileLogger = std::make_unique<FileLogger>
         (filePlugin.getParentDirectory().getChildFile(filenameLog),
          "oscsend-vst debug log", 0);
@@ -97,7 +97,9 @@ OscsendvstAudioProcessor() :
         }
     }
     else {
-        // TODO freak out!!
+        auto message = String("error: filename should start with oscsend-vst.");
+        Logger::writeToLog (message );
+        throw std::runtime_error (message.toStdString ());
     }
 }
 
@@ -135,8 +137,11 @@ initializeHeadless
     Logger::writeToLog("initializeHeadless");
 
     PresetParser preset (filePreset);
-    ControlElementFactory factory (*oscSender);
 
+    oscSender = std::make_unique<OSCSender> ();
+    oscSender->connect (preset.getHost (), preset.getPort ());
+
+    ControlElementFactory factory (*oscSender);
     for(auto control : preset.getControlElements ()) {
 
         auto createInfo = preset.getControlElementCreateInfo (control);
@@ -151,7 +156,7 @@ OscsendvstAudioProcessor::
 getName() const
 {
     Logger::writeToLog("getName");
-    return "oscsend";
+    return filenamePlugin;
 }
 
 bool
@@ -159,7 +164,7 @@ OscsendvstAudioProcessor::
 acceptsMidi() const
 {
     Logger::writeToLog("acceptsMidi");
-    return false;
+    return true;
 }
 
 bool
@@ -167,14 +172,22 @@ OscsendvstAudioProcessor::
 producesMidi() const
 {
     Logger::writeToLog("producesMidi");
-    return false;
+    return true;
+}
+
+bool
+OscsendvstAudioProcessor::
+isMidiEffect() const
+{
+//    Logger::writeToLog("isMidiEffect");
+    return true;
 }
 
 double
 OscsendvstAudioProcessor::
 getTailLengthSeconds() const
 {
-    Logger::writeToLog("getTailLengthSeconds");
+//    Logger::writeToLog("getTailLengthSeconds");
     return 0.0;
 }
 
