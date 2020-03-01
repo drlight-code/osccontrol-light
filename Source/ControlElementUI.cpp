@@ -60,15 +60,21 @@ void
 ControlElementUI::
 registerSendValue()
 {
-    sendValue.removeListener(this);
-    sendValue.referTo
-        (getSpecificSendValue());
-    sendValue.addListener(this);
+    sendValue.removeListener (this);
 
-    if (sendValue.getValue().isDouble() &&
-        float(sendValue.getValue()) == 0.f) {
-        send();
-    }
+    sendValue.referTo
+        (getSpecificSendValue ());
+
+    // set below allowed range to trigger valueChanged later
+    sendValue.setValue
+      (createInfo.range.first -
+        std::numeric_limits<float>::epsilon ());
+
+    sendValue.addListener (this);
+
+    // seting default value now triggers valueChanged -> send on init,
+    // even for default == 0 that would not trigger valueChanged.
+    sendValue.setValue (createInfo.defaultValue);
 }
 
 void

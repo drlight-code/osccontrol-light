@@ -40,7 +40,6 @@ public:
 protected:
     Value & getSpecificSendValue() override;
 
-
 private:
     std::unique_ptr<Slider> knob;
     std::unique_ptr<TextEditor> textEditor;

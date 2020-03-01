@@ -34,7 +34,6 @@ ControlElementKnob
     knob->setSliderStyle (Slider::RotaryVerticalDrag);
     knob->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     knob->setRange (createInfo.range.first, createInfo.range.second, 0);
-    knob->setValue (createInfo.defaultValue);
     knob->setPaintingIsUnclipped (true);
     addAndMakeVisible (knob.get());
 
