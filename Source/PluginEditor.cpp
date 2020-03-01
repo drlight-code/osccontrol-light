@@ -176,14 +176,15 @@ buttonClicked
 (Button * button)
 {
     if (button == &buttonPresetFolder) {
-        choosePresetFolder();
+        choosePresetFolder ();
     }
     else if (button == &buttonPreset) {
-        handlePresetButton();
+        handlePresetButton ();
     }
     else if (button == &buttonReset) {
-        activePage->second->loadFromFile(activePage->first);
-//        switchToPage(activePage->first);
+        activePage->second->loadFromFile (activePage->first);
+        activePage->second->getContainerComponent ()->resized ();
+        resized ();
     }
 }
 
@@ -277,8 +278,8 @@ switchToPage
     auto container = activePage->second->getContainerComponent ();
     viewport.setViewedComponent(container, false);
 
-    container->resized();
-    resized();
+    container->resized ();
+    resized ();
 }
 
 bool
