@@ -265,7 +265,6 @@ processBlock
 (AudioBuffer<float>& buffer,
   MidiBuffer& midiMessages)
 {
-//    Logger::writeToLog("processBlock");
 }
 
 bool
@@ -291,12 +290,14 @@ getStateInformation
 (MemoryBlock& destData)
 {
     Logger::writeToLog("getStateInformation");
-    // You should use this method to store your parameters in the
-    // memory block.  You could do that either as raw data, or use the
-    // XML or ValueTree classes as intermediaries to make it easy to
-    // save and load complex data.
 
-    // MemoryOutputStream (destData, true).writeString("test");
+    if (!hasUserInterface) {
+        auto stream = MemoryOutputStream (destData, true);
+
+        for (auto & control : listHostControls) {
+            control->serialize (stream);
+        }
+    }
 }
 
 void
@@ -305,6 +306,15 @@ setStateInformation
 (const void* data, int sizeInBytes)
 {
     Logger::writeToLog("setStateInformation");
+
+    if (!hasUserInterface && sizeInBytes > 0) {
+        auto stream = MemoryInputStream
+            (data, static_cast<size_t> (sizeInBytes), false);
+
+        for (auto & control : listHostControls) {
+            control->deserialize (stream);
+        }
+    }
 }
 
 // This creates new instances of the plugin..

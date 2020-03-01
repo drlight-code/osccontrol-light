@@ -41,7 +41,10 @@ public:
 
     void valueChanged (Value & value) override;
 
-    void send() override;
+    void send () override;
+
+    void serialize (MemoryOutputStream & stream);
+    void deserialize (MemoryInputStream & stream);
 
 private:
 

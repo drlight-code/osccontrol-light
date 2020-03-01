@@ -70,3 +70,19 @@ send()
         OSCMessage(String(createInfo.message), float(value));
     oscSender.send(oscMessage);
 }
+
+void
+ControlElementHost::
+serialize
+(MemoryOutputStream & stream)
+{
+    stream.writeFloat (parameter->getValue());
+}
+
+void
+ControlElementHost::
+deserialize
+(MemoryInputStream & stream)
+{
+    parameter->setValueNotifyingHost (stream.readFloat());
+}
