@@ -55,7 +55,7 @@ loadFromFile
     port = preset.getPort ();
     connected = true;
 
-    container->getElementList ().clear ();
+    container->getControlElements ().clear ();
 
     ControlElementFactory factory (oscSender);
 
@@ -69,7 +69,7 @@ loadFromFile
             element->getNumberOfRows () * LayoutHints::heightRow;
 
         container->addAndMakeVisible (element.get ());
-        container->getElementList ().push_back (std::move (element));
+        container->getControlElements ().push_back (std::move (element));
     }
 
     auto areaContainer = container->getBounds ();
@@ -121,7 +121,7 @@ connectOsc ()
 
     oscSender.connect(host.getValue (), port.getValue ());
 
-    for (auto & control : container->getElementList()) {
+    for (auto & control : container->getControlElements ()) {
         control->setEnabled(true);
     }
 }
@@ -130,7 +130,7 @@ void
 PresetPage::
 disconnectOsc()
 {
-    for (auto & control : container->getElementList()) {
+    for (auto & control : container->getControlElements ()) {
         control->setEnabled(false);
     }
 

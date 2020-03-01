@@ -24,6 +24,7 @@
 
 #include "ControlElementUI.h"
 #include "ControlElementKnob.h"
+#include "ControlElementHost.h"
 
 #include "ControlElementFactory.h"
 
@@ -34,7 +35,7 @@ ControlElementFactory
 {
 }
 
-std::unique_ptr<ControlElementUI>
+ControlElementUIUnique
 ControlElementFactory::
 createControlElementUI
 (const ControlElement::CreateInfo & createInfo)
@@ -44,6 +45,18 @@ createControlElementUI
         product = std::make_unique<ControlElementKnob>(createInfo, oscSender);
         product->registerSendValue();
     }
+
+    return product;
+}
+
+ControlElementHostUnique
+ControlElementFactory::
+createControlElementHost
+(const ControlElement::CreateInfo & createInfo,
+ OscsendvstAudioProcessor & processor)
+{
+    std::unique_ptr<ControlElementHost> product;
+    product = std::make_unique<ControlElementHost>(createInfo, oscSender);
 
     return product;
 }

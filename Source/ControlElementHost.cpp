@@ -28,3 +28,29 @@ ControlElementHost
     ControlElement(info, oscSender)
 {
 }
+
+void
+ControlElementHost::
+parameterValueChanged
+(int index, float value)
+{
+}
+
+void
+ControlElementHost::
+parameterGestureChanged
+(int index, bool starting)
+{
+}
+
+void
+ControlElementHost::
+valueChanged(Value & value)
+{
+}
+
+void
+ControlElementHost::
+send()
+{
+}

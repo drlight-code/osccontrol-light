@@ -20,14 +20,34 @@
 
 #pragma once
 
+#include <JuceHeader.h>
+
 #include "ControlElement.h"
 
+using AudioProcessorParameterUnique =
+    std::unique_ptr<AudioProcessorParameter>;
+
 class ControlElementHost :
-    public ControlElement
+    public ControlElement,
+    public AudioProcessorParameter::Listener,
+    public Value::Listener
 {
 public:
+
     ControlElementHost
     (const CreateInfo & info,
      OSCSender & oscSender);
 
+    void parameterValueChanged (int index, float value) override;
+    void parameterGestureChanged (int index, bool starting) override;
+
+    void valueChanged (Value & value) override;
+
+    void send() override;
+
+private:
+
+    AudioProcessorParameterUnique parameter;
+    Value sendValue;
 };
+using ControlElementHostUnique = std::unique_ptr<ControlElementHost>;

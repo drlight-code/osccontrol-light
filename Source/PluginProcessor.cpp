@@ -18,10 +18,16 @@
 
 */
 
-#include "PluginProcessor.h"
+#include <dlfcn.h>
+
+#include "PresetParser.h"
+
+#include "ControlElementHost.h"
+#include "ControlElementFactory.h"
+
 #include "PluginEditor.h"
 
-#include <dlfcn.h>
+#include "PluginProcessor.h"
 
 namespace  {
 File juce_getExecutableFile();
@@ -47,26 +53,42 @@ File juce_getExecutableFile()
 OscsendvstAudioProcessor::
 OscsendvstAudioProcessor() :
     AudioProcessor (BusesProperties()),
-    fileLogger(File("~/.oscsend-vst.log"), "oscsend-vst debug log", 0),
     hasUserInterface(true)
 {
-    Logger::setCurrentLogger(&fileLogger);
+    auto filePlugin = juce_getExecutableFile();
+    auto filenamePlugin = filePlugin.getFileNameWithoutExtension();
+    auto filenameLog = filenamePlugin + ".log";
+    std::cout << filenameLog.toStdString() << std::endl;
+    fileLogger = std::make_unique<FileLogger>
+        (filePlugin.getParentDirectory().getChildFile(filenameLog),
+         "oscsend-vst debug log", 0);
+
+    Logger::setCurrentLogger(fileLogger.get());
+    Logger::writeToLog(filePlugin.getFullPathName());
     Logger::writeToLog("OscsendvstAudioProcessor");
 
-    auto filename = juce_getExecutableFile();
-    Logger::writeToLog(filename.getFullPathName());
+    auto pathPreset =
+        SystemStats::getEnvironmentVariable("OSCSEND_PRESET_PATH", "");
+    dirPreset = File (pathPreset);
 
-    pathPreset =
-        File(SystemStats::getEnvironmentVariable("OSCSEND_PRESET_PATH", ""));
-
-    auto namePlugin = filename.getFileNameWithoutExtension();
-    if(namePlugin.startsWith("oscsend-vst")) {
+    if(filenamePlugin.startsWith("oscsend-vst")) {
         auto presetToLoad =
-            namePlugin.fromFirstOccurrenceOf
+            filenamePlugin.fromFirstOccurrenceOf
             ("oscsend-vst", false, false).trimCharactersAtStart("-");
 
         if(presetToLoad.isNotEmpty()) {
             Logger::writeToLog("PRESET NAME: " + presetToLoad);
+
+            // if (pathPreset == "") {
+            //     AlertWindow::showMessageBox
+            //         (AlertWindow::AlertIconType::WarningIcon,
+            //             "Error loading oscsend-vst",
+            //             "When running oscsend-vst in headless mode "
+            //             "for DAW integration, make sure that "
+            //             "OSCSEND_PRESET_PATH is set properly in "
+            //             "the environment!");
+            //     // TODO freak out!!
+            // }
 
             auto presetFile = locatePresetFile(presetToLoad);
 
@@ -92,13 +114,13 @@ locatePresetFile
 (String namePreset)
 {
     auto filenamePreset = namePreset + ".yaml";
-    auto files = pathPreset.findChildFiles
+    auto files = dirPreset.findChildFiles
         (File::findFiles, true, filenamePreset);
 
     if(files.isEmpty()) {
-        Logger::writeToLog
-            ("error: could not locate preset file: " + filenamePreset);
-        // TODO freak out!!
+        auto message = "error: could not locate preset file: " + filenamePreset;
+        Logger::writeToLog (message );
+        throw std::runtime_error (message.toStdString ());
     }
 
     // TODO resolve possible alternatives
@@ -112,7 +134,16 @@ initializeHeadless
 {
     Logger::writeToLog("initializeHeadless");
 
-    // initialize DAW controls from so-named preset
+    PresetParser preset (filePreset);
+    ControlElementFactory factory (*oscSender);
+
+    for(auto control : preset.getControlElements ()) {
+
+        auto createInfo = preset.getControlElementCreateInfo (control);
+        auto element = factory.createControlElementHost (createInfo, *this);
+
+        listHostControls.push_back (std::move (element));
+    }
 }
 
 const String
@@ -238,7 +269,7 @@ createEditor()
 {
     Logger::writeToLog("createEditor");
     return new OscsendvstAudioProcessorEditor
-        (*this, pathPreset);
+        (*this, dirPreset);
 }
 
 void

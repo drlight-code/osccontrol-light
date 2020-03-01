@@ -20,7 +20,13 @@
 
 #pragma once
 
+#include <list>
+
 #include <JuceHeader.h>
+
+class ControlElementHost;
+using ControlElementHostUnique =
+    std::unique_ptr<ControlElementHost>;
 
 class OscsendvstAudioProcessor :
   public AudioProcessor
@@ -59,11 +65,14 @@ public:
 
 private:
 
-    FileLogger fileLogger;
+    std::unique_ptr<FileLogger> fileLogger;
 
     bool hasUserInterface;
+
+    std::list<ControlElementHostUnique> listHostControls;
     std::unique_ptr<OSCSender> oscSender;
-    File pathPreset;
+
+    File dirPreset;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscsendvstAudioProcessor)
 };

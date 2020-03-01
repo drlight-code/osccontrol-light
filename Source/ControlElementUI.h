@@ -50,4 +50,4 @@ private:
     std::unique_ptr<TextButton> buttonMute;
     Value sendValue;
 };
-using ControlElementUIUniq = std::unique_ptr<ControlElementUI>;
+using ControlElementUIUnique = std::unique_ptr<ControlElementUI>;

@@ -27,10 +27,10 @@
 
 OscsendvstAudioProcessorEditor::
 OscsendvstAudioProcessorEditor
-(OscsendvstAudioProcessor& p, File pathPreset) :
+(OscsendvstAudioProcessor& p, File dirPreset) :
     AudioProcessorEditor (&p),
     processor (p),
-    pathPreset (pathPreset),
+    dirPreset (dirPreset),
     activePage(pageMap.end())
 {
     auto scaleFactor = SystemStats::getEnvironmentVariable
@@ -192,12 +192,12 @@ void
 OscsendvstAudioProcessorEditor::
 handlePresetButton()
 {
-    if (!pathPreset.exists ()) {
+    if (!dirPreset.exists ()) {
         choosePresetFolder ();
     }
     else {
         auto filePreset = pickPresetFile ();
-        auto pathPreset = filePreset.getFullPathName ();
+        auto dirPreset = filePreset.getFullPathName ();
 
         if (filePreset.exists ()) {
             buttonConnect.setEnabled (true);
@@ -205,16 +205,16 @@ handlePresetButton()
             textHost.setEnabled (true);
             textPort.setEnabled (true);
 
-            auto pageIter = pageMap.find (pathPreset);
+            auto pageIter = pageMap.find (dirPreset);
             auto pageExists = pageIter != pageMap.end ();
             if (!pageExists) {
                 auto presetPage = std::make_unique<PresetPage> ();
                 presetPage->loadFromFile (filePreset);
-                pageMap[pathPreset] = std::move (presetPage);
-                switchToPage (pathPreset);
+                pageMap[dirPreset] = std::move (presetPage);
+                switchToPage (dirPreset);
             }
-            else if (pathPreset != activePage->first) {
-                switchToPage (pathPreset);
+            else if (dirPreset != activePage->first) {
+                switchToPage (dirPreset);
             }
         }
     }
@@ -227,7 +227,7 @@ choosePresetFolder()
     FileBrowserComponent browser(
         FileBrowserComponent::openMode |
         FileBrowserComponent::canSelectDirectories,
-        pathPreset, nullptr, nullptr);
+        dirPreset, nullptr, nullptr);
 
     auto colourBg =
         LookAndFeel::getDefaultLookAndFeel()
@@ -237,7 +237,7 @@ choosePresetFolder()
         browser, false, colourBg);
 
     if (dialogBox.show()) {
-        pathPreset = browser.getSelectedFile(0);
+        dirPreset = browser.getSelectedFile(0);
     }
 }
 
@@ -245,13 +245,13 @@ File
 OscsendvstAudioProcessorEditor::
 pickPresetFile()
 {
-    auto files = pathPreset.findChildFiles(File::findFiles, true, "*.yaml");
+    auto files = dirPreset.findChildFiles(File::findFiles, true, "*.yaml");
     files.sort();
 
     PopupMenu popup;
     int id = 1;
     for (auto & file : files) {
-        auto name = file.getRelativePathFrom(pathPreset).dropLastCharacters(5);
+        auto name = file.getRelativePathFrom(dirPreset).dropLastCharacters(5);
         name = name.replaceCharacter('\\', '/');
         popup.addItem(id++, name);
     }

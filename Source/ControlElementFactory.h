@@ -25,15 +25,27 @@
 #include <JuceHeader.h>
 
 class OscsendvstAudioProcessor;
-class ControlElement;
+
+class ControlElementUI;
+using ControlElementUIUnique =
+    std::unique_ptr<ControlElementUI>;
+
+class ControlElementHost;
+using ControlElementHostUnique =
+    std::unique_ptr<ControlElementHost>;
 
 class ControlElementFactory  {
 public:
     ControlElementFactory(OSCSender & oscSender);
 
-    std::unique_ptr<ControlElementUI>
+    ControlElementUIUnique
     createControlElementUI
     (const ControlElement::CreateInfo & createInfo);
+
+    ControlElementHostUnique
+    createControlElementHost
+    (const ControlElement::CreateInfo & createInfo,
+     OscsendvstAudioProcessor & processor);
 
 private:
     OSCSender & oscSender;

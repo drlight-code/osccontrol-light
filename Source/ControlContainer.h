@@ -34,7 +34,7 @@ public:
 
     void resized() override;
 
-    std::list<ControlElementUIUnique> & getElementList();
+    std::list<ControlElementUIUnique> & getControlElements();
 
 private:
 

@@ -32,7 +32,7 @@ class OscsendvstAudioProcessorEditor
 {
 public:
     OscsendvstAudioProcessorEditor
-    (OscsendvstAudioProcessor&, File pathPreset);
+    (OscsendvstAudioProcessor&, File dirPreset);
     ~OscsendvstAudioProcessorEditor ();
 
     void paint (Graphics&) override;
@@ -52,7 +52,7 @@ private:
 
     OscsendvstAudioProcessor& processor;
 
-    File pathPreset;
+    File dirPreset;
 
     ImageButton buttonPreset;
     ImageButton buttonPresetFolder;

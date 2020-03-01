@@ -36,9 +36,9 @@ resized()
     }
 }
 
-std::list<ControlElementUIUniq> &
+std::list<ControlElementUIUnique> &
 ControlContainer::
-getElementList()
+getControlElements ()
 {
     return listControlElements;
 }
