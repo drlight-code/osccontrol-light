@@ -81,7 +81,7 @@ Platform Support
 
 Different plugin SDKs are supported via the [JUCE](https://juce.com/)
 library (VST, VST3, AU, RTAS and AAX), as well as all major operating
-systems (GNU/Linux, MacOS, Microsoft Windows).
+systems (GNU/Linux, MacOS and Microsoft Windows).
 
 
 Compilation
