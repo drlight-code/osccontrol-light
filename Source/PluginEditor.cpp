@@ -114,9 +114,11 @@ initializeMainUIComponents ()
     addAndMakeVisible(&buttonConnect);
 
     textHost.setEnabled(false);
+    textHost.setJustification(Justification::right);
     addAndMakeVisible(&textHost);
 
     textPort.setEnabled(false);
+    textPort.setJustification(Justification::right);
     addAndMakeVisible(&textPort);
 
     viewport.setPaintingIsUnclipped(true);
