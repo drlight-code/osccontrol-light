@@ -3,11 +3,15 @@ oscsend-light - An audio plugin that speaks OSC
 
 This software enables dispatching of Open Sound Control (OSC) messages
 from audio plugin host environments such as digital audio workstations
-(DAW). It features a plugin or standalone UI that enables prototyping
+(DAW). 
+
+It features a plugin or standalone UI that enables prototyping
 of control presets by quick switching and reloading of preset
 definitions.  To integrate into a host environment with automatable
 controls, the plugin can run in headless mode that loads a specific
-preset upon construction. Control presets are defined via a concise
+preset upon construction. 
+
+Control presets are defined via a concise
 YAML-based textual markup format.
 
 
