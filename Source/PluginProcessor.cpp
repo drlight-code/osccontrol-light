@@ -1,6 +1,6 @@
 /*
 
-  oscsend-vst - An audio plugin that speaks OSC.
+  oscsend-light - An audio plugin that speaks OSC.
   Copyright (C) 2020 Patric Schmitz
 
   This program is free software: you can redistribute it and/or modify
@@ -61,7 +61,7 @@ OscsendvstAudioProcessor() :
 
     fileLogger = std::make_unique<FileLogger>
         (filePlugin.getParentDirectory().getChildFile(filenameLog),
-         "oscsend-vst debug log", 0);
+         "oscsend-light debug log", 0);
 
     Logger::setCurrentLogger(fileLogger.get());
     Logger::writeToLog(filePlugin.getFullPathName());
@@ -71,10 +71,10 @@ OscsendvstAudioProcessor() :
         SystemStats::getEnvironmentVariable("OSCSEND_PRESET_PATH", "");
     dirPreset = File (pathPreset);
 
-    if(filenamePlugin.startsWith("oscsend-vst")) {
+    if(filenamePlugin.startsWith("oscsend-light")) {
         auto presetToLoad =
             filenamePlugin.fromFirstOccurrenceOf
-            ("oscsend-vst", false, false).trimCharactersAtStart("-");
+            ("oscsend-light", false, false).trimCharactersAtStart("-");
 
         if(presetToLoad.isNotEmpty()) {
             Logger::writeToLog("PRESET NAME: " + presetToLoad);
@@ -82,8 +82,8 @@ OscsendvstAudioProcessor() :
             // if (pathPreset == "") {
             //     AlertWindow::showMessageBox
             //         (AlertWindow::AlertIconType::WarningIcon,
-            //             "Error loading oscsend-vst",
-            //             "When running oscsend-vst in headless mode "
+            //             "Error loading oscsend-light",
+            //             "When running oscsend-light in headless mode "
             //             "for DAW integration, make sure that "
             //             "OSCSEND_PRESET_PATH is set properly in "
             //             "the environment!");
@@ -97,7 +97,7 @@ OscsendvstAudioProcessor() :
         }
     }
     else {
-        auto message = String("error: filename should start with oscsend-vst.");
+        auto message = String("error: filename should start with oscsend-light.");
         Logger::writeToLog (message );
         throw std::runtime_error (message.toStdString ());
     }
