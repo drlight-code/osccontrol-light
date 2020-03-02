@@ -294,6 +294,8 @@ getStateInformation
     if (!hasUserInterface) {
         auto stream = MemoryOutputStream (destData, true);
 
+        stream.writeString (hashHostControls ());
+
         for (auto & control : listHostControls) {
             control->serialize (stream);
         }
@@ -311,10 +313,41 @@ setStateInformation
         auto stream = MemoryInputStream
             (data, static_cast<size_t> (sizeInBytes), false);
 
-        for (auto & control : listHostControls) {
-            control->deserialize (stream);
+        auto hashHostControlsStored = stream.readString();
+        auto hashHostControlsActive = hashHostControls ();
+
+        if (hashHostControlsStored == hashHostControlsActive) {
+            Logger::writeToLog ("restoring plugin state");
+            for (auto & control : listHostControls) {
+                control->deserialize (stream);
+            }
+        }
+        else {
+            Logger::writeToLog
+                ("Host control hashes don't match, "
+                 "not restoring plugin state.");
+            Logger::writeToLog ("stored: " + hashHostControlsStored);
+            Logger::writeToLog ("active: " + hashHostControlsActive);
         }
     }
+}
+
+String
+OscsendvstAudioProcessor::
+hashHostControls()
+{
+    MemoryBlock memInput;
+
+    for (auto & control : listHostControls) {
+        auto createInfo = control->getCreateInfo ();
+
+        auto charpName = createInfo.name.getCharPointer();
+        memInput.append (charpName, sizeof (charpName));
+        memInput.append (&createInfo.type, sizeof (createInfo.type));
+        memInput.append (&createInfo.range, sizeof (createInfo.range));
+    }
+
+    return SHA256 (memInput).toHexString ();
 }
 
 // This creates new instances of the plugin..

@@ -67,6 +67,8 @@ public:
 
 private:
 
+    String hashHostControls();
+
     std::unique_ptr<FileLogger> fileLogger;
 
     bool hasUserInterface;

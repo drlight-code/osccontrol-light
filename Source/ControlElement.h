@@ -34,19 +34,21 @@ public:
     };
 
     struct CreateInfo {
-        std::string name;
+        String name;
         Type type;
 
         std::pair<float, float> range;
         float defaultValue;
 
-        std::string message;
-        std::string messageMute;
+        String message;
+        String messageMute;
     };
 
     ControlElement
     (const CreateInfo & info,
      OSCSender & oscSender);
+
+    CreateInfo getCreateInfo () const;
 
     virtual void send() = 0;
 

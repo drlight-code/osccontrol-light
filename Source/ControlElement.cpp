@@ -28,3 +28,10 @@ ControlElement
     createInfo(createInfo)
 {
 }
+
+ControlElement::CreateInfo
+ControlElement::
+getCreateInfo () const
+{
+    return createInfo;
+}
