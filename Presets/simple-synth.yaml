@@ -1,0 +1,16 @@
+network:
+  host: 127.0.0.1
+  port: 2342
+
+controls:
+  - name: frequency
+    type: float
+    range: [100, 2000]
+    default: 440
+    message: /synth/freq
+
+  - name: amplitude
+    type: float
+    range: [0, 1]
+    default: 0.8
+    message: /synth/amplitude
