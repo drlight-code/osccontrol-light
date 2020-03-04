@@ -1,6 +1,6 @@
 /*
 
-  oscsend-light - An audio plugin that speaks OSC.
+  osccontrol-light - An audio plugin that speaks OSC.
   Copyright (C) 2020 Patric Schmitz
 
   This program is free software: you can redistribute it and/or modify
@@ -25,16 +25,16 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-OscsendvstAudioProcessorEditor::
-OscsendvstAudioProcessorEditor
-(OscsendvstAudioProcessor& p, File dirPreset) :
+OSCControlAudioProcessorEditor::
+OSCControlAudioProcessorEditor
+(OSCControlAudioProcessor& p, File dirPreset) :
     AudioProcessorEditor (&p),
     processor (p),
     dirPreset (dirPreset),
     activePage(pageMap.end())
 {
     auto scaleFactor = SystemStats::getEnvironmentVariable
-        ("OSCSEND_SCALE_FACTOR", "1").getFloatValue();
+        ("OSCCONTROL_SCALE_FACTOR", "1").getFloatValue();
     setScaleFactor (scaleFactor);
 
     LookAndFeel::getDefaultLookAndFeel ()
@@ -48,13 +48,13 @@ OscsendvstAudioProcessorEditor
     setSize (300, 300);
 }
 
-OscsendvstAudioProcessorEditor::
-~OscsendvstAudioProcessorEditor ()
+OSCControlAudioProcessorEditor::
+~OSCControlAudioProcessorEditor ()
 {
 }
 
 void
-OscsendvstAudioProcessorEditor::
+OSCControlAudioProcessorEditor::
 initializeMainUIComponents ()
 {
     auto imagePreset = ImageCache::getFromMemory
@@ -126,7 +126,7 @@ initializeMainUIComponents ()
 }
 
 void
-OscsendvstAudioProcessorEditor::
+OSCControlAudioProcessorEditor::
 paint
 (Graphics& g)
 {
@@ -135,7 +135,7 @@ paint
 }
 
 void
-OscsendvstAudioProcessorEditor::
+OSCControlAudioProcessorEditor::
 resized ()
 {
     auto heightRow = LayoutHints::heightRow;
@@ -173,7 +173,7 @@ resized ()
 }
 
 void
-OscsendvstAudioProcessorEditor::
+OSCControlAudioProcessorEditor::
 buttonClicked
 (Button * button)
 {
@@ -191,7 +191,7 @@ buttonClicked
 }
 
 void
-OscsendvstAudioProcessorEditor::
+OSCControlAudioProcessorEditor::
 handlePresetButton()
 {
     if (!dirPreset.exists ()) {
@@ -223,7 +223,7 @@ handlePresetButton()
 }
 
 void
-OscsendvstAudioProcessorEditor::
+OSCControlAudioProcessorEditor::
 choosePresetFolder()
 {
     FileBrowserComponent browser(
@@ -244,7 +244,7 @@ choosePresetFolder()
 }
 
 File
-OscsendvstAudioProcessorEditor::
+OSCControlAudioProcessorEditor::
 pickPresetFile()
 {
     auto files = dirPreset.findChildFiles(File::findFiles, true, "*.yaml");
@@ -264,7 +264,7 @@ pickPresetFile()
 }
 
 void
-OscsendvstAudioProcessorEditor::
+OSCControlAudioProcessorEditor::
 switchToPage
 (String presetPath)
 {
@@ -285,7 +285,7 @@ switchToPage
 }
 
 bool
-OscsendvstAudioProcessorEditor::
+OSCControlAudioProcessorEditor::
 isPageLoaded
 () const
 {

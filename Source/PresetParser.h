@@ -1,6 +1,6 @@
 /*
 
-  oscsend-light - An audio plugin that speaks OSC.
+  osccontrol-light - An audio plugin that speaks OSC.
   Copyright (C) 2020 Patric Schmitz
 
   This program is free software: you can redistribute it and/or modify

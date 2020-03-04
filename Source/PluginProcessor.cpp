@@ -1,6 +1,6 @@
 /*
 
-  oscsend-light - An audio plugin that speaks OSC.
+  osccontrol-light - An audio plugin that speaks OSC.
   Copyright (C) 2020 Patric Schmitz
 
   This program is free software: you can redistribute it and/or modify
@@ -50,8 +50,8 @@ File juce_getExecutableFile()
 }
 }
 
-OscsendvstAudioProcessor::
-OscsendvstAudioProcessor() :
+OSCControlAudioProcessor::
+OSCControlAudioProcessor() :
     AudioProcessor (BusesProperties()),
     hasUserInterface(true)
 {
@@ -61,20 +61,20 @@ OscsendvstAudioProcessor() :
 
     fileLogger = std::make_unique<FileLogger>
         (filePlugin.getParentDirectory().getChildFile(filenameLog),
-         "oscsend-light debug log", 0);
+         "osccontrol-light debug log", 0);
 
     Logger::setCurrentLogger(fileLogger.get());
     Logger::writeToLog(filePlugin.getFullPathName());
-    Logger::writeToLog("OscsendvstAudioProcessor");
+    Logger::writeToLog("OSCControlAudioProcessor");
 
     auto pathPreset =
-        SystemStats::getEnvironmentVariable("OSCSEND_PRESET_PATH", "");
+        SystemStats::getEnvironmentVariable("OSCCONTROL_PRESET_PATH", "");
     dirPreset = File (pathPreset);
 
-    if(filenamePlugin.startsWith("oscsend-light")) {
+    if(filenamePlugin.startsWith("osccontrol-light")) {
         auto presetToLoad =
             filenamePlugin.fromFirstOccurrenceOf
-            ("oscsend-light", false, false).trimCharactersAtStart("-");
+            ("osccontrol-light", false, false).trimCharactersAtStart("-");
 
         if(presetToLoad.isNotEmpty()) {
             Logger::writeToLog("PRESET NAME: " + presetToLoad);
@@ -82,10 +82,10 @@ OscsendvstAudioProcessor() :
             // if (pathPreset == "") {
             //     AlertWindow::showMessageBox
             //         (AlertWindow::AlertIconType::WarningIcon,
-            //             "Error loading oscsend-light",
-            //             "When running oscsend-light in headless mode "
+            //             "Error loading osccontrol-light",
+            //             "When running osccontrol-light in headless mode "
             //             "for DAW integration, make sure that "
-            //             "OSCSEND_PRESET_PATH is set properly in "
+            //             "OSCCONTROL_PRESET_PATH is set properly in "
             //             "the environment!");
             //     // TODO freak out!!
             // }
@@ -97,21 +97,22 @@ OscsendvstAudioProcessor() :
         }
     }
     else {
-        auto message = String("error: filename should start with oscsend-light.");
+        auto message =
+            String("error: filename should start with osccontrol-light.");
         Logger::writeToLog (message );
         throw std::runtime_error (message.toStdString ());
     }
 }
 
-OscsendvstAudioProcessor::
-~OscsendvstAudioProcessor()
+OSCControlAudioProcessor::
+~OSCControlAudioProcessor()
 {
-    Logger::writeToLog ("~OscsendvstAudioProcessor");
+    Logger::writeToLog ("~OSCControlAudioProcessor");
     Logger::setCurrentLogger (nullptr);
 }
 
 File
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 locatePresetFile
 (String namePreset)
 {
@@ -130,7 +131,7 @@ locatePresetFile
 }
 
 void
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 initializeHeadless
 (File filePreset)
 {
@@ -152,7 +153,7 @@ initializeHeadless
 }
 
 const String
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 getName() const
 {
     Logger::writeToLog("getName");
@@ -160,7 +161,7 @@ getName() const
 }
 
 bool
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 acceptsMidi() const
 {
     Logger::writeToLog("acceptsMidi");
@@ -168,7 +169,7 @@ acceptsMidi() const
 }
 
 bool
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 producesMidi() const
 {
     Logger::writeToLog("producesMidi");
@@ -176,7 +177,7 @@ producesMidi() const
 }
 
 bool
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 isMidiEffect() const
 {
 //    Logger::writeToLog("isMidiEffect");
@@ -184,7 +185,7 @@ isMidiEffect() const
 }
 
 double
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 getTailLengthSeconds() const
 {
 //    Logger::writeToLog("getTailLengthSeconds");
@@ -192,7 +193,7 @@ getTailLengthSeconds() const
 }
 
 int
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 getNumPrograms()
 {
     // Logger::writeToLog("getNumPrograms");
@@ -203,7 +204,7 @@ getNumPrograms()
 }
 
 int
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 getCurrentProgram()
 {
     // Logger::writeToLog("getCurrentProgram");
@@ -211,7 +212,7 @@ getCurrentProgram()
 }
 
 void
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 setCurrentProgram
 (int index)
 {
@@ -219,7 +220,7 @@ setCurrentProgram
 }
 
 const String
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 getProgramName
 (int index)
 {
@@ -228,7 +229,7 @@ getProgramName
 }
 
 void
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 changeProgramName
 (int index, const String& newName)
 {
@@ -236,7 +237,7 @@ changeProgramName
 }
 
 void
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 prepareToPlay
 (double sampleRate, int samplesPerBlock)
 {
@@ -244,14 +245,14 @@ prepareToPlay
 }
 
 void
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 releaseResources()
 {
     Logger::writeToLog("releaseResources");
 }
 
 bool
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 isBusesLayoutSupported
 (const BusesLayout& layouts) const
 {
@@ -260,7 +261,7 @@ isBusesLayoutSupported
 }
 
 void
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 processBlock
 (AudioBuffer<float>& buffer,
   MidiBuffer& midiMessages)
@@ -268,7 +269,7 @@ processBlock
 }
 
 bool
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 hasEditor() const
 {
     Logger::writeToLog("hasEditor");
@@ -276,16 +277,16 @@ hasEditor() const
 }
 
 AudioProcessorEditor*
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 createEditor()
 {
     Logger::writeToLog("createEditor");
-    return new OscsendvstAudioProcessorEditor
+    return new OSCControlAudioProcessorEditor
         (*this, dirPreset);
 }
 
 void
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 getStateInformation
 (MemoryBlock& destData)
 {
@@ -303,7 +304,7 @@ getStateInformation
 }
 
 void
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 setStateInformation
 (const void* data, int sizeInBytes)
 {
@@ -333,7 +334,7 @@ setStateInformation
 }
 
 String
-OscsendvstAudioProcessor::
+OSCControlAudioProcessor::
 hashHostControls()
 {
     MemoryBlock memInput;
@@ -355,5 +356,5 @@ AudioProcessor* JUCE_CALLTYPE
 createPluginFilter()
 {
     Logger::writeToLog("createPluginFilter");
-    return new OscsendvstAudioProcessor();
+    return new OSCControlAudioProcessor();
 }

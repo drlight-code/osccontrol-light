@@ -1,47 +1,54 @@
-oscsend-light - An audio plugin that speaks OSC
+osccontrol-light - An audio plugin that speaks OSC
 ===============================================
 
-This software enables dispatching of Open Sound Control (OSC) messages
-from audio plugin host environments such as digital audio workstations
-(DAW). 
+This software enables sending and receiving of Open Sound Control
+(OSC) messages from audio plugin host environments such as digital
+audio workstations (DAW).
 
-It features a plugin or standalone UI that enables prototyping
-of control presets by quick switching and reloading of preset
+Controls are tied to OSC messages directly in the host environment
+without encoding the control data as MIDI CC messages. This way,
+control automation can be sent and received via OSC at
+full-resolution, and all time sequencing, automation recording,
+modulation and side-chaining functionality of the host environment can
+be used for external OSC control.
+
+We provide a plugin or standalone UI that enables prototyping of
+control presets by quick switching and reloading of preset
 definitions.  To integrate into a host environment with automatable
 controls, the plugin can run in headless mode that loads a specific
-preset upon construction. 
+preset upon construction.
 
-Control presets are defined via a concise
-YAML-based textual markup format.
+Control presets are defined via a concise YAML-based textual markup
+format.
 
 
 Usage
 -----
 
-To run the standalone UI application, execute the `oscsend-light`
+To run the standalone UI application, execute the `osccontrol-light`
 application binary. To run the UI inside a plugin host, make the
-`oscsend-light.{so,dll}` file available to the host environment and
+`osccontrol-light.{so,dll}` file available to the host environment and
 load the plugin.
 
 The UI elements are illustrated in the following.
 
-<img src="Documentation/Images/ui-overview.png" width="512" title="oscsend-light UI overview">
+<img src="Documentation/Images/ui-overview.png" width="512" title="osccontrol-light UI overview">
 
 To create a headless instance of the plugin that provides automatable
 controls inside an audio plugin host environment, create a copy (or
-symbolic link) of the `oscsend-light.{so,dll}` file with the preset
-name as `oscsend-light-<name>.{so,dll}`. This enables
+symbolic link) of the `osccontrol-light.{so,dll}` file with the preset
+name as `osccontrol-light-<name>.{so,dll}`. This enables
 registration of the controls at plugin initialization time, which is
 necessary for most hosts.
 
 Environment variables:
-- `OSCSEND_SCALE_FACTOR`: Set UI scale factor for high DPI displays.
-- `OSCSEND_PRESET_PATH`: Set directory with preset definitions.
+- `OSCCONTROL_SCALE_FACTOR`: Set UI scale factor for high DPI displays.
+- `OSCCONTROL_PRESET_PATH`: Set directory with preset definitions.
 
-The directory specified via the UI or `OSCSEND_PRESET_PATH` will
-be searched recursively for `*.yaml` preset definition files.
+The directory specified via the UI or `OSCCONTROL_PRESET_PATH` will be
+searched recursively for `*.yaml` preset definition files.
 
-**Please note: setting `OSCSEND_PRESET_PATH` in the environment is
+**Please note: setting `OSCCONTROL_PRESET_PATH` in the environment is
   mandatory for headless mode!**
 
 

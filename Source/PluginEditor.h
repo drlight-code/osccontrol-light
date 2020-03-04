@@ -1,6 +1,6 @@
 /*
 
-  oscsend-light - An audio plugin that speaks OSC.
+  osccontrol-light - An audio plugin that speaks OSC.
   Copyright (C) 2020 Patric Schmitz
 
   This program is free software: you can redistribute it and/or modify
@@ -26,14 +26,14 @@
 
 #include "PluginProcessor.h"
 
-class OscsendvstAudioProcessorEditor
+class OSCControlAudioProcessorEditor
     : public AudioProcessorEditor,
       public Button::Listener
 {
 public:
-    OscsendvstAudioProcessorEditor
-    (OscsendvstAudioProcessor&, File dirPreset);
-    ~OscsendvstAudioProcessorEditor ();
+    OSCControlAudioProcessorEditor
+    (OSCControlAudioProcessor&, File dirPreset);
+    ~OSCControlAudioProcessorEditor ();
 
     void paint (Graphics&) override;
     void resized () override;
@@ -50,7 +50,7 @@ private:
     void switchToPage (String pathName);
     bool isPageLoaded() const;
 
-    OscsendvstAudioProcessor& processor;
+    OSCControlAudioProcessor& processor;
 
     File dirPreset;
 
@@ -69,5 +69,5 @@ private:
     PageMap::iterator activePage;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR
-    (OscsendvstAudioProcessorEditor)
+    (OSCControlAudioProcessorEditor)
 };

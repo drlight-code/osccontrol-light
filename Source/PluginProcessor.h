@@ -1,6 +1,6 @@
 /*
 
-  oscsend-light - An audio plugin that speaks OSC.
+  osccontrol-light - An audio plugin that speaks OSC.
   Copyright (C) 2020 Patric Schmitz
 
   This program is free software: you can redistribute it and/or modify
@@ -28,12 +28,12 @@ class ControlElementHost;
 using ControlElementHostUnique =
     std::unique_ptr<ControlElementHost>;
 
-class OscsendvstAudioProcessor :
+class OSCControlAudioProcessor :
   public AudioProcessor
 {
 public:
-    OscsendvstAudioProcessor();
-    ~OscsendvstAudioProcessor();
+    OSCControlAudioProcessor();
+    ~OSCControlAudioProcessor();
 
     File locatePresetFile(String namePreset);
     void initializeHeadless(File filePreset);
@@ -79,5 +79,5 @@ private:
     File dirPreset;
     String filenamePlugin;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OscsendvstAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OSCControlAudioProcessor)
 };
