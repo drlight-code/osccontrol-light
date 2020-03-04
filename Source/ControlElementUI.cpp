@@ -20,6 +20,8 @@
 
 #include "LayoutHints.h"
 
+#include "UIComponentFactory.h"
+
 #include "ControlElementUI.h"
 
 ControlElementUI::
@@ -28,12 +30,11 @@ ControlElementUI
     OSCSender & oscSender) :
     ControlElement(info, oscSender)
 {
-    buttonMute.reset (new TextButton ("buttonMute"));
+    buttonMute = UIComponentFactory::createControlButton ();
     buttonMute->setButtonText("m");
-    buttonMute->setColour(TextButton::buttonOnColourId,
+    buttonMute->setColour
+        (TextButton::buttonOnColourId,
         Colours::crimson);
-    buttonMute->setClickingTogglesState(true);
-    buttonMute->setPaintingIsUnclipped(true);
     buttonMute->getToggleStateValue().addListener(this);
     addAndMakeVisible(buttonMute.get());
 
@@ -42,18 +43,16 @@ ControlElementUI
 
 void
 ControlElementUI::
-resized()
+resized ()
 {
-    auto area = getLocalBounds();
+    auto area = getLocalBounds ();
 
-    auto gap = LayoutHints::sizeGap;
-    auto buttonSize = LayoutHints::heightRow - 2*gap;
+    area.removeFromRight (LayoutHints::sizeGap);
+    area.removeFromTop (LayoutHints::sizeGap);
+    area.setHeight (LayoutHints::sizeButton);
 
-    area.removeFromRight(gap);
-    area.removeFromTop(gap);
-    area.setHeight(buttonSize);
-
-    buttonMute->setBounds(area.removeFromRight(buttonSize));
+    buttonMute->setBounds
+        (area.removeFromRight (LayoutHints::sizeButton));
 }
 
 void
@@ -82,7 +81,9 @@ ControlElementUI::
 valueChanged
 (Value & value)
 {
-    if(value == buttonMute->getToggleStateValue()) {
+    if(value.refersToSameSourceAs
+        (buttonMute->getToggleStateValue ())) {
+
         auto toggleState = buttonMute->getToggleState();
         if(createInfo.messageMute != "") {
             auto oscMessage =

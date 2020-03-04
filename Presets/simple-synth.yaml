@@ -14,3 +14,8 @@ controls:
     range: [0, 1]
     default: 0.8
     message: /synth/amplitude
+
+  - name: freak out
+    type: toggle
+    default: off
+    message: /synth/freak-out

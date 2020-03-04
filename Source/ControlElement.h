@@ -30,7 +30,7 @@ public:
 
     enum class Type {
         Float,
-        Bool
+        Toggle
     };
 
     struct CreateInfo {

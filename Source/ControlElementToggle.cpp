@@ -23,20 +23,17 @@
 #include "LayoutHints.h"
 #include "UIComponentFactory.h"
 
-#include "ControlElementKnob.h"
+#include "ControlElementToggle.h"
 
-ControlElementKnob::
-ControlElementKnob
+ControlElementToggle::
+ControlElementToggle
 (const CreateInfo & createInfo,
  OSCSender & oscSender) :
     ControlElementUI(createInfo, oscSender)
 {
-    knob.reset (new Slider("knob"));
-    knob->setSliderStyle (Slider::RotaryVerticalDrag);
-    knob->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    knob->setRange (createInfo.range.first, createInfo.range.second, 0);
-    knob->setPaintingIsUnclipped (true);
-    addAndMakeVisible (knob.get());
+    toggle = UIComponentFactory::createControlButton ();
+    toggle->getToggleStateValue().addListener(this);
+    addAndMakeVisible(toggle.get());
 
     textEditor = UIComponentFactory::createControlTextEditor ();
     textEditor->setText (createInfo.name);
@@ -44,33 +41,34 @@ ControlElementKnob
 }
 
 int
-ControlElementKnob::
+ControlElementToggle::
 getNumberOfRows() const
 {
     return 1;
 }
 
 void
-ControlElementKnob::
+ControlElementToggle::
 resized()
 {
-    ControlElementUI::resized();
+    ControlElementUI::resized ();
 
-    auto area = getLocalBounds();
-    auto areaKnob = area.removeFromLeft(LayoutHints::heightRow);
-    areaKnob = areaKnob.withSizeKeepingCentre
-        (LayoutHints::sizeKnob, LayoutHints::sizeKnob);
-    knob->setBounds(areaKnob);
+    auto area = getLocalBounds ();
+    auto areaToggle = area.removeFromLeft
+        (LayoutHints::heightRow);
+    areaToggle = areaToggle.withSizeKeepingCentre
+        (LayoutHints::sizeButton, LayoutHints::sizeButton);
+    toggle->setBounds (areaToggle);
 
-    area.removeFromRight(LayoutHints::heightRow);
-    area.removeFromTop(LayoutHints::getTextBoxInset());
-    area.removeFromBottom(LayoutHints::getTextBoxInset());
-    textEditor->setBounds(area);
+    area.removeFromRight (LayoutHints::heightRow);
+    area.removeFromTop (LayoutHints::getTextBoxInset());
+    area.removeFromBottom (LayoutHints::getTextBoxInset());
+    textEditor->setBounds (area);
 }
 
 Value &
-ControlElementKnob::
+ControlElementToggle::
 getSpecificSendValue()
 {
-    return knob->getValueObject();
+    return toggle->getToggleStateValue();
 }

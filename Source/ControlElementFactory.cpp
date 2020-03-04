@@ -24,6 +24,7 @@
 
 #include "ControlElementUI.h"
 #include "ControlElementKnob.h"
+#include "ControlElementToggle.h"
 #include "ControlElementHost.h"
 
 #include "ControlElementFactory.h"
@@ -41,10 +42,17 @@ createControlElementUI
 (const ControlElement::CreateInfo & createInfo)
 {
     std::unique_ptr<ControlElementUI> product;
+
     if(createInfo.type == ControlElement::Type::Float) {
-        product = std::make_unique<ControlElementKnob>(createInfo, oscSender);
-        product->registerSendValue();
+        product = std::make_unique<ControlElementKnob>
+            (createInfo, oscSender);
     }
+    else if(createInfo.type == ControlElement::Type::Toggle) {
+        product = std::make_unique<ControlElementToggle>
+            (createInfo, oscSender);
+    }
+
+    product->registerSendValue();
 
     return product;
 }

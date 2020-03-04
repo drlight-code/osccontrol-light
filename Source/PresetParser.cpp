@@ -26,7 +26,7 @@ const std::map<String, ControlElement::Type>
 PresetParser::mapTypeNames =
 {
     {"float", ControlElement::Type::Float},
-    {"bool", ControlElement::Type::Bool},
+    {"toggle", ControlElement::Type::Toggle},
 };
 
 PresetParser::
@@ -100,11 +100,23 @@ getControlElementCreateInfo
         auto typeName = control["type"].as<std::string>();
         info.type = mapTypeNames.at(typeName);
 
-        auto range = control["range"];
-        info.range = std::make_pair
-            (range[0].as<float>(), range[1].as<float>());
+        switch (info.type) {
+        case ControlElement::Type::Float: {
+            auto range = control["range"];
+            info.range = std::make_pair
+                (range[0].as<float>(), range[1].as<float>());
+            info.defaultValue = control["default"].as<float>();
+            break;
+        }
 
-        info.defaultValue = control["default"].as<float>();
+        case ControlElement::Type::Toggle: {
+            info.defaultValue = control["default"].as<bool>();
+            break;
+        }
+
+        default:
+            break;
+        }
 
         info.message = control["message"].as<std::string>();
 

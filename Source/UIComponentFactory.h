@@ -20,17 +20,19 @@
 
 #pragma once
 
-struct LayoutHints
+#include <memory.h>
+
+#include <JuceHeader.h>
+
+class UIComponentFactory
 {
 public:
-    static const int heightRow = 32;
-    static const int heightTextBox = 24;
-    static const int widthTextPort = 48;
 
-    static const int sizeGap = 4;
-    static const int sizeIcons = 28;
-    static const int sizeKnob = 42;
-    static const int sizeButton = heightRow - 2*sizeGap;
+    static
+    std::unique_ptr<TextEditor>
+    createControlTextEditor ();
 
-    static int getTextBoxInset();
+    static
+    std::unique_ptr<TextButton>
+    createControlButton ();
 };
