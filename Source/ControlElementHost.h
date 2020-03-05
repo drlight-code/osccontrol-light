@@ -48,6 +48,8 @@ public:
 
 private:
 
+    void createHostParameter ();
+
     AudioProcessor & processor;
     AudioProcessorParameter * parameter;
 

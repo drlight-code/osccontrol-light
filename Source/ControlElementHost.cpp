@@ -29,14 +29,41 @@ ControlElementHost
     ControlElement (createInfo, oscSender),
     processor (processor)
 {
-    parameter = new AudioParameterFloat
-        (createInfo.name, createInfo.name,
-         createInfo.range.first, createInfo.range.second,
-         createInfo.defaultValue);
+    createHostParameter ();
+
     parameter->addListener (this);
     processor.addParameter (parameter);
 
     sendValue.addListener(this);
+}
+
+void
+ControlElementHost::
+createHostParameter ()
+{
+    switch (createInfo.type) {
+    case ControlElement::Type::Float: {
+        parameter = new AudioParameterFloat
+            (createInfo.name, createInfo.name,
+             createInfo.range.first, createInfo.range.second,
+             createInfo.defaultValue);
+        break;
+    }
+
+    case ControlElement::Type::Int: {
+        parameter = new AudioParameterInt
+            (createInfo.name, createInfo.name,
+             createInfo.range.first, createInfo.range.second,
+             createInfo.defaultValue);
+        break;
+    }
+
+    case ControlElement::Type::Toggle: {
+        parameter = new AudioParameterBool
+            (createInfo.name, createInfo.name,
+             createInfo.defaultValue);
+        break;
+    }}
 }
 
 void
