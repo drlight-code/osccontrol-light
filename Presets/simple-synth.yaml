@@ -30,3 +30,4 @@ controls:
     type: toggle
     default: off
     message: /synth/freak-out
+    message-mute: /synth/freak-out/mute

@@ -84,7 +84,9 @@ valueChanged
         auto toggleState = buttonMute->getToggleState ();
         if(createInfo.messageMute != "") {
             auto oscMessage =
-                OSCMessage(String(createInfo.messageMute), int(toggleState));
+                OSCMessage
+                (String(createInfo.messageMute),
+                    float(toggleState));
             oscSender.send(oscMessage);
         }
 
