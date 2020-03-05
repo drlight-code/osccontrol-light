@@ -32,7 +32,6 @@ ControlElementToggle
     ControlElementUI(createInfo, oscSender)
 {
     toggle = UIComponentFactory::createControlButton ();
-    toggle->getToggleStateValue().addListener(this);
     addAndMakeVisible(toggle.get());
 
     textEditor = UIComponentFactory::createControlTextEditor ();

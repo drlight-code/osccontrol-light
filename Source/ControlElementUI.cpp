@@ -27,16 +27,16 @@
 ControlElementUI::
 ControlElementUI
 (const CreateInfo & info,
-    OSCSender & oscSender) :
+ OSCSender & oscSender) :
     ControlElement(info, oscSender)
 {
     buttonMute = UIComponentFactory::createControlButton ();
-    buttonMute->setButtonText("m");
+    buttonMute->setButtonText ("m");
     buttonMute->setColour (TextButton::buttonOnColourId, Colours::crimson);
-    buttonMute->getToggleStateValue().addListener(this);
-    addAndMakeVisible(buttonMute.get());
+    addAndMakeVisible (buttonMute.get ());
 
-    sendValue.addListener(this);
+    buttonMute->getToggleStateValue().addListener (this);
+    sendValue.addListener (this);
 }
 
 void
@@ -49,7 +49,7 @@ resized ()
     area = area.withSizeKeepingCentre
         (LayoutHints::sizeButton, LayoutHints::sizeButton);
 
-    buttonMute->setBounds(area);
+    buttonMute->setBounds (area);
 }
 
 void
@@ -81,7 +81,7 @@ valueChanged
     if(value.refersToSameSourceAs
         (buttonMute->getToggleStateValue ())) {
 
-        auto toggleState = buttonMute->getToggleState();
+        auto toggleState = buttonMute->getToggleState ();
         if(createInfo.messageMute != "") {
             auto oscMessage =
                 OSCMessage(String(createInfo.messageMute), int(toggleState));
