@@ -35,4 +35,8 @@ public:
     static
     std::unique_ptr<TextButton>
     createControlButton ();
+
+    static
+    std::unique_ptr<Slider>
+    createControlKnob ();
 };

@@ -5,8 +5,8 @@ network:
 controls:
   - name: frequency
     type: float
-    range: [100, 2000]
     default: 440
+    range: [100, 2000]
     message: /synth/freq
 
   - name: amplitude
@@ -14,19 +14,18 @@ controls:
     default: 0.8
     message: /synth/amplitude
 
-  # - name: voices
-  #   type: int
-  #   range: [1, 6]
-  #   default: 1
-  #   message: /synth/voices
+  - name: vibrato
+    type: float
+    default: 0.0
+    message: /synth/vibrato
 
-  - name: flerp
-    type: toggle
-    default: on
-    message: /synth/flerp
+  - name: voices
+    type: int
+    default: 1
+    range: [1, 6]
+    message: /synth/voices
 
-  - name: freak out
+  - name: sub-oscillator
     type: toggle
     default: off
-    message: /synth/freak-out
-    message-mute: /synth/freak-out/mute
+    message: /synth/sub-osc

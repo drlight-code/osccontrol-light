@@ -26,6 +26,7 @@ const std::map<String, ControlElement::Type>
 PresetParser::mapTypeNames =
 {
     {"float", ControlElement::Type::Float},
+    {"int", ControlElement::Type::Int},
     {"toggle", ControlElement::Type::Toggle},
 };
 
@@ -114,6 +115,11 @@ getControlElementCreateInfo
         switch (info.type) {
         case ControlElement::Type::Float: {
             info.defaultValue = control["default"].as<float>();
+            break;
+        }
+
+        case ControlElement::Type::Int: {
+            info.defaultValue = control["default"].as<int>();
             break;
         }
 

@@ -31,11 +31,12 @@ ControlElementKnob
  OSCSender & oscSender) :
     ControlElementUI(createInfo, oscSender)
 {
-    knob.reset (new Slider("knob"));
-    knob->setSliderStyle (Slider::RotaryVerticalDrag);
-    knob->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
-    knob->setRange (createInfo.range.first, createInfo.range.second, 0);
-    knob->setPaintingIsUnclipped (true);
+    knob = UIComponentFactory::createControlKnob ();
+
+    auto increment =
+        createInfo.type == ControlElement::Type::Int ? 1 : 0;
+    knob->setRange (createInfo.range.first,
+        createInfo.range.second, increment);
     addAndMakeVisible (knob.get());
 
     textEditor = UIComponentFactory::createControlTextEditor ();

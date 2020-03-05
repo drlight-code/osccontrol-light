@@ -61,3 +61,16 @@ createControlButton ()
 
     return product;
 }
+
+std::unique_ptr<Slider>
+UIComponentFactory::
+createControlKnob ()
+{
+    auto product = std::make_unique<Slider> ("knob");
+
+    product->setSliderStyle (Slider::RotaryVerticalDrag);
+    product->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    product->setPaintingIsUnclipped (true);
+
+    return product;
+}

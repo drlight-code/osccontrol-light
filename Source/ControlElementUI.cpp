@@ -57,19 +57,9 @@ ControlElementUI::
 registerSendValue()
 {
     sendValue.removeListener (this);
-
-    sendValue.referTo
-        (getSpecificSendValue ());
-
-    // set below allowed range to trigger valueChanged later
-    sendValue.setValue
-      (createInfo.range.first -
-        std::numeric_limits<float>::epsilon ());
-
+    sendValue.referTo (getSpecificSendValue ());
     sendValue.addListener (this);
 
-    // seting default value now triggers valueChanged -> send on init,
-    // even for default == 0 that would not trigger valueChanged.
     sendValue.setValue (createInfo.defaultValue);
 }
 
@@ -105,8 +95,33 @@ send()
 {
     if (!buttonMute->getToggleState()) {
         auto value = sendValue.getValue();
-        auto oscMessage =
-            OSCMessage(String(createInfo.message), float(value));
-        oscSender.send(oscMessage);
+
+        switch (createInfo.type) {
+        case ControlElement::Type::Float: {
+            auto oscMessage =
+                OSCMessage(
+                    String(createInfo.message),
+                    float(value));
+            oscSender.send(oscMessage);
+            break;
+        }
+
+        case ControlElement::Type::Int: {
+            auto oscMessage =
+                OSCMessage(
+                    String(createInfo.message),
+                    int(value));
+            oscSender.send(oscMessage);
+            break;
+        }
+
+        case ControlElement::Type::Toggle:
+            auto oscMessage =
+                OSCMessage(
+                    String(createInfo.message),
+                    float(value));
+            oscSender.send(oscMessage);
+            break;
+        }
     }
 }

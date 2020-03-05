@@ -43,14 +43,19 @@ createControlElementUI
 {
     std::unique_ptr<ControlElementUI> product;
 
-    if(createInfo.type == ControlElement::Type::Float) {
+    switch (createInfo.type) {
+    case ControlElement::Type::Float:
+    case ControlElement::Type::Int: {
         product = std::make_unique<ControlElementKnob>
             (createInfo, oscSender);
+        break;
     }
-    else if(createInfo.type == ControlElement::Type::Toggle) {
+
+    case ControlElement::Type::Toggle: {
         product = std::make_unique<ControlElementToggle>
             (createInfo, oscSender);
-    }
+        break;
+    }}
 
     product->registerSendValue();
 

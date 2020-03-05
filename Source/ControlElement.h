@@ -30,6 +30,7 @@ public:
 
     enum class Type {
         Float,
+        Int,
         Toggle
     };
 
