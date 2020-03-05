@@ -100,11 +100,19 @@ getControlElementCreateInfo
         auto typeName = control["type"].as<std::string>();
         info.type = mapTypeNames.at(typeName);
 
-        switch (info.type) {
-        case ControlElement::Type::Float: {
-            auto range = control["range"];
+        auto range = control["range"];
+        if (range.IsSequence()) {
             info.range = std::make_pair
                 (range[0].as<float>(), range[1].as<float>());
+        }
+        else {
+            info.range = std::make_pair(0.f, 1.f);
+        }
+
+        // TODO: change the type mapping to a generic mapping using the
+        // external polymorphism idiom: https://stackoverflow.com/a/12653596
+        switch (info.type) {
+        case ControlElement::Type::Float: {
             info.defaultValue = control["default"].as<float>();
             break;
         }
