@@ -54,5 +54,10 @@ createControlButton ()
     product->setClickingTogglesState (true);
     product->setPaintingIsUnclipped (true);
 
+    auto activeColor =
+        LookAndFeel::getDefaultLookAndFeel ().findColour
+        (Slider::ColourIds::thumbColourId);
+    product->setColour (TextButton::buttonOnColourId, activeColor);
+
     return product;
 }

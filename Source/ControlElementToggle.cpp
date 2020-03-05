@@ -54,8 +54,8 @@ resized()
     ControlElementUI::resized ();
 
     auto area = getLocalBounds ();
-    auto areaToggle = area.removeFromLeft
-        (LayoutHints::heightRow);
+
+    auto areaToggle = area.removeFromLeft (LayoutHints::heightRow);
     areaToggle = areaToggle.withSizeKeepingCentre
         (LayoutHints::sizeButton, LayoutHints::sizeButton);
     toggle->setBounds (areaToggle);

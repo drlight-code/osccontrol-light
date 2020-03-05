@@ -30,7 +30,7 @@ public:
     static const int sizeGap = 4;
     static const int sizeIcons = 28;
     static const int sizeKnob = 42;
-    static const int sizeButton = heightRow - 2*sizeGap;
+    static const int sizeButton = 22;
 
     static int getTextBoxInset();
 };

@@ -32,9 +32,7 @@ ControlElementUI
 {
     buttonMute = UIComponentFactory::createControlButton ();
     buttonMute->setButtonText("m");
-    buttonMute->setColour
-        (TextButton::buttonOnColourId,
-        Colours::crimson);
+    buttonMute->setColour (TextButton::buttonOnColourId, Colours::crimson);
     buttonMute->getToggleStateValue().addListener(this);
     addAndMakeVisible(buttonMute.get());
 
@@ -47,12 +45,11 @@ resized ()
 {
     auto area = getLocalBounds ();
 
-    area.removeFromRight (LayoutHints::sizeGap);
-    area.removeFromTop (LayoutHints::sizeGap);
-    area.setHeight (LayoutHints::sizeButton);
+    area = area.removeFromRight (LayoutHints::heightRow);
+    area = area.withSizeKeepingCentre
+        (LayoutHints::sizeButton, LayoutHints::sizeButton);
 
-    buttonMute->setBounds
-        (area.removeFromRight (LayoutHints::sizeButton));
+    buttonMute->setBounds(area);
 }
 
 void
