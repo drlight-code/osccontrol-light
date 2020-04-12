@@ -26,8 +26,7 @@
 
 class ControlElementHost :
     public ControlElement,
-    public AudioProcessorParameter::Listener,
-    public Value::Listener
+    public AudioProcessorParameter::Listener
 {
 public:
 
@@ -39,10 +38,6 @@ public:
     void parameterValueChanged (int index, float value) override;
     void parameterGestureChanged (int index, bool starting) override;
 
-    void valueChanged (Value & value) override;
-
-    void send () override;
-
     void serialize (MemoryOutputStream & stream);
     void deserialize (MemoryInputStream & stream);
 
@@ -50,9 +45,6 @@ private:
 
     void createHostParameter ();
 
-    AudioProcessor & processor;
     AudioProcessorParameter * parameter;
-
-    Value sendValue;
 };
 using ControlElementHostUnique = std::unique_ptr<ControlElementHost>;

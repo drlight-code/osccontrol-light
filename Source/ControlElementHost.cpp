@@ -26,8 +26,7 @@ ControlElementHost
 (const CreateInfo & createInfo,
  OSCSender & oscSender,
  AudioProcessor & processor) :
-    ControlElement (createInfo, oscSender),
-    processor (processor)
+    ControlElement (createInfo, oscSender)
 {
     createHostParameter ();
 
@@ -71,7 +70,10 @@ ControlElementHost::
 parameterValueChanged
 (int index, float value)
 {
-    sendValue.setValue(value);
+    float outValue = createInfo.range.first +
+        (createInfo.range.second - createInfo.range.first) * value;
+
+    sendValue.setValue(outValue);
 }
 
 void
@@ -79,23 +81,6 @@ ControlElementHost::
 parameterGestureChanged
 (int index, bool starting)
 {
-}
-
-void
-ControlElementHost::
-valueChanged(Value & value)
-{
-    send();
-}
-
-void
-ControlElementHost::
-send()
-{
-    auto value = sendValue.getValue();
-    auto oscMessage =
-        OSCMessage(String(createInfo.message), float(value));
-    oscSender.send(oscMessage);
 }
 
 void

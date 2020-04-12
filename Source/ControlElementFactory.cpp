@@ -57,8 +57,6 @@ createControlElementUI
         break;
     }}
 
-    product->registerSendValue();
-
     return product;
 }
 

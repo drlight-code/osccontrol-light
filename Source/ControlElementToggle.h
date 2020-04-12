@@ -32,11 +32,9 @@ public:
      OSCSender & oscSender);
 
     int getNumberOfRows() const override;
-
     void resized() override;
 
-protected:
-    Value & getSpecificSendValue() override;
+    void buttonClicked (Button * button) override;
 
 private:
     std::unique_ptr<TextButton> toggle;

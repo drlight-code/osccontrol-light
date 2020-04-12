@@ -24,7 +24,8 @@
 
 #include <JuceHeader.h>
 
-class ControlElement
+class ControlElement :
+    public Value::Listener
 {
 public:
 
@@ -51,9 +52,13 @@ public:
 
     CreateInfo getCreateInfo () const;
 
-    virtual void send() = 0;
+    void valueChanged(Value & value) override;
+
+    virtual void send();
 
 protected:
+
     OSCSender & oscSender;
     CreateInfo createInfo;
+    Value sendValue;
 };

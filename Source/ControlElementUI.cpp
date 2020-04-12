@@ -35,8 +35,7 @@ ControlElementUI
     buttonMute->setColour (TextButton::buttonOnColourId, Colours::crimson);
     addAndMakeVisible (buttonMute.get ());
 
-    buttonMute->getToggleStateValue().addListener (this);
-    sendValue.addListener (this);
+    buttonMute->addListener (this);
 }
 
 void
@@ -54,23 +53,10 @@ resized ()
 
 void
 ControlElementUI::
-registerSendValue()
+buttonClicked
+(Button * button)
 {
-    sendValue.removeListener (this);
-    sendValue.referTo (getSpecificSendValue ());
-    sendValue.addListener (this);
-
-    sendValue.setValue (createInfo.defaultValue);
-}
-
-void
-ControlElementUI::
-valueChanged
-(Value & value)
-{
-    if(value.refersToSameSourceAs
-        (buttonMute->getToggleStateValue ())) {
-
+    if (button == buttonMute.get()) {
         auto toggleState = buttonMute->getToggleState ();
         if(createInfo.messageMute != "") {
             auto oscMessage =
@@ -84,9 +70,6 @@ valueChanged
             send();
         }
     }
-    else if(value.refersToSameSourceAs(sendValue)) {
-        send();
-    }
 }
 
 void
@@ -94,34 +77,6 @@ ControlElementUI::
 send()
 {
     if (!buttonMute->getToggleState()) {
-        auto value = sendValue.getValue();
-
-        switch (createInfo.type) {
-        case ControlElement::Type::Float: {
-            auto oscMessage =
-                OSCMessage(
-                    String(createInfo.message),
-                    float(value));
-            oscSender.send(oscMessage);
-            break;
-        }
-
-        case ControlElement::Type::Int: {
-            auto oscMessage =
-                OSCMessage(
-                    String(createInfo.message),
-                    int(value));
-            oscSender.send(oscMessage);
-            break;
-        }
-
-        case ControlElement::Type::Toggle:
-            auto oscMessage =
-                OSCMessage(
-                    String(createInfo.message),
-                    float(value));
-            oscSender.send(oscMessage);
-            break;
-        }
+        ControlElement::send();
     }
 }

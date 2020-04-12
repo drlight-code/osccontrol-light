@@ -25,29 +25,22 @@
 class ControlElementUI :
     public ControlElement,
     public Component,
-    public Value::Listener
+    public Button::Listener
 {
 public:
     ControlElementUI
     (const CreateInfo & info,
-        OSCSender & oscSender);
+     OSCSender & oscSender);
 
-    virtual int getNumberOfRows() const = 0;
-    void resized() override;
+    virtual int getNumberOfRows () const = 0;
+    void resized () override;
 
-    void registerSendValue();
+    void buttonClicked (Button * button) override;
 
-    void valueChanged(Value & value) override;
-
-    void send() override;
-
-protected:
-
-    virtual Value & getSpecificSendValue() = 0;
+    void send () override;
 
 private:
 
     std::unique_ptr<TextButton> buttonMute;
-    Value sendValue;
 };
 using ControlElementUIUnique = std::unique_ptr<ControlElementUI>;

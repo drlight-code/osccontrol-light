@@ -37,6 +37,8 @@ ControlElementToggle
     textEditor = UIComponentFactory::createControlTextEditor ();
     textEditor->setText (createInfo.name);
     addAndMakeVisible (textEditor.get());
+
+    toggle->addListener (this);
 }
 
 int
@@ -65,9 +67,15 @@ resized()
     textEditor->setBounds (area);
 }
 
-Value &
+void
 ControlElementToggle::
-getSpecificSendValue()
+buttonClicked
+(Button * button)
 {
-    return toggle->getToggleStateValue();
+    if (button == toggle.get()) {
+        sendValue.setValue (button->getToggleStateValue());
+    }
+    else {
+        ControlElementUI::buttonClicked (button);
+    }
 }

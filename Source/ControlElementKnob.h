@@ -26,7 +26,8 @@
 #include "ControlElementKnob.h"
 
 class ControlElementKnob :
-    public ControlElementUI
+    public ControlElementUI,
+    public Slider::Listener
 {
 public:
     ControlElementKnob
@@ -34,13 +35,12 @@ public:
      OSCSender & oscSender);
 
     int getNumberOfRows() const override;
-
     void resized() override;
 
-protected:
-    Value & getSpecificSendValue() override;
+    void sliderValueChanged (Slider * slider) override;
 
 private:
+
     std::unique_ptr<Slider> knob;
     std::unique_ptr<TextEditor> textEditor;
 };

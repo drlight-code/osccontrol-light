@@ -27,6 +27,7 @@ ControlElement
     oscSender(oscSender),
     createInfo(createInfo)
 {
+    sendValue.addListener(this);
 }
 
 ControlElement::CreateInfo
@@ -34,4 +35,46 @@ ControlElement::
 getCreateInfo () const
 {
     return createInfo;
+}
+
+void
+ControlElement::
+valueChanged(Value & value)
+{
+    send();
+}
+
+void
+ControlElement::
+send()
+{
+    auto value = sendValue.getValue();
+
+    switch (createInfo.type) {
+    case ControlElement::Type::Float: {
+        auto oscMessage =
+            OSCMessage(
+                String(createInfo.message),
+                float(value));
+        oscSender.send(oscMessage);
+        break;
+    }
+
+    case ControlElement::Type::Int: {
+        auto oscMessage =
+            OSCMessage(
+                String(createInfo.message),
+                int(value));
+        oscSender.send(oscMessage);
+        break;
+    }
+
+    case ControlElement::Type::Toggle:
+        auto oscMessage =
+            OSCMessage(
+                String(createInfo.message),
+                float(value));
+        oscSender.send(oscMessage);
+        break;
+    }
 }

@@ -42,6 +42,8 @@ ControlElementKnob
     textEditor = UIComponentFactory::createControlTextEditor ();
     textEditor->setText (createInfo.name);
     addAndMakeVisible (textEditor.get());
+
+    knob->addListener (this);
 }
 
 int
@@ -69,9 +71,10 @@ resized()
     textEditor->setBounds(area);
 }
 
-Value &
+void
 ControlElementKnob::
-getSpecificSendValue()
+sliderValueChanged
+(Slider * slider)
 {
-    return knob->getValueObject();
+    sendValue.setValue(slider->getValue());
 }
