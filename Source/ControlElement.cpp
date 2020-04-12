@@ -28,6 +28,7 @@ ControlElement
     createInfo(createInfo)
 {
     sendValue.addListener(this);
+    sendValue.setValue (createInfo.defaultValue);
 }
 
 ControlElement::CreateInfo

@@ -38,6 +38,9 @@ ControlElementToggle
     textEditor->setText (createInfo.name);
     addAndMakeVisible (textEditor.get());
 
+    toggle->setToggleState
+        (createInfo.defaultValue,
+         NotificationType::sendNotification);
     toggle->addListener (this);
 }
 

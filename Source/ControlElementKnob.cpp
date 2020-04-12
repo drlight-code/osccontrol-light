@@ -43,6 +43,7 @@ ControlElementKnob
     textEditor->setText (createInfo.name);
     addAndMakeVisible (textEditor.get());
 
+    knob->setValue (createInfo.defaultValue);
     knob->addListener (this);
 }
 
