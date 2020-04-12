@@ -73,7 +73,12 @@ parameterValueChanged
     float outValue = createInfo.range.first +
         (createInfo.range.second - createInfo.range.first) * value;
 
-    sendValue.setValue(outValue);
+    if (createInfo.type == Type::Toggle) {
+        sendValue.setValue (value >= 0.5f);
+    }
+    else {
+        sendValue.setValue (outValue);
+    }
 }
 
 void
