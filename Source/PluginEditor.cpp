@@ -37,8 +37,11 @@ OSCControlAudioProcessorEditor
         ("OSCCONTROL_SCALE_FACTOR", "1").getFloatValue();
     setScaleFactor (scaleFactor);
 
+    auto typeface = Typeface::createSystemTypefaceFor
+        (BinaryData::SourceCodeProRegular_otf,
+         BinaryData::SourceCodeProRegular_otfSize);
     LookAndFeel::getDefaultLookAndFeel ()
-        .setDefaultSansSerifTypefaceName ("Liberation Mono");
+        .setDefaultSansSerifTypeface (typeface);
 
     initializeMainUIComponents ();
 

@@ -15,6 +15,8 @@
       <FILE id="Dml0Im" name="preset-folder-icon.png" compile="0" resource="1"
             file="Resources/preset-folder-icon.png"/>
       <FILE id="uIGffv" name="reset-icon.png" compile="0" resource="1" file="Resources/reset-icon.png"/>
+      <FILE id="EaS8zt" name="SourceCodePro-Regular.otf" compile="0" resource="1"
+            file="Resources/SourceCodePro-Regular.otf"/>
     </GROUP>
     <GROUP id="{4FA477F1-3527-10C5-E7C6-083C0695095A}" name="Source">
       <FILE id="uewbfh" name="ControlContainer.cpp" compile="1" resource="0"
