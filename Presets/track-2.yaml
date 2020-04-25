@@ -1,0 +1,15 @@
+network:
+  host: 127.0.0.1
+  port: 6789
+
+controls:
+  - name: gain
+    type: float
+    range: [-48, 6]
+    default: 0
+    message: /track/2/gain
+
+  - name: mute
+    type: toggle
+    default: off
+    message: /track/2/mute
