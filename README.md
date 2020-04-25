@@ -35,11 +35,11 @@ The UI elements are illustrated in the following.
 <img src="Documentation/Images/ui-overview.png" width="512" title="osccontrol-light UI overview">
 
 To create a headless instance of the plugin that provides automatable
-controls inside an audio plugin host environment, create a copy (or
-symbolic link) of the `osccontrol-light.{so,dll}` file with the preset
-name as `osccontrol-light-<name>.{so,dll}`. This enables
-registration of the controls at plugin initialization time, which is
-necessary for most hosts.
+controls inside an audio plugin host environment, create a copy of the
+`osccontrol-light.{so,dll}` file with the preset name as
+`osccontrol-light-<name>.{so,dll}`. This enables registration of the
+controls at plugin initialization time, which is necessary for most
+hosts.
 
 Environment variables:
 - `OSCCONTROL_SCALE_FACTOR`: Set UI scale factor for high DPI displays.
