@@ -4,7 +4,8 @@
               cppLanguageStandard="17" pluginCharacteristicsValue="pluginIsSynth,pluginRTASDisableBypass"
               pluginManufacturer="dr.light" version="0.0.0" companyCopyright="Copyright 2020 Patric Schmitz"
               pluginFormats="buildStandalone,buildVST" pluginName="osccontrol-light"
-              pluginAUIsSandboxSafe="1" userNotes="osccontrol-light - An audio plugin that speaks OSC.">
+              pluginAUIsSandboxSafe="1" userNotes="osccontrol-light - An audio plugin that speaks OSC."
+              pluginDesc="An audio plugin that speaks OSC.">
   <MAINGROUP id="d0anJy" name="osccontrol-light">
     <GROUP id="{C999FE65-569A-9B5F-CCD1-8F36F8E11923}" name="Resources">
       <FILE id="gEy28T" name="drlight-eyesclosed.png" compile="0" resource="1"

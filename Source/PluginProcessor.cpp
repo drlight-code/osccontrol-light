@@ -92,6 +92,7 @@ OSCControlAudioProcessor() :
 
             auto presetFile = locatePresetFile(presetToLoad);
 
+            namePlugin = "osc-" + presetToLoad;
             hasUserInterface = false;
             initializeHeadless(presetFile);
         }
@@ -157,7 +158,7 @@ OSCControlAudioProcessor::
 getName() const
 {
     Logger::writeToLog("getName");
-    return filenamePlugin;
+    return namePlugin;
 }
 
 bool

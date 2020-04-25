@@ -78,6 +78,7 @@ private:
 
     File dirPreset;
     String filenamePlugin;
+    String namePlugin = JucePlugin_Name;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OSCControlAudioProcessor)
 };
