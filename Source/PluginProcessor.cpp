@@ -52,7 +52,9 @@ File juce_getExecutableFile()
 
 OSCControlAudioProcessor::
 OSCControlAudioProcessor() :
-    AudioProcessor (BusesProperties()),
+    AudioProcessor (BusesProperties()
+        .withInput  ("Input",  AudioChannelSet::stereo())
+        .withOutput ("Output", AudioChannelSet::stereo())),
     hasUserInterface(true)
 {
     auto filePlugin = juce_getExecutableFile();
