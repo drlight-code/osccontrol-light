@@ -296,7 +296,7 @@ getStateInformation
     Logger::writeToLog("getStateInformation");
 
     if (!hasUserInterface) {
-        auto stream = MemoryOutputStream (destData, true);
+        MemoryOutputStream stream (destData, true);
 
         stream.writeString (hashHostControls ());
 
@@ -314,7 +314,7 @@ setStateInformation
     Logger::writeToLog("setStateInformation");
 
     if (!hasUserInterface && sizeInBytes > 0) {
-        auto stream = MemoryInputStream
+        MemoryInputStream stream
             (data, static_cast<size_t> (sizeInBytes), false);
 
         auto hashHostControlsStored = stream.readString();
