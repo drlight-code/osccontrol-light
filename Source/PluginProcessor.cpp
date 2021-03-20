@@ -73,12 +73,12 @@ OSCControlAudioProcessor() :
         SystemStats::getEnvironmentVariable("OSCCONTROL_PRESET_PATH", "");
     dirPreset = File (pathPreset);
 
-    if(filenamePlugin.startsWith("osccontrol-light")) {
+    if(filenamePlugin.startsWith("osccontrol-")) {
         auto presetToLoad =
             filenamePlugin.fromFirstOccurrenceOf
-            ("osccontrol-light", false, false).trimCharactersAtStart("-");
+            ("osccontrol-", false, false).trimCharactersAtStart("-");
 
-        if(presetToLoad.isNotEmpty()) {
+        if(presetToLoad.isNotEmpty() && presetToLoad != "light") {
             Logger::writeToLog("PRESET NAME: " + presetToLoad);
 
             // if (pathPreset == "") {
@@ -159,7 +159,7 @@ const String
 OSCControlAudioProcessor::
 getName() const
 {
-    Logger::writeToLog("getName");
+    Logger::writeToLog("getName : " + namePlugin);
     return namePlugin;
 }
 

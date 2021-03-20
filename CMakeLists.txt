@@ -4,6 +4,10 @@ project(osccontrol-light VERSION 0.0.1)
 
 find_package(JUCE CONFIG REQUIRED)
 
+if(NOT PRESET_NAME)
+    set(PRESET_NAME "light")
+endif()
+
 juce_add_plugin(osccontrol-light
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
@@ -17,8 +21,9 @@ juce_add_plugin(osccontrol-light
     # COPY_PLUGIN_AFTER_BUILD TRUE/FALSE        # Should the plugin be installed to a default location after building?
     PLUGIN_MANUFACTURER_CODE drlight            # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE oscL                            # A unique four-character plugin id with at least one upper-case character
+    PLUGIN_NAME "osccontrol-${PRESET_NAME}"
     FORMATS VST3 Standalone                     # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-    PRODUCT_NAME "osccontrol-light")            # The name of the final executable, which can differ from the target name
+    PRODUCT_NAME "osccontrol-${PRESET_NAME}")            # The name of the final executable, which can differ from the target name
 
 juce_generate_juce_header(osccontrol-light)
 
