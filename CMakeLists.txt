@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.11)
 project(osccontrol-light VERSION 0.0.1)
 
 find_package(JUCE CONFIG REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 function(add_osccontrol_target TARGET FORMATS)
     juce_add_plugin(${TARGET}

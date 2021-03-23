@@ -56,8 +56,6 @@ do
     PRESET_NAMES="$PRESET_NAMES;$preset"
 done
 
-echo $PRESET_NAMES
-
 echo "creating cmake config in 'build' directory"
 mkdir -p build ; cd build
 cmake -DPRESET_NAMES=$PRESET_NAMES ..
