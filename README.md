@@ -140,7 +140,7 @@ cmake --install . --prefix <juce_install_root>
 
 [yaml-cpp](https://github.com/jbeder/yaml-cpp) is required as an
 additional dependency. Install it via your distribution or manually by
-following the instruction on the project page.
+following the instructions on the project page.
 
 If either JUCE or yaml-cpp is installed in a non-standard location,
 remember to set `CMAKE_PREFIX_PATH` or `*_DIR` or similar, such
