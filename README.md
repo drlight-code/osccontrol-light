@@ -165,6 +165,18 @@ You can perform a parallel build by passing the `-j` option with the
 desired number of threads.  To see all available options, call the
 build script with the `-h` option.
 
+Please note: the build script is only supplied for your
+convenience. You can always build the plugin manually by calling CMake
+directly. To create build targets for specific presets, you can pass
+the `PRESET_NAMES` variable with a semicolon-separated list of preset
+names. For example:
+
+```
+mkdir build
+cd build
+cmake -DPRESET_NAMES="simple-synth;track-1" ..
+cmake --build .
+```
 
 Licensing
 ---------
