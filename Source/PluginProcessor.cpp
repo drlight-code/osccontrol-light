@@ -73,12 +73,15 @@ OSCControlAudioProcessor() :
         SystemStats::getEnvironmentVariable("OSCCONTROL_PRESET_PATH", "");
     dirPreset = File (pathPreset);
 
-    if(filenamePlugin.startsWith("osccontrol-")) {
+    if(filenamePlugin == "osccontrol-light-gui") {
+        hasUserInterface = true;
+    }
+    else if(filenamePlugin.startsWith("osc-")) {
         auto presetToLoad =
             filenamePlugin.fromFirstOccurrenceOf
-            ("osccontrol-", false, false).trimCharactersAtStart("-");
+            ("osc-", false, false).trimCharactersAtStart("-");
 
-        if(presetToLoad.isNotEmpty() && presetToLoad != "light") {
+        if(presetToLoad.isNotEmpty()) {
             Logger::writeToLog("PRESET NAME: " + presetToLoad);
 
             // if (pathPreset == "") {
@@ -101,7 +104,7 @@ OSCControlAudioProcessor() :
     }
     else {
         auto message =
-            String("error: filename should start with osccontrol-light.");
+            String("error: unexpected shared object name.");
         Logger::writeToLog (message );
         throw std::runtime_error (message.toStdString ());
     }
