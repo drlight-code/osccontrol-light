@@ -140,10 +140,11 @@ cmake --install . --prefix <juce_install_root>
 
 [yaml-cpp](https://github.com/jbeder/yaml-cpp) is required as an
 additional dependency. Install it via your distribution or manually by
-following the instruction on the project page. If it is installed in a
-non-standard location, remember to set `CMAKE_PREFIX_PATH` or
-`yaml-cpp_DIR` or similar, such that CMake is able to pick up the
-installation location.
+following the instruction on the project page.
+
+If either JUCE or yaml-cpp is installed in a non-standard location,
+remember to set `CMAKE_PREFIX_PATH` or `*_DIR` or similar, such
+that CMake is able to pick up the installation location.
 
 We provide a script to build different versions of this plugin, which
 are preconfigured to load custom YAML presets at runtime. The
@@ -156,11 +157,13 @@ just call the build script as follows.
 ./build_plugins.sh simple-synth track-1
 ```
 
-Afterwards, you can find the prebuilt plugins for each preset in the
-`Plugins` directory in the top-level directory of the source tree.
+Afterwards, you can find the prebuilt plugins for each preset as well
+as the GUI version in the `Plugins` directory in the top-level source
+tree.
 
-You can perform a parallel build by passing the `-j` option.  To see
-all available options, call the build script with the `-h` option.
+You can perform a parallel build by passing the `-j` option with the
+desired number of threads.  To see all available options, call the
+build script with the `-h` option.
 
 
 Licensing
