@@ -12,36 +12,38 @@ full resolution, and all time sequencing, automation recording,
 modulation and side-chaining functionality of the host environment can
 be used for external OSC control.
 
-We provide a plugin or standalone UI that enables prototyping of
-control presets by quick switching and reloading of preset
-definitions.  To integrate into a host environment with automatable
-controls, the plugin can run in headless mode that loads a specific
-preset upon construction.
+We provide an interactive GUI version, as a plugin as well as a
+standalone application, that enables prototyping of control presets by
+quick switching and reloading of preset definitions.  To integrate a
+preset into a host environment with automatable controls, the non-GUI
+version of the plugin can be pre-built to load a specific preset
+definition at runtime.
 
-Control presets are defined via a concise YAML-based textual markup
+Control presets are defined in a concise YAML-based textual markup
 format.
 
 
 Usage
 -----
 
-To run the standalone UI application, execute the `osccontrol-light`
-application binary. To run the UI inside a plugin host, make the
-`osccontrol-light.{so,dll}` file available to the host environment and
-load the plugin.
+To run the standalone GUI application, execute the
+`osccontrol-light-gui` application binary. To run the GUI inside a
+plugin host, make the `osccontrol-light-gui` plugin available to the
+host environment and load it.
 
-The UI elements are illustrated in the following.
+The GUI elements are illustrated in the following.
 
 <img src="Documentation/Images/ui-overview.png" width="512" title="osccontrol-light UI overview">
 
-To create a headless instance of the plugin that provides automatable
-controls inside an audio plugin host environment, create a copy of the
-`osccontrol-light.{so,dll}` file with the preset name as
-`osccontrol-light-<name>.{so,dll}`. This enables registration of the
-controls at plugin initialization time, which is necessary for most
-hosts.
+To create a non-GUI instance of the plugin that provides automatable
+controls inside an audio plugin host environment, the plugin needs to
+be pre-built to load a certain preset file at runtime. See the build
+instructions below for details.
 
-In headless mode, controls are exposed directly in the host UI and can be mapped to controller input or automated and modulated at full resolution. The following images show an example preset integrated into different host environments.
+In headless mode, controls are exposed directly in the host UI and can
+be mapped to controller input or automated and modulated at full
+resolution. The following images show an example preset integrated
+into different host environments.
 
 <div style="display:flex;">
     <img style="flex:2;" src="Documentation/Images/simplesynth-juce.png" height="300" title="Headless example in the JUCE plugin host">
@@ -55,11 +57,11 @@ Environment variables:
 - `OSCCONTROL_SCALE_FACTOR`: Set UI scale factor for high DPI displays.
 - `OSCCONTROL_PRESET_PATH`: Set directory with preset definitions.
 
-The directory specified via the UI or `OSCCONTROL_PRESET_PATH` will be
+The directory specified via the GUI or `OSCCONTROL_PRESET_PATH` will be
 searched recursively for `*.yaml` preset definition files.
 
 **Please note: setting `OSCCONTROL_PRESET_PATH` in the environment is
-  mandatory for headless mode!**
+  mandatory for non-GUI mode!**
 
 
 Preset Definitions
@@ -111,16 +113,54 @@ Platform Support
 
 Different plugin SDKs are supported via the [JUCE](https://juce.com/)
 library (VST, VST3, AU, RTAS and AAX), as well as all major operating
-systems (GNU/Linux, MacOS and Microsoft Windows).
+systems (GNU/Linux, MacOS and Microsoft Windows). The build is
+currently preconfigured to build VST3 plugins on all platforms, but
+this can be customized by adapting the `CMakeLists.txt` file
+accordingly.
 
 
 Compilation
 -----------
 
-Build the standalone application and plugin for your platform by
-exporting the project files for your favorite IDE using the
-[Projucer](https://juce.com/discover/projucer) application that ships
-with JUCE.
+The plugin is built using the [CMake](https://cmake.org/) build
+system. JUCE therefore needs to be properly deployed using CMake,
+using the Projucer is not supported.
+
+First, download a copy of JUCE, or clone the [github
+repository](https://github.com/juce-framework/JUCE.git), and install
+it to a desired location.
+
+```
+git clone https://github.com/juce-framework/JUCE.git
+mkdir JUCE/build
+cd JUCE/build
+cmake ..
+cmake --install . --prefix <juce_install_root>
+```
+
+[yaml-cpp](https://github.com/jbeder/yaml-cpp) is required as an
+additional dependency. Install it via your distribution or manually by
+following the instruction on the project page. If it is installed in a
+non-standard location, remember to set `CMAKE_PREFIX_PATH` or
+`yaml-cpp_DIR` or similar, such that CMake is able to pick up the
+installation location.
+
+We provide a script to build different versions of this plugin, which
+are preconfigured to load custom YAML presets at runtime. The
+interactive GUI version is always built, as VST plugin as well as a
+standalone application. To build the GUI version (plugin and
+standalone), and plugins for the `simple-synth` and `track-1` presets,
+just call the build script as follows.
+
+```
+./build_plugins.sh simple-synth track-1
+```
+
+Afterwards, you can find the prebuilt plugins for each preset in the
+`Plugins` directory in the top-level directory of the source tree.
+
+You can perform a parallel build by passing the `-j` option.  To see
+all available options, call the build script with the `-h` option.
 
 
 Licensing
