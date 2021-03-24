@@ -6,6 +6,10 @@ find_package(JUCE CONFIG REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
 function(add_osccontrol_target TARGET FORMATS)
+    string(MD5 PLUGIN_CODE ${TARGET})
+    string(SUBSTRING ${PLUGIN_CODE} 0 4 PLUGIN_CODE)
+    message("adding target ${TARGET} with plugin code ${PLUGIN_CODE}")
+
     juce_add_plugin(${TARGET}
         # VERSION ...                               # Set this if the plugin version is different to the project version
         # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
@@ -18,7 +22,7 @@ function(add_osccontrol_target TARGET FORMATS)
         # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
         # COPY_PLUGIN_AFTER_BUILD TRUE/FALSE        # Should the plugin be installed to a default location after building?
         PLUGIN_MANUFACTURER_CODE drLt               # A four-character manufacturer id with at least one upper-case character
-        PLUGIN_CODE oscL                            # A unique four-character plugin id with at least one upper-case character
+        PLUGIN_CODE ${PLUGIN_CODE}                  # A unique four-character plugin id with at least one upper-case character
         PLUGIN_NAME ${TARGET}
         FORMATS ${FORMATS}                          # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
         PRODUCT_NAME ${TARGET})                     # The name of the final executable, which can differ from the target name
