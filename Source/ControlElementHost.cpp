@@ -79,10 +79,8 @@ parameterValueChanged
     }
 
     // temporary fix to work around a bug in JUCE VST3 on Linux
-    if(! lastSentValue.equalsWithSameType(sendValue.getValue())) {
-        lastSentValue = sendValue.getValue();
-        sendValue.getValueSource().sendChangeMessage(true);
-    }
+    // https://forum.juce.com/t/handleasyncupdate-never-called-for-valuesource/45180
+    sendValue.getValueSource().sendChangeMessage(true);
 }
 
 void

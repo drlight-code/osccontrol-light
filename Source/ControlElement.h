@@ -56,6 +56,18 @@ public:
 
     virtual void send();
 
+private:
+    template <class T>
+    void sendTyped() {
+        var valueToSend = T(sendValue.getValue());
+        if(! lastSentValue.equalsWithSameType(valueToSend)) {
+            auto oscMessage = OSCMessage(String(createInfo.message), T(valueToSend));
+            oscSender.send(oscMessage);
+            lastSentValue = valueToSend;
+        }
+    }
+    var lastSentValue;
+
 protected:
 
     OSCSender & oscSender;

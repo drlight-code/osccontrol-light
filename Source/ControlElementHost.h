@@ -46,9 +46,5 @@ private:
     void createHostParameter ();
 
     AudioProcessorParameter * parameter;
-
-    // temporary fix to work around a bug in JUCE VST3 on Linux
-    // https://forum.juce.com/t/handleasyncupdate-never-called-for-valuesource/45180
-    var lastSentValue;
 };
 using ControlElementHostUnique = std::unique_ptr<ControlElementHost>;

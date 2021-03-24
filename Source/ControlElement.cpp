@@ -49,33 +49,17 @@ void
 ControlElement::
 send()
 {
-    auto value = sendValue.getValue();
-
     switch (createInfo.type) {
     case ControlElement::Type::Float: {
-        auto oscMessage =
-            OSCMessage(
-                String(createInfo.message),
-                float(value));
-        oscSender.send(oscMessage);
+        sendTyped<float>();
         break;
     }
-
     case ControlElement::Type::Int: {
-        auto oscMessage =
-            OSCMessage(
-                String(createInfo.message),
-                int(value));
-        oscSender.send(oscMessage);
+        sendTyped<int>();
         break;
     }
-
     case ControlElement::Type::Toggle:
-        auto oscMessage =
-            OSCMessage(
-                String(createInfo.message),
-                float(value));
-        oscSender.send(oscMessage);
+        sendTyped<float>();
         break;
     }
 }
