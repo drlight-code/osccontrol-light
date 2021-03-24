@@ -62,9 +62,9 @@ cmake -DPRESET_NAMES=$PRESET_NAMES ..
 
 echo "building osccontrol plugins... "
 if [ "$VERBOSE" -ne 0 ] ; then
-    cmake --build . --parallel
+    cmake --build . --parallel $JOBS
 else
-    cmake --build . --parallel > /dev/null
+    cmake --build . --parallel $JOBS > /dev/null
 fi
 
 echo "copying to 'Plugins' directory... "
