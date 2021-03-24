@@ -32,8 +32,6 @@ ControlElementHost
 
     parameter->addListener (this);
     processor.addParameter (parameter);
-
-    sendValue.addListener(this);
 }
 
 void
@@ -78,6 +76,12 @@ parameterValueChanged
     }
     else {
         sendValue.setValue (outValue);
+    }
+
+    // temporary fix to work around a bug in JUCE VST3 on Linux
+    if(! lastSentValue.equalsWithSameType(sendValue.getValue())) {
+        lastSentValue = sendValue.getValue();
+        sendValue.getValueSource().sendChangeMessage(true);
     }
 }
 
