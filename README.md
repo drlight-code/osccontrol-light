@@ -1,9 +1,9 @@
 osccontrol-light - An audio plugin that speaks OSC
 ===============================================
 
-This software enables sending and receiving of Open Sound Control
-(OSC) messages from audio plugin host environments such as digital
-audio workstations (DAW).
+This software enables sending of Open Sound Control (OSC) messages
+from audio plugin host environments such as digital audio workstations
+(DAW).
 
 Controls are tied to OSC messages directly in the host environment
 without encoding the control data as MIDI CC messages. This way,
@@ -19,8 +19,7 @@ preset into a host environment with automatable controls, the non-GUI
 version of the plugin can be pre-built to load a specific preset
 definition at runtime.
 
-Control presets are defined in a concise YAML-based textual markup
-format.
+Control presets are defined in a YAML-based textual markup format.
 
 
 Usage
