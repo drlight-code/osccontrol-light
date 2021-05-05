@@ -58,6 +58,7 @@ done
 
 echo "creating cmake config in 'build' directory"
 mkdir -p build ; cd build
+echo "cmake -DPRESET_NAMES=$PRESET_NAMES .."
 cmake -DPRESET_NAMES=$PRESET_NAMES ..
 
 echo "building osccontrol plugins... "
