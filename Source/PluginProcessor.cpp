@@ -18,8 +18,6 @@
 
 */
 
-#include <dlfcn.h>
-
 #include "PresetParser.h"
 
 #include "ControlElementHost.h"
@@ -30,24 +28,6 @@
 #include "PluginProcessor.h"
 
 namespace  {
-File juce_getExecutableFile();
-File juce_getExecutableFile()
-{
-  struct DLAddrReader
-  {
-    static String getFilename()
-    {
-      Dl_info exeInfo;
-
-      auto localSymbol = (void*) juce_getExecutableFile;
-      dladdr (localSymbol, &exeInfo);
-      return CharPointer_UTF8 (exeInfo.dli_fname);
-    }
-  };
-
-  static String filename = DLAddrReader::getFilename();
-  return File::getCurrentWorkingDirectory().getChildFile (filename);
-}
 }
 
 OSCControlAudioProcessor::
@@ -57,7 +37,7 @@ OSCControlAudioProcessor() :
         .withOutput ("Output", AudioChannelSet::stereo())),
     hasUserInterface(true)
 {
-    auto filePlugin = juce_getExecutableFile();
+    auto filePlugin = File::getSpecialLocation(File::SpecialLocationType::currentExecutableFile);
     filenamePlugin = filePlugin.getFileNameWithoutExtension();
     auto filenameLog = filenamePlugin + ".log";
 
