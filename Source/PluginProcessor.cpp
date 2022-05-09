@@ -47,8 +47,8 @@ OSCControlAudioProcessor() :
 
     Logger::setCurrentLogger(fileLogger.get());
     
-    //Logger::writeToLog(filePlugin.getFullPathName());
-    //Logger::writeToLog(filenamePlugin);
+    Logger::writeToLog(filePlugin.getFullPathName());
+    Logger::writeToLog(filenamePlugin);
 
     auto pathPreset =
         SystemStats::getEnvironmentVariable("OSCCONTROL_PRESET_PATH", "");
@@ -77,12 +77,6 @@ OSCControlAudioProcessor() :
             hasUserInterface = false;
             initializeHeadless(presetFile);
         }
-    }
-    else {
-        auto message =
-            String("error: unexpected shared object name.");
-        Logger::writeToLog (message );
-        throw std::runtime_error (message.toStdString ());
     }
 }
 
