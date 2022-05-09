@@ -92,7 +92,7 @@ message("creating build target for osccontrol-light VST3 plugin")
 add_osccontrol_target(osccontrol-light "Standalone;VST3")
 configure_osccontrol_target(osccontrol-light)
 
-set(PRESET_NAMES "" CACHE INTERNAL "list of presets for which a plugin is built")
+set(PRESET_NAMES "" CACHE STRING "list of presets for which a plugin is built")
 foreach(PRESET_NAME ${PRESET_NAMES})
     message("creating build target for ${PRESET_NAME} preset VST3 plugin")
     set(PRESET_TARGET "osc-${PRESET_NAME}")
