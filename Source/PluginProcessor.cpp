@@ -46,38 +46,34 @@ OSCControlAudioProcessor() :
          "osccontrol-light debug log", 0);
 
     Logger::setCurrentLogger(fileLogger.get());
-    Logger::writeToLog(filePlugin.getFullPathName());
-    Logger::writeToLog("OSCControlAudioProcessor");
+    
+    //Logger::writeToLog(filePlugin.getFullPathName());
+    //Logger::writeToLog(filenamePlugin);
 
     auto pathPreset =
         SystemStats::getEnvironmentVariable("OSCCONTROL_PRESET_PATH", "");
     dirPreset = File (pathPreset);
 
-    if(filenamePlugin == "osccontrol-light-gui") {
-        hasUserInterface = true;
-    }
-    else if(filenamePlugin.startsWith("osc-")) {
+    if (filenamePlugin != "osccontrol-light") {
         auto presetToLoad =
             filenamePlugin.fromFirstOccurrenceOf
-            ("osc-", false, false).trimCharactersAtStart("-");
+			("osc", false, false).trimCharactersAtStart("-");
 
-        if(presetToLoad.isNotEmpty()) {
-            Logger::writeToLog("PRESET NAME: " + presetToLoad);
+        if (presetToLoad.isNotEmpty()) {
+            Logger::writeToLog("presetToLoad: " + presetToLoad);
+            namePlugin = filenamePlugin;
 
-            // if (pathPreset == "") {
-            //     AlertWindow::showMessageBox
-            //         (AlertWindow::AlertIconType::WarningIcon,
-            //             "Error loading osccontrol-light",
-            //             "When running osccontrol-light in headless mode "
-            //             "for DAW integration, make sure that "
-            //             "OSCCONTROL_PRESET_PATH is set properly in "
-            //             "the environment!");
-            //     // TODO freak out!!
-            // }
+            if (pathPreset == "") {
+                AlertWindow::showMessageBox
+                (AlertWindow::AlertIconType::WarningIcon,
+                    String("Error loading osccontrol-light with preset: ") + presetToLoad,
+                    "When running osccontrol-light in headless mode "
+                    "for DAW integration, make sure that "
+                    "OSCCONTROL_PRESET_PATH is set properly in "
+                    "the environment!"); // TODO freak out!!
+            }
 
             auto presetFile = locatePresetFile(presetToLoad);
-
-            namePlugin = "osc-" + presetToLoad;
             hasUserInterface = false;
             initializeHeadless(presetFile);
         }
