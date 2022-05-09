@@ -87,10 +87,10 @@ juce_add_binary_data(osccontrol-light-data SOURCES
 set_target_properties(osccontrol-light-data PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 # we always build the interactive gui version of the plugin as VST3 and standalone application
-message("creating build target for osccontrol-light-gui standalone application")
-message("creating build target for osccontrol-light-gui VST3 plugin")
-add_osccontrol_target(osccontrol-light-gui "Standalone;VST3")
-configure_osccontrol_target(osccontrol-light-gui)
+message("creating build target for osccontrol-light standalone application")
+message("creating build target for osccontrol-light VST3 plugin")
+add_osccontrol_target(osccontrol-light "Standalone;VST3")
+configure_osccontrol_target(osccontrol-light)
 
 set(PRESET_NAMES "" CACHE INTERNAL "list of presets for which a plugin is built")
 foreach(PRESET_NAME ${PRESET_NAMES})
