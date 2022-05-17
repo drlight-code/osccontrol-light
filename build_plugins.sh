@@ -68,10 +68,17 @@ else
     cmake --build . --parallel $JOBS > /dev/null
 fi
 
-echo "copying to 'Plugins' directory... "
+echo -n "copying VST3 plugins into 'Plugins' directory... "
 mkdir -p ../Plugins
-cp -r ./osccontrol-light_artefacts/VST3/osccontrol-light.vst3 ../Plugins
-for preset in "$@"
-do
-    cp -r ./osc-${preset}_artefacts/VST3/osc-${preset}.vst3 ../Plugins
-done
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    for preset in "$@"
+    do
+        find ./osc-${preset}_artefacts/VST3/osc-${preset}.vst3 -type f -name '*.so' -exec cp {} ../Plugins \;
+    done
+fi
+cp ./osccontrol-light_artefacts/VST3/osccontrol-light.vst3/Contents/*/osccontrol-light.so ../Plugins
+echo "done!"
+
+echo -n "copying GUI application into top-level source directory... "
+cp ./osccontrol-light_artefacts/Standalone/osccontrol-light ../
+echo "done!"
