@@ -70,7 +70,7 @@ fi
 
 echo "copying to 'Plugins' directory... "
 mkdir -p ../Plugins
-cp -r ./osccontrol-light-gui_artefacts/VST3/osccontrol-light-gui.vst3 ../Plugins
+cp -r ./osccontrol-light_artefacts/VST3/osccontrol-light.vst3 ../Plugins
 for preset in "$@"
 do
     cp -r ./osc-${preset}_artefacts/VST3/osc-${preset}.vst3 ../Plugins
