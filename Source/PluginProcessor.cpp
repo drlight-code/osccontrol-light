@@ -256,6 +256,18 @@ processBlock
 (AudioBuffer<float>& buffer,
   MidiBuffer& midiMessages)
 {
+    auto mainInputOutput = getBusBuffer (buffer, true, 0);
+
+    // add a hopefully inaudible float epsilon here to circumvent VST3
+    // plugin auto-suspend (tested in Bitwig). This is ugly, let's
+    // hope we can switch to CLAP soon or find a saner solution by
+    // flagging the host that we don't want to get suspended via the
+    // JUCE API.
+    for (auto j = 0; j < buffer.getNumSamples(); ++j)
+        for (auto i = 0; i < mainInputOutput.getNumChannels(); ++i)
+            *mainInputOutput.getWritePointer (i, j) =
+                *mainInputOutput.getReadPointer (i, j) +
+                std::numeric_limits<float>::epsilon();
 }
 
 bool
