@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function print_usage {
-    printf "Usage: %s: [-j <jobs>] [-v] [<preset> ...]\n" $0
+    printf "Usage: %s: [-j <jobs>] [-v] [-e] [<preset> ...]\n" $0
     echo ""
     echo "Build the osccontrol plugin."
     echo ""
@@ -13,12 +13,14 @@ function print_usage {
     echo "Options:"
     echo "<preset> ...: list of preset names separated with spaces"
     echo "-j<jobs>: run build in parallel with <jobs> threads"
-    echo "-v: print cmake progress output"
+    echo "-v: verbosely print cmake output"
+    echo "-e: embed presets during build"
 }
 
 JOBS=1
 VERBOSE=0
-while getopts ":hvj:" opt; do
+EMBED=""
+while getopts ":hvej:" opt; do
     case ${opt} in
         \? )
             echo "Invalid option: $OPTARG" 1>&2
@@ -46,20 +48,25 @@ while getopts ":hvj:" opt; do
         v)
             VERBOSE=1
             ;;
+        e)
+            EMBED="-DEMBED_PRESETS=ON"
+            ;;
     esac
 done
 shift $((OPTIND -1))
 
-PRESET_NAMES=""
+PRESETS=""
 for preset in "$@"
 do
-    PRESET_NAMES="$PRESET_NAMES;$preset"
+    PRESETS="$PRESETS;$preset"
 done
 
 echo "creating cmake config in 'build' directory"
 mkdir -p build ; cd build
-echo "cmake -DPRESET_NAMES=$PRESET_NAMES .."
-cmake -DPRESET_NAMES=$PRESET_NAMES ..
+
+COMMAND="cmake -DPRESETS=$PRESETS $EMBED .."
+echo $COMMAND
+$COMMAND
 
 echo "building osccontrol plugins... "
 if [ "$VERBOSE" -ne 0 ] ; then

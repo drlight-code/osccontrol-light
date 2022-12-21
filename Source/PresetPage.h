@@ -33,7 +33,8 @@ public:
     PresetPage ();
     ~PresetPage ();
 
-    void loadFromFile (File filePreset);
+    void load (InputStream & inputStream);
+    void loadFromFile (File const & file);
 
     Value & getHostValue ();
     Value & getPortValue ();

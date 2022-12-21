@@ -32,19 +32,18 @@ PresetParser::mapTypeNames =
 
 PresetParser::
 PresetParser
-(File filePreset)
+(InputStream & inputStream)
 {
-    auto pathPreset = filePreset.getFullPathName().toStdString();
     try {
-        config = YAML::LoadFile(pathPreset);
+        config = YAML::Load(inputStream.readString().toStdString());
     }
     catch (YAML::BadFile &e) {
-        std::string message = "Unable to load config: " + pathPreset;
+        std::string message = "Could not parse preset";
         throw std::runtime_error(message);
     }
 
     if(config.IsNull()) {
-        std::string message = "Empty config: " + pathPreset;
+        std::string message = "Could not parse preset";
         throw std::runtime_error(message);
     }
 }

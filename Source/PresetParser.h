@@ -30,7 +30,7 @@ class PresetParser
 {
 public:
 
-    PresetParser(File filePreset);
+    PresetParser(InputStream & inputStream);
 
     String getHost() const;
     int getPort() const;

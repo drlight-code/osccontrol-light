@@ -18,10 +18,10 @@ function(add_osccontrol_target TARGET FORMATS)
         # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
         COPY_PLUGIN_AFTER_BUILD FALSE               # Should the plugin be installed to a default location after building?
         PLUGIN_MANUFACTURER_CODE drLt               # A four-character manufacturer id with at least one upper-case character
-        # PLUGIN_CODE oscL                            # A unique four-character plugin id with at least one upper-case character
-        PLUGIN_NAME ${TARGET}
-        FORMATS ${FORMATS}                          # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-        PRODUCT_NAME ${TARGET})                     # The name of the final executable, which can differ from the target name
+        # PLUGIN_CODE oscL                          # A unique four-character plugin id with at least one upper-case character
+        PLUGIN_NAME "${TARGET}"
+        FORMATS "${FORMATS}"                        # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+        PRODUCT_NAME "${TARGET}")                   # The name of the final executable, which can differ from the target name
 endfunction()
 
 function(configure_osccontrol_target TARGET)
@@ -56,15 +56,26 @@ function(configure_osccontrol_target TARGET)
         Source/UIComponentFactory.h
         )
 
-    target_compile_definitions(${TARGET}
-        PUBLIC
+    target_compile_definitions(${TARGET} PUBLIC
         # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
         JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
         JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
         JUCE_VST3_CAN_REPLACE_VST2=0
         JUCE_MODAL_LOOPS_PERMITTED=1 # allow modal loops for now to enable file chooser dialog
         YAML_CPP_STATIC_DEFINE=1
+    )
+
+    if(EMBED_PRESETS AND NOT "${TARGET}" STREQUAL "osccontrol-light")
+        STRING(REGEX REPLACE "^osc-" "" PRESET ${TARGET})
+        target_compile_definitions("${TARGET}" PUBLIC EMBED_PRESET)
+        juce_add_binary_data("${TARGET}-data"
+            HEADER_NAME "EmbeddedPreset.h"
+            NAMESPACE "osccontrol_embedded_preset"
+            SOURCES "Presets/${PRESET}.yaml"
         )
+        set_target_properties("${TARGET}-data" PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+        target_link_libraries(${TARGET} PRIVATE "${TARGET}-data")
+    endif()
 
     target_link_libraries(${TARGET} PRIVATE
         osccontrol-light-data
@@ -87,15 +98,16 @@ juce_add_binary_data(osccontrol-light-data SOURCES
 set_target_properties(osccontrol-light-data PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 # we always build the interactive gui version of the plugin as VST3 and standalone application
-message("creating build target for osccontrol-light standalone application")
-message("creating build target for osccontrol-light VST3 plugin")
+message("creating build target for osccontrol-light (Standalone)")
+message("creating build target for osccontrol-light (VST3)")
 add_osccontrol_target(osccontrol-light "Standalone;VST3")
 configure_osccontrol_target(osccontrol-light)
 
-set(PRESET_NAMES "" CACHE STRING "list of presets for which a plugin is built")
-foreach(PRESET_NAME ${PRESET_NAMES})
-    message("creating build target for ${PRESET_NAME} preset VST3 plugin")
-    set(PRESET_TARGET "osc-${PRESET_NAME}")
+set(PRESETS "" CACHE STRING "list of presets for which a plugin is built")
+set(EMBED_PRESETS "" CACHE BOOL "embed preset definition at build time")
+foreach(PRESET ${PRESETS})
+    message("creating build target for ${PRESET} preset (VST3)")
+    set(PRESET_TARGET "osc-${PRESET}")
     add_osccontrol_target(${PRESET_TARGET} "VST3")
     configure_osccontrol_target(${PRESET_TARGET})
 endforeach()

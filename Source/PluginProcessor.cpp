@@ -18,6 +18,12 @@
 
 */
 
+#include "BinaryData.h"
+#ifdef EMBED_PRESET
+  #include "EmbeddedPreset.h"
+#endif
+
+
 #include "PresetParser.h"
 
 #include "ControlElementHost.h"
@@ -41,12 +47,14 @@ OSCControlAudioProcessor() :
     filenamePlugin = filePlugin.getFileNameWithoutExtension();
     auto filenameLog = filenamePlugin + ".log";
 
+    namePlugin = filenamePlugin;
+
     fileLogger = std::make_unique<FileLogger>
         (filePlugin.getParentDirectory().getChildFile(filenameLog),
          "osccontrol-light debug log", 0);
 
     Logger::setCurrentLogger(fileLogger.get());
-    
+
     Logger::writeToLog(filePlugin.getFullPathName());
     Logger::writeToLog(filenamePlugin);
 
@@ -54,29 +62,24 @@ OSCControlAudioProcessor() :
         SystemStats::getEnvironmentVariable("OSCCONTROL_PRESET_PATH", "");
     dirPreset = File (pathPreset);
 
-    if (filenamePlugin != "osccontrol-light") {
-        auto presetToLoad =
-            filenamePlugin.fromFirstOccurrenceOf
-			("osc", false, false).trimCharactersAtStart("-");
+    auto presetToLoad = namePlugin.fromFirstOccurrenceOf
+        ("osc-", false, false).trimCharactersAtStart("-");
+    Logger::writeToLog("presetToLoad: " + presetToLoad);
 
-        if (presetToLoad.isNotEmpty()) {
-            Logger::writeToLog("presetToLoad: " + presetToLoad);
-            namePlugin = filenamePlugin;
+    if (presetToLoad != "osccontrol-light" && presetToLoad.isNotEmpty()) {
+        if (!dirPreset.exists()) {
+            auto message =
+                String("Error loading osccontrol-light with preset: ") + presetToLoad +
+                "When running osccontrol-light in headless mode "
+                "for DAW integration, make sure that "
+                "OSCCONTROL_PRESET_PATH is set properly in "
+                "the environment!";
 
-            if (pathPreset == "") {
-                AlertWindow::showMessageBox
-                (AlertWindow::AlertIconType::WarningIcon,
-                    String("Error loading osccontrol-light with preset: ") + presetToLoad,
-                    "When running osccontrol-light in headless mode "
-                    "for DAW integration, make sure that "
-                    "OSCCONTROL_PRESET_PATH is set properly in "
-                    "the environment!"); // TODO freak out!!
-            }
-
-            auto presetFile = locatePresetFile(presetToLoad);
-            hasUserInterface = false;
-            initializeHeadless(presetFile);
+            throw std::runtime_error (message.toStdString ());
         }
+
+        hasUserInterface = false;
+        initializeHeadless(presetToLoad);
     }
 }
 
@@ -90,7 +93,7 @@ OSCControlAudioProcessor::
 File
 OSCControlAudioProcessor::
 locatePresetFile
-(String namePreset)
+(String const & namePreset)
 {
     auto filenamePreset = namePreset + ".yaml";
     auto files = dirPreset.findChildFiles
@@ -109,11 +112,22 @@ locatePresetFile
 void
 OSCControlAudioProcessor::
 initializeHeadless
-(File filePreset)
+(String const & namePreset)
 {
     Logger::writeToLog("initializeHeadless");
 
-    PresetParser preset (filePreset);
+#ifdef EMBED_PRESET
+    int sourceSize = 0;
+    const void * sourceData =
+        osccontrol_embedded_preset::getNamedResource(
+            osccontrol_embedded_preset::namedResourceList[0], sourceSize);
+    MemoryInputStream inputStream(sourceData, sourceSize, false);
+#else
+    auto presetFile = locatePresetFile(namePreset);
+    FileInputStream inputStream(presetFile);
+#endif
+
+    PresetParser preset (inputStream);
 
     oscSender = std::make_unique<OSCSender> ();
     oscSender->connect (preset.getHost (), preset.getPort ());

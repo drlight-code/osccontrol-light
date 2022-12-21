@@ -45,11 +45,10 @@ PresetPage::
 
 void
 PresetPage::
-loadFromFile
-(File filePreset)
+load
+(InputStream & inputStream)
 {
-    PresetParser preset (filePreset);
-    auto presetPath = filePreset.getFullPathName ();
+    PresetParser preset (inputStream);
 
     host = preset.getHost ();
     port = preset.getPort ();
@@ -76,6 +75,16 @@ loadFromFile
     areaContainer.setHeight (accumulatedHeight);
     container->setBounds (areaContainer);
 }
+
+void
+PresetPage::
+loadFromFile
+(File const & file)
+{
+    FileInputStream inputStream(file);
+    load(inputStream);
+}
+
 
 Value &
 PresetPage::

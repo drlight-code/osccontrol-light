@@ -35,8 +35,8 @@ public:
     OSCControlAudioProcessor();
     ~OSCControlAudioProcessor();
 
-    File locatePresetFile(String namePreset);
-    void initializeHeadless(File filePreset);
+    File locatePresetFile(String const & namePreset);
+    void initializeHeadless(String const & namePreset);
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
