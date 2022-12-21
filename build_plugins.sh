@@ -77,13 +77,13 @@ fi
 
 echo -n "copying VST3 plugins into 'Plugins' directory... "
 mkdir -p ../Plugins
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+# if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     for preset in "$@"
     do
-        find ./osc-${preset}_artefacts/VST3/osc-${preset}.vst3 -type f -name '*.so' -exec cp {} ../Plugins \;
+        cp -r ./osc-${preset}_artefacts/VST3/osc-${preset}.vst3 ../Plugins
     done
-fi
-cp ./osccontrol-light_artefacts/VST3/osccontrol-light.vst3/Contents/*/osccontrol-light.so ../Plugins
+# fi
+cp -r ./osccontrol-light_artefacts/VST3/osccontrol-light.vst3 ../Plugins
 echo "done!"
 
 echo -n "copying GUI application into top-level source directory... "
